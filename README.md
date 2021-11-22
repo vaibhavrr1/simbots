@@ -5,5 +5,5 @@ model to create bots . It uses a multinomial NB classifier to create intent clas
 Links
  
  1) [Documentation](https://vaibhavrr1.github.io/simbots/index.html) 
- 2) [pypi] (https://pypi.org/project/simbots/)
+ 2) [pypi](https://pypi.org/project/simbots/)
  3) [github](https://github.com/vaibhavrr1/simbots)
