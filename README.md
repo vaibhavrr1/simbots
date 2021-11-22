@@ -3,7 +3,7 @@ model to create bots . It uses a multinomial NB classifier to create intent clas
 
 To install simply use 
 
-pip install simbots
+    pip install simbots
 
 Links
  
