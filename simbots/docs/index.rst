@@ -1,0 +1,613 @@
+.. simbots documentation master file, created by
+   sphinx-quickstart on Sun Nov 21 23:38:40 2021.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to simbots's documentation!
+===================================
+
+Simple bots or Simbots is a library designed to create simple bots using the power of python. This library utilises Intent, Entity, Relation and Context
+model to create bots . It uses a multinomial NB classifier to create intent classifiers.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   simbots
+
+
+*******************
+Quick Start
+*******************
+
+In this Example we will set up a simple bot which can answer basic questions like
+
+Who are you ?
+What is your age ?
+
+Lets first setup some intent examples
+
+.. code:: python
+
+   #!/usr/bin/python
+   # -*- coding: utf-8 -*-
+
+   import json
+
+   intentExamples = {
+       'Greetings': [
+           'Hello !',
+           'Hi , How are you ?',
+           'Hey !! ',
+           'Namaste ',
+           'Good day',
+           'Good evening',
+           'Good morning',
+           'Good to see you',
+           'Greetings',
+           'Have you been well?',
+           'Hello Agent',
+           'Hello',
+           'Hello I am looking for some help here',
+           'Hey how are you doing',
+           'Hey there all',
+           'Hey there',
+           'Hey twin',
+           'Hey you',
+           'Hi advisor',
+           'Hi there',
+           'How are things going?',
+           'How are you today?',
+           'How have you been?',
+           'How is it going?',
+           'How r u?',
+           'Looking good eve',
+           'take me back',
+           "What's new?",
+           "What's up?",
+           'Who is this?',
+           'You there',
+           'Namaste',
+           'satsriyakaal',
+           'helo',
+           'hiiiiiii',
+           'abe oye',
+           ' sup ',
+           ' wassup bruh ',
+           ' sup bro ',
+           ' ssssup mate whats up',
+       ],
+       'BotName': [
+           'Who are you',
+           'Who are you ?',
+           'What is your Name ?',
+           'What is your name ',
+           'what should i call you ?',
+           'What should i call you',
+           'How to address you ?',
+           'how  to address you by name',
+           'what is your name in english',
+           'call you',
+           'your name',
+           'call you ?',
+           'your name ?',
+           'whom are you',
+           'whom are you referred as',
+       ],
+       'Relatives': [
+           'Do you have any relatives ',
+           'Do you have a sibling ',
+           'Any brother or sister',
+           'Do you have a father',
+           'Do you happen to have a grandparent ?',
+           'Any grandparents or parents ',
+           'do you have Any wife ?',
+           'Are you married ?',
+       ],
+       'Age': [
+           'What is your age',
+           'your age ?',
+           'how old are you ?when were you born',
+           'when were you born',
+           'your year of birth',
+           'year of birth',
+           'when were you born again',
+           'born ?',
+           'born again ?',
+       ],
+       'BirthPlace': [
+           'where were you born ?',
+           'where are you from',
+           'where in the world are you from ?',
+           'where do you belong to',
+           'you are from ',
+           'are you from ',
+           'you belong to ',
+           'place of birth',
+           'and you are from ?',
+           'and your birthplace is from ?and you are from ?',
+           'birthplace',
+           'place of birth',
+           'location of birth',
+           'place of residence',
+           'location',
+           'your address',
+           'where do you reside ?',
+           'place of residence ?',
+       ],
+       'Abilities': [
+           'What can you do ?',
+           'What are your abilities ',
+           'your abilities',
+           'your capabilities',
+           'what are your capabilities',
+           'ability',
+           'your ability',
+           'capability',
+           'your capability',
+           'your abilities',
+           'your powers',
+           'what are your superpowers',
+           'superpowers',
+           'you are capable of ',
+           'what are you capable of',
+           'what can you do ?',
+           'what can you do ?',
+           'Can you jump ?',
+           'can you shit ?',
+           'could you do this ?',
+           'could you please do this ?',
+       ],
+       'Really': [
+           'really',
+           'is that so ?',
+           'is that what you believe',
+           'are you sure',
+           'is that what you belief',
+           'you positive about that',
+           'are you positively sure',
+           'is that what you think',
+           'are you positive about that ?',
+           'you positive',
+           'are you really sure',
+           'really',
+       ],
+       'Laughter': [
+           'i think thats funny ',
+           'thats very funny ,hahaha',
+           'i think that hahahaha',
+           'thats very funny',
+           'laughter',
+           ':)',
+           'thats really funny ',
+           'I think thats hilarious',
+           'thats so funny !',
+           'that really made me laugh !',
+       ],
+       'Sarcasm': [
+           'thats not funny',
+           'thats not very funny',
+           'thats laughable',
+           'thats rude',
+           'are you trying to be funny',
+           'are you serious ?',
+           'sad',
+       ],
+       'Cool': [
+           'thats cool',
+           'cool',
+           'that is really cool',
+           'very cool',
+           'totally cool !',
+           'Awesome !',
+           'Very cool',
+           'Pretty cool',
+           'surely very cool',
+           'nice',
+           'neat',
+           'thats neat',
+           'thats pretty neat',
+           'thats nice',
+       ],
+       'Praise': [
+           'I think that you are absolutely amazing  !',
+           'I really think you are amazing',
+           'You are absolutely fantastic',
+           'That\xe2\x80\x99s Incredible',
+           'How Extraordinary !',
+           'Far Out ! ',
+           'Great ! ',
+           'Outstanding',
+           'Performance',
+           'Marvelous',
+           'I Can\xe2\x80\x99t Get Over It !',
+           'Wonderful ! ',
+           'Amazing Effort !',
+           'Unbelievable Work',
+           'You Should Be Proud',
+           'Phenomenal ! ',
+           'You\xe2\x80\x99ve Got It',
+           'Superb ! ',
+           'You\xe2\x80\x99re Special',
+           'Excellent ! ',
+           'Cool ! ',
+           'Your Project Is First Rate !',
+           'Way to Go ! ',
+           'You\xe2\x80\x99ve Outdone',
+           'Yourself',
+           'Thumbs Up',
+           'What A Great',
+           'Listener',
+           'Your Help Counts ! ',
+           'You Came Through ! ',
+           'Terrific',
+           'You Tried Hard',
+           'You\xe2\x80\x99re OK',
+           'Fabulous',
+           'You Made It',
+           'Happen',
+           'You\xe2\x80\x99re a Real',
+           'Trooper',
+           'It Couldn\xe2\x80\x99t Be',
+           'Better',
+           'The Time You Put in Shows',
+           'Bravo ! ',
+           'You\xe2\x80\x99re Unique',
+           'Exceptional',
+           'Fantastic Work',
+           'Breathtaking ! ',
+           'You\xe2\x80\x99re a Great',
+           'Example For Others',
+           'Keep Up the Good',
+           'Work',
+           'Awesome  !',
+           'I Knew You Had It In You',
+           'You\xe2\x80\x99ve Made',
+           'Progress',
+           'Your Work Is Out of Sight',
+           'What an Imagination  ! ',
+           'It\xe2\x80\x99s Everything I Hoped For',
+           'Stupendous',
+           'You\xe2\x80\x99re Sensational',
+           'Very Good !',
+       ],
+       'TrueT': [
+           'Thats True',
+           'thats self evident',
+           'thats evident',
+           'thats truly evident',
+           'true that',
+           'true as it comes',
+           'thats completely true',
+           'true as it comes',
+           'thats correct',
+           'absolutely correct',
+       ],
+       'FalseT': [
+           'thats false',
+           'you are wrong',
+           'completely wrong',
+           'absolutely and utterly wrong',
+           'I dont believe that',
+           'i think thats not correctthats absolutely not correct',
+       ],
+       'Bye': [
+           'good bye',
+           'bye bye',
+           'buh bye',
+           'see you later',
+           'byee',
+           'se ya later aligator',
+           'I gotta go',
+           'I have someplace else i need to be',
+           'I Need to be someplace else',
+           'We can talk later',
+           'Will chat later',
+           'We can chat later',
+           'Will be chatting later',
+           'goodbye',
+       ],
+       'Confirm': [
+           'Yes ',
+           'Okay',
+           'Please do that',
+           'Okay go ahead',
+           'You do that',
+           'Wrap it up',
+           'I confirm',
+           'Please do',
+           'Sure go ahead',
+           'Sure',
+           'ok',
+           'ok',
+           'yep',
+           'yep yep do that ',
+       ],
+       'Thanks': ['Thank you', 'Thanks', 'Thank you so very much !'],
+       'Discard': [
+           'No',
+           'No , i dont wanna do that',
+           'Nope change that',
+           ' negative ',
+           'No no',
+           'I said no',
+           'Never',
+           'Cancel that',
+           'Build a new one',
+       ],
+       'Joke': [
+           'Can you tell a joke ?',
+           'Tell a joke !',
+           'Tell me another joke !',
+           'I want to smile ',
+           'can you make me smile',
+           'could you tell me a joke ?',
+           'make me laugh',
+           'I want some laughter',
+           'make some laughter',
+           'give me some jokes ',
+       ],
+       'Question': [
+           'what is a key ?',
+           ' Describe a planet ?',
+           'What is a shadow ?',
+           'Can you tell me what a dictionary is ?',
+           'What is a cake ?',
+           'Describe a house ?',
+           'What is the meaning of den ',
+           'can you tell me the meaning of trouble ',
+       ],
+       'Irrelevant': ['the weather is fine todaythe sun rises in the east'
+           , 'the quick brown fox jumps over the red carpet',
+                      'This is some next level shit',
+                      'What is love , baby dont hurt me ',
+                      'Bahubali ne kattappa ko kyun mara'],
+   }
+
+
+Now we will add some entities here . Note that we dont have any interesting entities here . We have only added entities to help the bot identify certain
+intents like Laughter and Greetings
+
+.. code:: python
+
+   entityExamples = {
+    "GreetingsHelper": {
+        "wsup": [
+            {
+                "tag": "case-insensitive",
+                "pattern": "\s[w]*[a]*[s] [u] [p] \s",
+                "type": "regex",
+            }
+        ],
+        "hi": [{"tag": "case-insensitive", "pattern": "\s[h] [i] \s", "type": "regex"}],
+        "hello": [
+            {
+                "tag": "case-insensitive",
+                "pattern": "\s[h] [e] [l] [o] \s",
+                "type": "regex",
+            }
+        ],
+    },
+    "LaughterHelper": {
+        "haha": [
+            {
+                "tag": "case-insensitive",
+                "pattern": "\s(h (a|e) ) (h )?\s",
+                "type": "regex",
+            }
+        ],
+        "happysmily": [
+            {"tag": "case-insensitive", "pattern": "\s\:\)\s", "type": "regex"}
+        ],
+    },
+    "CoolHelper": {
+        "cool": [{"tag": "case-insensitive", "pattern": "\sc oo l \s", "type": "regex"}]
+    },
+    "ByeHelper": {
+        "bye": [
+            {
+                "tag": "case-insensitive",
+                "pattern": "\s(goo d)?b y e \s",
+                "type": "regex",
+            }
+        ]
+    },
+   }
+
+Now that we are done with the entities and intents lets setup the basic bot responses .
+
+.. code:: python
+
+   botMessages = {
+       "basic": {
+           "Greetings": {
+               "basic": [
+                   "Hello ! What can i do for you ?",
+                   "Hi there ! what can I do for you ?",
+                   "Hello",
+               ]
+           },
+           "Age": {"basic": ["I am two years old ", "I am two"]},
+           "BotName": {"basic": ["I am riko", "You can call me riko"]},
+           "Abilities": {
+               "basic": [
+                   "I am learning to make basic conversation ! \n ... and i can tell you a couple of jokes :) "
+               ]
+           },
+           "BirthPlace": {
+               "basic": [
+                   "I am from Punjab , india",
+                   "I am punjabi",
+                   "I am punjabi and i love food",
+               ]
+           },
+           "Really": {"basic": ["To the best of my knowledge", "Im positive !"]},
+           "Laughter": {
+               "basic": [
+                   "Im glad i was able to make you smile !",
+                   "See I can be funny !",
+                   "And they say I dont have a sense of humor :)",
+               ]
+           },
+           "Sarcasm": {"basic": ["oh ..", ":("]},
+           "Cool": {"basic": ["cool", "thanks"]},
+           "Bye": {"basic": ["Bubye !", "Bye ! nice chatting with you !"]},
+           "Confirm": {"basic": ["cool "]},
+           "Discard": {"basic": ["No it is then", "agreed , no it is ."]},
+           "TrueT": {"basic": ["I know right", "that makes me "]},
+           "FalseT": {"basic": ["Im still learning ... I sometimes make mistakes "]},
+           "Praise": {
+               "basic": ["Thanks ! now i think ill blush ", "So nice of you to say that !"]
+           },
+           "Relatives": {"basic": ["Umm no i dont really have any relatives :)"]},
+           "Thanks": {"basic": ["Dont mention it ", " Im glad , please dont mention it"]},
+           "Joke": {
+               "basic": [
+                   """
+
+    Sure here is one
+    {0}""".format(
+                       el.replace(
+                           "...",
+                           """
+
+   """,
+                       )
+                   )
+                   for el in [
+                       "What did one pirate say to the other when he beat him at chess? Checkmatey.",
+                       "I burned 2000 calories today<>I left my food in the oven for too long.",
+                   ]
+               ]
+           },
+           "Question": {"basic": ["i dont know !"]},
+           "Irrelevant": {
+               "basic": [
+                   "Im sorry Im not getting you :( ",
+                   "Im sorry could you please rephrase ?",
+               ]
+           },
+       },
+       "funky": {
+           "Greetings": {
+               "basic": ["Hey Yo Wassup Bro What can i do for ya ?", "Heyo what ya want ?"]
+           },
+           "Abilities": {"basic": ["Yo I can get ya somethin to eat "]},
+       },
+       "cowboy": {
+           "Greetings": {
+               "basic": [
+                   "Howdy partner what can i do for you greenhorn",
+                   " Howdy ! Pleasure meeting ya ?",
+               ]
+           },
+           "Abilities": {
+               "basic": ["You up for some food ? cause i can help you with that "]
+           },
+       },
+   }
+
+
+
+Now lets define the bot . To do that you must always define the reason method in the bot class.
+
+.. code:: python
+
+   from Bot import Bot
+   class NewBot(Bot):
+
+       def reason(self):
+
+           # # find current dialogNumber
+
+           currentDialogNumber = self.contextManager.context['dialogs'][-1]
+
+           currentTopIntent = self.contextManager.findCurrentTopIntent()
+
+           currentEntities = self.contextManager.findCurrentEntities()
+
+           output = []
+
+           if currentTopIntent['confidence'] < self.confidenceLimit \
+                   or currentTopIntent['name'] == 'Irrelevant':
+               currentTopIntent = {}
+
+           if currentTopIntent:
+
+               # #
+               # # Rule For All
+               # #
+               # if currentTopIntent["name"]=="Greetings":
+               # #
+               # # Person is greeting
+               # #
+
+               name = currentTopIntent['name'].split('_')[0]
+               reply = {'tag': '{0}.basic'.format(name), 'data': None}
+
+               # "message":""
+
+               output.append(reply)
+           else:
+
+               # #
+               # #
+               # # Rule for irrelevant
+               # #
+               # #
+
+               irrelevant = {'tag': 'Irrelevant.basic', 'data': None}
+
+               output.append(irrelevant)
+
+           return output
+
+   newB = NewBot(intentExamples, entityExamples, botMessages,
+                 confidenceLimit=0)
+
+Once we have defined the bot, lets run it !
+
+.. code:: python
+
+   outputTheme = 'basic'
+
+   print('Type @@ to exit bot ,@i to get intents ,@c to get context')
+   while True:
+
+       inputMessage = input('User : ')
+
+       if inputMessage == '@@':
+           break
+       elif inputMessage == '@i':
+           print('Bot Intents: ')
+           print(json.dumps(newB.getBotConfidence(), indent=2))
+       elif inputMessage == '@c':
+           print('Bot Context: ')
+           print(json.dumps(newB.getBotContext(), indent=2))
+       else:
+           inputMessage = ' {0} '.format(inputMessage)
+           output = newB.getBotOutput(inputMessage, outputTheme)
+           print('{0}Bot : {1}'.format(outputTheme, output))
+---------
+
+
+
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

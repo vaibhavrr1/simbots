@@ -2,4 +2,8 @@ Simple bots or Simbots is a library designed to create simple bots using the pow
 model to create bots . It uses a multinomial NB classifier to create intent classifiers.
 
 
-you can check out the documentation [here](https://vaibhavrr1.github.io/simbots/index.html)
+Links
+ 
+ 1) [Documentation](https://vaibhavrr1.github.io/simbots/index.html) 
+ 2) [pypi] (https://pypi.org/project/simbots/)
+ 3) [github](https://github.com/vaibhavrr1/simbots)
