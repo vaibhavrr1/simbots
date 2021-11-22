@@ -4,6 +4,9 @@ from objectpath import Tree
 import datetime
 
 class ContextManager():
+    """
+    Context handler class, This maintains context as a dict and also as a Object Path tree, to facilitate searching within the context
+    """
 
     def __init__(self,entitiesExtractorJson,allIntentExamples):
 
@@ -21,10 +24,18 @@ class ContextManager():
         self.contextTree = Tree(self.context)
 
     def setNewContext(self,newContext):
+        """
+        Deletes the old context and sets a new one .
+        :param newContext: the new context object as json
+
+        """
         self.context = newContext
         self.contextTree =Tree(self.context)
 
     def clearContext(self):
+        """
+        Clears context
+        """
         context = {
             "entities": [],
             "intents": [],
@@ -36,6 +47,18 @@ class ContextManager():
 
 
     def updateDialog(self,message,type="input"):
+        """
+        Updates the context by
+        1) Computing all entities present in the message
+        2) Extracting all intents in the message
+        3) Updating the current dialog number
+        4) Updating messages in the context
+
+
+        :param message: Message text
+        :param type: message type : "input" or "output"
+
+        """
 
         if type =="input":
             # for input
@@ -71,6 +94,12 @@ class ContextManager():
         self.contextTree =Tree(self.context)
 
     def findStuff(self,filter=None,stuff="intents"):
+        """
+        Basic method to search a particular part of the context ie Intent, Entities, Message
+        :param filter: dict of terms to search
+        :param stuff: part of context that needs to be searched ie Intent, Entities, Message
+        :return: matched values as list
+        """
         matchedStuff=[]
         if filter:
             # $.intss[@.foo is 1][@.bar is b]
@@ -87,6 +116,10 @@ class ContextManager():
         return matchedStuff
 
     def findCurrentTopIntent(self):
+        """
+        Find the the top intent in the current message
+        :return: topIntent: the Top intent ie intent with rank 1
+        """
         # Find current dialog number
         currentDialogNumber = self.context["dialogs"][-1]
 
@@ -103,6 +136,10 @@ class ContextManager():
         return topIntent
 
     def findCurrentEntities(self):
+        """
+        Find the entities detected in the current message
+        :return: currentEntities : the entities detected in the current message as list
+        """
         # Find current dialog number
         currentDialogNumber = self.context["dialogs"][-1]
 
@@ -114,6 +151,12 @@ class ContextManager():
 
     @staticmethod
     def findObjectInStuff(stuff,filter):
+        """
+        Generalised method to search within any given dictionary using objectPath library
+        :param stuff: the dictionary where the object is to be searched
+        :param filter: the filter
+        :return: list of matched objects
+        """
 
         allStuff={
             "allStuff":stuff,

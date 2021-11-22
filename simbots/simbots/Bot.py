@@ -4,8 +4,7 @@ from .Context import ContextManager
 
 class Bot():
     """
-    Whenever a new bot is created it will inherit from the Bot class. Always overwrite the reason method with your own
-    bot logic
+    Whenever a new bot is created it will inherit from the Bot class.
 
     """
 
@@ -13,9 +12,9 @@ class Bot():
         """
 
         :param intentExamples: The Intents need to be in a json format as accepted by IntentsHandler
-        :param entityExamples:
-        :param templates:
-        :param confidenceLimit:
+        :param entityExamples: The Entities need to be in a json format as accepted by entities handler
+        :param templates:  Bot output message templates
+        :param confidenceLimit: Confidence limit for any intent to be accepted
         """
 
         contextManager = ContextManager(allIntentExamples=intentExamples, entitiesExtractorJson=entityExamples)
@@ -24,10 +23,35 @@ class Bot():
         self.templates = templates
         self.confidenceLimit = confidenceLimit
 
-    def updateConversation(self, message):
+    def updateConversationInputs(self, message):
+        """
+        Update the conversation by updating the context with the input message
+        :param message:
+        :return:
+        """
         self.contextManager.updateDialog(message)
 
+    def updateConversationOutputs(self,message):
+        """
+        Update the conversation by updating the context with the output message
+        :param message:
+        :return:
+        """
+        self.contextManager.updateDialog(message,"output")
+
+
     def reason(self):
+        """
+        Bot reasoning is done here , use bot intents and entities to create message logic here
+
+        :return:
+        Should return a list of
+        {
+        "tag": Used to identify output message from the template
+        "data": To be used to fill the missing attributes in message to generate the complete message
+        }
+
+        """
 
         ## find current dialogNumber
 
@@ -75,6 +99,12 @@ class Bot():
         return output
 
     def say(self, output, outputTheme):
+        """
+        Generate bot output message by adding message to the output components
+        :param output:
+        :param outputTheme:
+        :return:
+        """
 
         botSpeech = []
 
@@ -86,27 +116,45 @@ class Bot():
             data = component["data"]
             if data:
                 message = message.format(data)
+
+
             botSpeech.append(message)
+
+
 
         return botSpeech
 
     def getBotContext(self):
+        """
+        Returns bot context
+        :return: context as json
+        """
         return self.contextManager.context
 
     def getBotConfidence(self):
+        """
+        Returns the bot confidence as list of tuples
+        :return: [(intentName,intentConfidence) ..]
+        """
         currentDialogNumber = self.contextManager.context["dialogs"][-1]
         return [(elem["name"], elem["confidence"]) for elem in
                 self.contextManager.findStuff(filter={"dialogNumber": currentDialogNumber}, stuff="intents")]
 
     def getBotOutput(self, message, outputTheme):
-        # update the conversation
-        self.updateConversation(message)
+        # update the conversation with Inputs
+        self.updateConversationInputs(message)
 
         # reason
         output = self.reason()
 
         # say
         messages = self.say(output, outputTheme)
+
+        # update the conversation with Outputs
+        for message in messages:
+            self.updateConversationOutputs(message)
+
+
 
         return "\n".join(messages)
 

@@ -588,6 +588,7 @@ Once we have defined the bot, lets run it !
            inputMessage = ' {0} '.format(inputMessage)
            output = newB.getBotOutput(inputMessage, outputTheme)
            print('{0}Bot : {1}'.format(outputTheme, output))
+
 ---------
 
 

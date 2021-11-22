@@ -7,6 +7,9 @@ from sklearn import metrics
 import copy
 
 class Intent(ABC):
+    """
+    The abstract method for any intent.
+    """
 
     @abstractmethod
     def __init__(self, intentName="Irrelevant",allIntentExamples=None, entityHandler=None,testSize=0.25,vocab=None):
@@ -33,9 +36,11 @@ class Intent(ABC):
 
         """
 
-        Substitutes all the training examples with the entity classes
+        For certain types of classifiers it is helpful to have entities substituted
+        Whenever a new intent is trained , all the entitiy values in the message texts get replaced by the entity kind values.
+        This is to help training the intents . Note that you can define certain entities to help increase the accuracy of intent
 
-        :return:
+
         """
 
         allIntentExamplesSubstituted = {}
@@ -52,15 +57,34 @@ class Intent(ABC):
 
     @abstractmethod
     def createIntent(self,clfName=None):
+        """
+
+        Method to create intent will be overridden in the derived class
+
+        :param clfName: Classifier Name
+        :return: the inherited class should return a classifier
+
+        """
         pass
 
     @staticmethod
     @abstractmethod
     def train(X_train, y_train, params = None):
+        """
+
+        :param X_train: Training examples
+        :param y_train: Training labels
+        :param params: Any additional parameters that may be needed can be defined here
+        :return:
+
+        """
         pass
 
 
 class MultinomialNBIntent(Intent):
+    """
+    Uses Multinomial Naive bayes classifier for intent training.
+    """
 
     def __init__(self,intentName="Irrelevant",allIntentExamples=None,entityHandler = None,vocab=None):
         """
@@ -75,6 +99,7 @@ class MultinomialNBIntent(Intent):
 
     def substituteAllEntitiesInAllTrainingExamples(self):
         """
+        No changes made to
 
         :return:
         """
@@ -82,12 +107,12 @@ class MultinomialNBIntent(Intent):
 
 
     def createVocab(self):
+        """
+        This function creates the vocab for intent and updates the intent vocabulary
+        :return:
+        count_vect : This returns a fitted Countvectorizer object
+        """
 
-        ##
-        ##
-        ## this function creates the vocabulary for the BOW /
-        ##
-        ##
         ##
         ## Initialise the Count Vectoriser
         ##
@@ -106,19 +131,28 @@ class MultinomialNBIntent(Intent):
         return count_vect
 
     def createDataSetForIntent(self):
+        """
+        Creates the data set for the intent model
+        :return:
+        X_train: training sentences asn list
+        X_test: testing sentences as list
+        X : all sentences as list
+        y_train: train set labels
+        y_test: testset labels
+        y : the complete  sample labels (including the training and the testing sets)
 
+        """
         ##
         ## if output is 1 means intent is present else not
         ##
         allIntentExamplesCopy = copy.deepcopy(self.allIntentExamples)
 
         intentSamples = allIntentExamplesCopy[self.intentName]
-        #
-        # pop the intent from json
-        #
+
         allIntentExamplesCopy.pop(self.intentName, None)
         nonIntentSamples = [intentExample for intentExamples in allIntentExamplesCopy.values() for intentExample in
                             intentExamples]
+
         Y = [1 for i in range(len(intentSamples))] + [0 for i in range(len(nonIntentSamples))]
         intentSamples.extend(nonIntentSamples)
         X = copy.deepcopy(intentSamples)
@@ -126,13 +160,20 @@ class MultinomialNBIntent(Intent):
         ##
         ## stratify split the dataset to maintain class balance
         ##
-
         X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=self.testSize, stratify=Y, random_state=2020)
 
         return X_train, X_test, X, y_train, y_test, Y
 
     @staticmethod
     def train(X_train, y_train, params = None):
+        """
+        Train the intent model
+
+        :param X_train: Training sentences
+        :param y_train: Training labels
+        :param params: None
+        :return: trained classifier
+        """
         vectorizer = params["vectorizer"]
         X_trainCount = vectorizer.transform(X_train)
         clf = MultinomialNB()
@@ -141,6 +182,16 @@ class MultinomialNBIntent(Intent):
 
     @staticmethod
     def predictClassifierOutput(clf, X, count_vect):
+        """
+        Make predictions on the trained intent
+        :param clf: trained classifier
+        :param X: The sample for prediction
+        :param count_vect: count vectoriser for the classifier
+        :return:
+
+        predictions: predicted class
+        probabilities: probablities for the predicted class
+        """
         X_count = count_vect.transform(X)
         predictions = clf.predict(X_count)
         probabilities = clf.predict_proba(X_count)
@@ -148,14 +199,40 @@ class MultinomialNBIntent(Intent):
 
 
     def getIntentProbability(self, userMessage):
+        """
+        Get the intent probability
+        :param userMessage: Text message from the user
+        :return: {
+        "name": classifier name
+        "confidence": classifier confidence
+        }
+        """
         userMessage = [userMessage]
         predictions, probabilities = self.predictClassifierOutput(self.classifier["classifier"], userMessage,
                                                              self.classifier["data"]["countVect"])
 
-        # print probabilities
+
         return {"name": self.classifier["name"], "confidence": probabilities[0][1]}
 
     def createIntent(self, clfName=None):
+        """
+
+        :param clfName: Classifier Name , if not provided , will default to intentName+'_multinomialNbClassifier'
+        :return: classifier
+
+        classifier = {
+            "name": Classifier name,
+            "classifier": Classifier Object,
+            "expectedAccuracy": Training accuracy achieved by the intent,
+            "data": {
+                "countVect": count vectoriser ,
+                "trainedOnX": Training samples,
+                "trainedOnY": Training labels
+            }
+
+
+
+        """
         if not clfName:
             clfName = self.intentName + "_multinomialNbClassifier"
 
@@ -198,6 +275,9 @@ class MultinomialNBIntent(Intent):
 
 
 class IntentsHandler():
+    """
+    Class for creating and handling multiple intents
+    """
 
     def __init__(self,allIntentExamples=None, entityHandler=None):
 
@@ -209,6 +289,11 @@ class IntentsHandler():
 
 
     def intentSamplesAugment(self):
+        """
+        Function to augment intent samples
+
+
+        """
         # Write a better function for this
         for i in range(4):
             for key in self.allIntentExamples:
@@ -218,6 +303,10 @@ class IntentsHandler():
 
 
     def createAllTrainedIntents(self):
+        """
+        Creates trained intents and sets self.trained
+
+        """
 
         allIntentExamplesCopy = copy.deepcopy(self.allIntentExamples)
 
@@ -242,12 +331,25 @@ class IntentsHandler():
 
 
     def getMessageIntents(self, message,dialogNumber=0):
+        """
+
+        :param message: Message Text
+        :param dialogNumber:  The current dialog number
+        :return:
+        list of [{
+        "name": classifier name
+        "confidence": Classifier confidence
+        "dialogNumber": Current dialog number
+        "rank": Classifier rank
+        }]
+        """
 
         if self.entityHandler:
+            # substitute message entities if they are available
             message = self.entityHandler.substituteAllEntities(message)
 
         if self.trained:
-            allIntents=sorted([trainedIntent.getIntentProbability(message) for trainedIntent in self.trainedIntentArray],
+            allIntents = sorted([trainedIntent.getIntentProbability(message) for trainedIntent in self.trainedIntentArray],
                       key=lambda x: x["confidence"], reverse=True)
 
             allIntentsDialogCounterUpdated=[]
@@ -260,7 +362,7 @@ class IntentsHandler():
 
             return allIntentsDialogCounterUpdated
         else:
-            return "error"
+            return "model not trained"
 
 
 
