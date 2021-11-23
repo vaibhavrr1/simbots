@@ -513,7 +513,7 @@ Now lets define the bot . To do that you must always define the reason method in
 
 .. code:: python
 
-   from Bot import Bot
+   from simbots.Bot import Bot
    class NewBot(Bot):
 
        def reason(self):
