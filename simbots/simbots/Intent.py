@@ -290,16 +290,16 @@ class IntentsHandler():
 
     def intentSamplesAugment(self):
         """
-        Function to augment intent samples
+        Function to augment intent samples ,making sure each intent is atleast 100 samples long
 
 
         """
-        # Write a better function for this
-        for i in range(4):
-            for key in self.allIntentExamples:
+
+        for key in self.allIntentExamples:
+            while len(self.allIntentExamples[key]) < 100:
                 self.allIntentExamples[key].extend(self.allIntentExamples[key])
-                if len(self.allIntentExamples[key]) < 20:
-                    self.allIntentExamples[key].extend(self.allIntentExamples[key])
+
+
 
 
     def createAllTrainedIntents(self):

@@ -1,6 +1,14 @@
 simbots package
 ===============
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   simbots.utils
+
 Submodules
 ----------
 
