@@ -35,11 +35,7 @@ class EntitySamples():
         """
         :return:
 
-        {'haha': [{'tag': 'case-insensitive',
-                             'pattern': "\s(h+(a|e)+)+(h+)?\s",
-                             'type': 'regex'}],
-                   'happysmily': [{'tag': 'case-insensitive',
-                                   'pattern': "\s\:\)\s", 'type': 'regex'}]}
+        {'haha': [{'tag': 'case-insensitive','pattern': "\s(h+(a|e)+)+(h+)?\s",'type': 'regex'}],'happysmily': [{'tag': 'case-insensitive','pattern': "\s\:\)\s", 'type': 'regex'}]}
         """
 
         return {'haha': [{'tag': 'case-insensitive',
@@ -53,21 +49,16 @@ class EntitySamples():
         """
         :return:
 
-        {'cool': [{'tag': 'case-insensitive',
-                         'pattern': "\sc+oo+l+\s", 'type': 'regex'}]}
-
+        {'cool': [{'tag': 'case-insensitive','pattern': "\sc+oo+l+\s", 'type': 'regex'}]}
 
         """
-        return {'cool': [{'tag': 'case-insensitive',
-                             'pattern': "\sc+oo+l+\s", 'type': 'regex'}]}
+        return {'cool': [{'tag': 'case-insensitive','pattern': "\sc+oo+l+\s", 'type': 'regex'}]}
 
     @staticmethod
     def byeHelper():
         """
         :return:
-        {'bye': [{'tag': 'case-insensitive',
-                           'pattern': "\s(goo+d)?b+y+e+\s", 'type': 'regex'}]}
+        {'bye': [{'tag': 'case-insensitive','pattern': "\s(goo+d)?b+y+e+\s", 'type': 'regex'}]}
 
         """
-        return {'bye': [{'tag': 'case-insensitive',
-                           'pattern': "\s(goo+d)?b+y+e+\s", 'type': 'regex'}]}
+        return {'bye': [{'tag': 'case-insensitive','pattern': "\s(goo+d)?(b+u+)?b+y+e+\s", 'type': 'regex'}]}

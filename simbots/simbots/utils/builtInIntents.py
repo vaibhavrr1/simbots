@@ -246,6 +246,12 @@ class IntentSamples():
         'I really think you are amazing',
         'You are absolutely fantastic',
         'Thats Incredible',
+        "you are awesome buddy !",
+        "this is awesome ",
+        "talking to you is awesome",
+        " i believe you are awesome !!",
+        "pretty awesome my friend !",
+        "thanks for being so awesome !!"
         'How Extraordinary !',
         'Far Out ! ',
         'Great ! ',

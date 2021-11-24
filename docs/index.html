@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to Simbots’s documentation! &#8212; simbots 0.0.16 documentation</title>
+    <title>Welcome to Simbots’s documentation! &#8212; simbots 0.0.17 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -58,7 +58,7 @@
       
       
       
-      <h1 class="site-logo" id="site-title">simbots 0.0.16 documentation</h1>
+      <h1 class="site-logo" id="site-title">simbots 0.0.17 documentation</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -159,10 +159,30 @@
   <a class="reference internal nav-link" href="#">
    Welcome to Simbots’s documentation!
   </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#installation">
+   Installation
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#usage-guide">
+   Usage Guide
+  </a>
   <ul class="visible nav section-nav flex-column">
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#quick-start">
      Quick Start
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-more-responsive-bot">
+     A more responsive bot
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#modules">
+     Modules
     </a>
    </li>
   </ul>
@@ -187,29 +207,17 @@
 <h1>Welcome to Simbots’s documentation!<a class="headerlink" href="#welcome-to-simbots-s-documentation" title="Permalink to this headline">¶</a></h1>
 <p>Simple bots or Simbots is a library designed to create simple bots using the power of python. This library utilises Intent, Entity , Relation and Context
 model to create bots . It uses a multinomial NB classifier to create intent classifiers.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="simbots.html">simbots package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="simbots.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="simbots.utils.html">simbots.utils package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="simbots.utils.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="simbots.utils.html#module-simbots.utils.builtInEntities">simbots.utils.builtInEntities module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="simbots.utils.html#module-simbots.utils.builtInIntents">simbots.utils.builtInIntents module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="simbots.utils.html#module-simbots.utils">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="simbots.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="simbots.html#module-simbots.Bot">simbots.Bot module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="simbots.html#module-simbots.Context">simbots.Context module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="simbots.html#module-simbots.Entity">simbots.Entity module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="simbots.html#module-simbots.Intent">simbots.Intent module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="simbots.html#module-simbots">Module contents</a></li>
-</ul>
-</li>
-</ul>
 </div>
+<div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>To install simply do</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install simbots
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage-guide">
+<h1>Usage Guide<a class="headerlink" href="#usage-guide" title="Permalink to this headline">¶</a></h1>
+<p>Lets start building some bots</p>
 <div class="section" id="quick-start">
 <h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
 <p>In this Example we will set up a simple bot which can answer basic questions like</p>
@@ -452,7 +460,10 @@ say method.</p>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">Bot : </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputTheme</span><span class="p">,</span> <span class="n">output</span><span class="p">))</span>
 </pre></div>
 </div>
+</div>
 <hr class="docutils" />
+<div class="section" id="a-more-responsive-bot">
+<h2>A more responsive bot<a class="headerlink" href="#a-more-responsive-bot" title="Permalink to this headline">¶</a></h2>
 <p>Now heres the bot with a number of intents and entities added</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">simbots.Bot</span> <span class="kn">import</span> <span class="n">Bot</span>
 <span class="kn">from</span> <span class="nn">simbots.utils.builtInIntents</span> <span class="kn">import</span> <span class="n">IntentSamples</span>
@@ -618,7 +629,62 @@ say method.</p>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">Bot : </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputTheme</span><span class="p">,</span> <span class="n">output</span><span class="p">))</span>
 </pre></div>
 </div>
+<p>Some conversations with this bot :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Type @@ to <span class="nb">exit</span> bot ,@i to get intents ,@c to get context
+User : hi
+themeBasicBot : Hello ! What can i <span class="k">do</span> <span class="k">for</span> you ?
+User : who are you ?
+themeBasicBot : I am riko
+User : hey riko
+themeBasicBot : Hello ! What can i <span class="k">do</span> <span class="k">for</span> you ?
+User : what can you <span class="k">do</span> ?
+themeBasicBot : I am learning to make basic conversation !
+ ... and i can tell you a couple of jokes :<span class="o">)</span>
+User : tell me one <span class="k">then</span>
+themeBasicBot :
+
+ Sure here is one
+ I burned <span class="m">2000</span> calories today&lt;&gt;I left my food <span class="k">in</span> the oven <span class="k">for</span> too long.
+User : hahaha
+themeBasicBot : Im glad i was able to make you smile !
+User : thats awesome
+themeBasicBot : thanks
+User : <span class="k">do</span> you have a sister ?
+themeBasicBot : Umm no i dont really have any relatives :<span class="o">)</span>
+User : oh ok
+themeBasicBot : cool
+User : bye
+themeBasicBot : Bye ! nice chatting with you !
+User : @@
+Process finished with <span class="nb">exit</span> code <span class="m">0</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="simbots.html">simbots package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="simbots.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simbots.utils.html">simbots.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="simbots.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="simbots.utils.html#module-simbots.utils.builtInEntities">simbots.utils.builtInEntities module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="simbots.utils.html#module-simbots.utils.builtInIntents">simbots.utils.builtInIntents module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="simbots.utils.html#module-simbots.utils.exceptions">simbots.utils.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="simbots.utils.html#module-simbots.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simbots.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simbots.html#module-simbots.Bot">simbots.Bot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simbots.html#module-simbots.Context">simbots.Context module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simbots.html#module-simbots.Entity">simbots.Entity module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simbots.html#module-simbots.Intent">simbots.Intent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simbots.html#module-simbots">Module contents</a></li>
+</ul>
+</li>
+</ul>
 </div>
 </div>
 </div>

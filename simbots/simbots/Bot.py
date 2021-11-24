@@ -14,7 +14,7 @@ class Bot():
         :param intentExamples: The Intents need to be in a json format as accepted by IntentsHandler
         :param entityExamples: The Entities need to be in a json format as accepted by entities handler
         :param templates:  Bot output message templates
-        :param confidenceLimit: Confidence limit for any intent to be accepted
+        :param confidenceLimit: Confidence limit for any intent to be accepted to generate a response
         """
 
         contextManager = ContextManager(allIntentExamples=intentExamples, entitiesExtractorJson=entityExamples)

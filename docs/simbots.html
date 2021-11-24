@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>simbots package &#8212; simbots 0.0.16 documentation</title>
+    <title>simbots package &#8212; simbots 0.0.17 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -59,7 +59,7 @@
       
       
       
-      <h1 class="site-logo" id="site-title">simbots 0.0.16 documentation</h1>
+      <h1 class="site-logo" id="site-title">simbots 0.0.17 documentation</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -212,6 +212,7 @@
 <li class="toctree-l2"><a class="reference internal" href="simbots.utils.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simbots.utils.html#module-simbots.utils.builtInEntities">simbots.utils.builtInEntities module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simbots.utils.html#module-simbots.utils.builtInIntents">simbots.utils.builtInIntents module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simbots.utils.html#module-simbots.utils.exceptions">simbots.utils.exceptions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simbots.utils.html#module-simbots.utils">Module contents</a></li>
 </ul>
 </li>
@@ -380,15 +381,11 @@ The init method for the EntitiesHandler Class</p>
 </dl>
 <p><strong>Sample Json accepted</strong></p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span>{
-
         &quot;GreetingsHelper&quot;:{
-
             &quot;wsup&quot; : [{
                         &quot;tag&quot;:&quot;case-insensitive&quot;,
                         &quot;pattern&quot;:&quot;\s[w]*[a]*[s]+[u]+[p]+\s&quot;,
                         &quot;type&quot;:&quot;regex&quot;
-
-
             }
                     ],
             &quot;hi&quot;:[
@@ -475,8 +472,8 @@ The init method for the EntitiesHandler Class</p>
 <p><strong>kind</strong> : Here GreetingsHelper,LaughterHelper,CoolHelper,ByeHelper are entity kinds.
 also “wsup”,”hi”,”hello” are entity values assosciated with the entity kind GreetingsHelper</p>
 <p><strong>type</strong>: Only two types are supported -&gt; regex and function.</p>
-<p><strong>pattern</strong> : the pattern of the regex only used if type is regex,</p>
-<p><strong>extractor</strong>: A function that extracts the given entity from the message text,</p>
+<p><strong>pattern</strong> : the pattern of the regex, only used if type is regex,</p>
+<p><strong>extractor</strong>: A function that extracts the given entity from the message text should be present if type is function,</p>
 <p>Note that any function used should take in two arguments messageText and dialogNumber and should
 return A list of dicts of the format</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span>[{
@@ -490,7 +487,7 @@ return A list of dicts of the format</p>
 </pre></div>
 </div>
 <p><strong>substituter</strong>: A custom substitution function to substitute entity by another value, This function takes in the message text and should
-return the substituted message text</p>
+return the substituted message text this should always be present if type is “function”. should return substituted message text.</p>
 </div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Entity.EntitiesHandler.extractAllEntities">

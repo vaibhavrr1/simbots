@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>simbots.utils package &#8212; simbots 0.0.16 documentation</title>
+    <title>simbots.utils package &#8212; simbots 0.0.17 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -58,7 +58,7 @@
       
       
       
-      <h1 class="site-logo" id="site-title">simbots 0.0.16 documentation</h1>
+      <h1 class="site-logo" id="site-title">simbots 0.0.17 documentation</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -171,6 +171,11 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#module-simbots.utils.exceptions">
+   simbots.utils.exceptions module
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#module-simbots.utils">
    Module contents
   </a>
@@ -206,10 +211,7 @@
 <dd class="field-odd"><p></p>
 </dd>
 </dl>
-<dl class="simple">
-<dt>{‘bye’: [{‘tag’: ‘case-insensitive’,</dt><dd><p>‘pattern’: “s(goo+d)?b+y+e+s”, ‘type’: ‘regex’}]}</p>
-</dd>
-</dl>
+<p>{‘bye’: [{‘tag’: ‘case-insensitive’,’pattern’: “s(goo+d)?b+y+e+s”, ‘type’: ‘regex’}]}</p>
 </dd></dl>
 
 <dl class="py method">
@@ -220,10 +222,7 @@
 <dd class="field-odd"><p></p>
 </dd>
 </dl>
-<dl class="simple">
-<dt>{‘cool’: [{‘tag’: ‘case-insensitive’,</dt><dd><p>‘pattern’: “sc+oo+l+s”, ‘type’: ‘regex’}]}</p>
-</dd>
-</dl>
+<p>{‘cool’: [{‘tag’: ‘case-insensitive’,’pattern’: “sc+oo+l+s”, ‘type’: ‘regex’}]}</p>
 </dd></dl>
 
 <dl class="py method">
@@ -258,17 +257,7 @@
 <dd class="field-odd"><p></p>
 </dd>
 </dl>
-<dl>
-<dt>{‘haha’: [{‘tag’: ‘case-insensitive’,</dt><dd><blockquote>
-<div><p>‘pattern’: “s(h+(a|e)+)+(h+)?s”,
-‘type’: ‘regex’}],</p>
-</div></blockquote>
-<dl class="simple">
-<dt>‘happysmily’: [{‘tag’: ‘case-insensitive’,</dt><dd><p>‘pattern’: “s:)s”, ‘type’: ‘regex’}]}</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<p>{‘haha’: [{‘tag’: ‘case-insensitive’,’pattern’: “s(h+(a|e)+)+(h+)?s”,’type’: ‘regex’}],’happysmily’: [{‘tag’: ‘case-insensitive’,’pattern’: “s:)s”, ‘type’: ‘regex’}]}</p>
 </dd></dl>
 
 </dd></dl>
@@ -451,6 +440,16 @@
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-simbots.utils.exceptions">
+<span id="simbots-utils-exceptions-module"></span><h2>simbots.utils.exceptions module<a class="headerlink" href="#module-simbots.utils.exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="simbots.utils.exceptions.SchemaException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.utils.exceptions.</span></span><span class="sig-name descname"><span class="pre">SchemaException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.exceptions.SchemaException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised for errors in schema.</p>
 </dd></dl>
 
 </div>

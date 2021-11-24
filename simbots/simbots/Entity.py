@@ -1,6 +1,7 @@
 #from examples import entities as entitiesExtractorJson
 import re
 import json
+from simbots.utils.exceptions import SchemaException
 
 class EntitiesHandler():
     """
@@ -12,17 +13,12 @@ class EntitiesHandler():
 
         .. code-block:: json
 
-
             {
-
                     "GreetingsHelper":{
-
                         "wsup" : [{
                                     "tag":"case-insensitive",
                                     "pattern":"\s[w]*[a]*[s]+[u]+[p]+\s",
                                     "type":"regex"
-
-
                         }
                                 ],
                         "hi":[
@@ -110,9 +106,9 @@ class EntitiesHandler():
 
         **type**: Only two types are supported -> regex and function.
 
-        **pattern** : the pattern of the regex only used if type is regex,
+        **pattern** : the pattern of the regex, only used if type is regex,
 
-        **extractor**: A function that extracts the given entity from the message text,
+        **extractor**: A function that extracts the given entity from the message text should be present if type is function,
 
         Note that any function used should take in two arguments messageText and dialogNumber and should
         return A list of dicts of the format
@@ -130,7 +126,7 @@ class EntitiesHandler():
 
 
         **substituter**: A custom substitution function to substitute entity by another value, This function takes in the message text and should
-        return the substituted message text
+        return the substituted message text this should always be present if type is "function". should return substituted message text.
 
 
     """
@@ -138,6 +134,89 @@ class EntitiesHandler():
     def __init__(self,entitiesExtractorJson=None):
         if not entitiesExtractorJson:
             entitiesExtractorJson={}
+        else:
+            # validate entity schema here
+            if type(entitiesExtractorJson) != dict:
+                # check if entity is dict
+                raise SchemaException("Entities", "Entity samples",
+                                      "Entities should be specified as a dict instead got  {0} .".format(type(entitiesExtractorJson)))
+
+            for entityName in entitiesExtractorJson.keys():
+                entityContent = entitiesExtractorJson[entityName]
+                if type(entityContent) != dict:
+                    raise SchemaException("Entity", entityName,
+                                          "Entities should be specified as a dict instead got  {0} .".format(
+                                              type(entityContent)))
+                for entitySynonym in entityContent.keys():
+                    synonymContent = entityContent[entitySynonym]
+                    if type(synonymContent) != list:
+                       raise SchemaException("Entity","{0} - {1}".format(entityName,entitySynonym),"Should be a list of dicts instead got {0} of {1}".format(synonymContent,type(synonymContent))
+
+                                             )
+                    for i,synonymDefinition in enumerate(synonymContent):
+                        if type(synonymDefinition) != dict:
+                            raise SchemaException("Entity","{0} - {1}- index {2}".format(entityName,entitySynonym,i),"Should be a dict got {0} of {1}".format(synonymDefinition,type(synonymDefinition))
+
+                                             )
+                        for key in synonymDefinition.keys():
+                            if key == 'tag':
+                                value = synonymDefinition[key]
+                                if value not in ["case-insensitive","case-sensitive"]:
+                                    raise SchemaException("Entity","{0} - {1}- index {2}".format(entityName,entitySynonym,i),"allowed 'tag' values in ['case-insensitive','case-sensitive'] got {0}".format(value))
+                            if key == "type":
+                                value = synonymDefinition[key]
+                                if value not in ["regex", "function"]:
+                                    raise SchemaException("Entity",
+                                                          "{0} - {1}- index {2}".format(entityName, entitySynonym,
+                                                                                         i),
+                                                          "allowed 'type' values in ['regex', 'function'] got {0}".format(
+                                                              value))
+                            if key == "pattern":
+                                value = synonymDefinition[key]
+                                if type(value) != str:
+                                    raise SchemaException("Entity",
+                                                          "{0} - {1}- index {2}".format(entityName, entitySynonym,
+                                                                                         i),
+                                                          "pattern should be a regex got {0}".format(
+                                                              type(value)))
+                            if key =="extractor":
+                                # work more on this
+                                value = synonymDefinition[key]
+                                if not callable(value):
+                                    raise SchemaException("Entity",
+                                                          "{0} - {1}- index {2}".format(entityName, entitySynonym,
+                                                                                         i),
+                                                          "extractor should be a function got {0}".format(
+                                                              type(value)))
+                                # write extractor text here
+
+                            if "tag" not in synonymDefinition.keys():
+                                raise SchemaException("Entity",
+                                                      "{0} - {1}- index {2}".format(entityName, entitySynonym, i),
+                                                      "should have  a key called 'tag' ")
+                            if "type" not in synonymDefinition.keys():
+                                raise SchemaException("Entity",
+                                                      "{0} - {1}- index {2}".format(entityName, entitySynonym, i),
+                                                      "should have  a key called 'type' ")
+
+                            if ("tag" =='regex') and "pattern" not in synonymDefinition.keys():
+                                raise SchemaException("Entity",
+                                                      "{0} - {1}- index {2}".format(entityName, entitySynonym, i),
+                                                      "if  'tag' =='regex' you must add a key called 'pattern' with a regex value  ")
+
+                            if ("tag" =='function') and "extractor" not in synonymDefinition.keys():
+                                raise SchemaException("Entity",
+                                                      "{0} - {1}- index {2}".format(entityName, entitySynonym, i),
+                                                      "if  'tag' =='function' you must add a key called 'extractor' with a function that extracts the entities and a key called 'substituter' which is a function that substitues the message entities for more details refer documentation -> EntitiesHandler")
+
+                            if ("tag" =='function') and "substituter" not in synonymDefinition.keys():
+                                raise SchemaException("Entity",
+                                                      "{0} - {1}- index {2}".format(entityName, entitySynonym, i),
+                                                      "if  'tag' =='function' you must add a key called 'extractor' with a function that extracts the entities and a key called 'substituter' which is a function that substitues the message entities for more details refer documentation -> EntitiesHandler")
+
+
+
+
 
         self.entitiesExtractorJson=entitiesExtractorJson
 

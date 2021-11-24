@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
 import copy
+from simbots.utils.exceptions import SchemaException
 
 class Intent(ABC):
     """
@@ -281,6 +282,36 @@ class IntentsHandler():
 
     def __init__(self,allIntentExamples=None, entityHandler=None):
 
+        """
+
+        Intent Schema validation
+
+        """
+
+        if type(allIntentExamples)  != dict:
+            raise SchemaException("Intent Samples","",
+                                  "Intents should be a dict of the schema : \n "+
+                                  "{\n 'IntentName1' : list of str  ,\n 'IntentName2' : list of str \n "+"}"
+
+                                  )
+
+        for intentName in allIntentExamples.keys():
+            intentExamples = allIntentExamples[intentName]
+
+            if type(intentExamples) != list:
+                raise SchemaException("Intent",intentName ,"Intent should be a list of type str , instead intent is {0} .".format(type(intentExamples)))
+
+            for i,intentSample in enumerate(intentExamples):
+
+                if type(intentSample) != str:
+                    raise SchemaException("Intent",intentName,"Intent should be a list of type str ,instead intent sample no {0} ({1}) is {2} .".format(i,intentSample,type(intentSample)))
+
+        intentNames = allIntentExamples.keys()
+        if "Irrelevant" not in intentNames:
+            raise SchemaException("Intent Samples","No intent with the name Irrelevant .","Every bot should have an intent with the name 'Irrelevant' , not found in detected intent names .")
+        ##
+        ## Initialise intent
+        ##
         self.allIntentExamples = allIntentExamples
         self.intentSamplesAugment()
         self.entityHandler     = entityHandler
@@ -290,6 +321,7 @@ class IntentsHandler():
 
     def intentSamplesAugment(self):
         """
+
         Function to augment intent samples ,making sure each intent is atleast 100 samples long
 
 
@@ -319,7 +351,6 @@ class IntentsHandler():
         for intentName in intentNames:
             #
             # allIntentExamplesCopy = copy.deepcopy(self.allIntentExamples)
-            # print intent
             #
             trainedIntentArray.append(
                 MultinomialNBIntent(intentName=intentName,allIntentExamples=self.allIntentExamples,entityHandler=self.entityHandler,vocab=None)

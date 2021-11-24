@@ -10,13 +10,18 @@ Welcome to Simbots's documentation!
 Simple bots or Simbots is a library designed to create simple bots using the power of python. This library utilises Intent, Entity , Relation and Context
 model to create bots . It uses a multinomial NB classifier to create intent classifiers.
 
+Installation
+============
 
+To install simply do
 
-.. toctree::
-   :maxdepth: 4
+.. code:: shell
 
-   simbots
+    pip install simbots
 
+Usage Guide
+===========
+Lets start building some bots
 
 *******************
 Quick Start
@@ -287,6 +292,10 @@ Once we have defined the bot, lets run it !
 
 ---------
 
+*********************
+A more responsive bot
+*********************
+
 Now heres the bot with a number of intents and entities added
 
 .. code:: python
@@ -454,19 +463,47 @@ Now heres the bot with a number of intents and entities added
            output = newB.getBotOutput(inputMessage, outputTheme)
            print('{0}Bot : {1}'.format(outputTheme, output))
 
+Some conversations with this bot :
 
+.. code:: shell
 
+   Type @@ to exit bot ,@i to get intents ,@c to get context
+   User : hi
+   themeBasicBot : Hello ! What can i do for you ?
+   User : who are you ?
+   themeBasicBot : I am riko
+   User : hey riko
+   themeBasicBot : Hello ! What can i do for you ?
+   User : what can you do ?
+   themeBasicBot : I am learning to make basic conversation !
+    ... and i can tell you a couple of jokes :)
+   User : tell me one then
+   themeBasicBot :
 
+    Sure here is one
+    I burned 2000 calories today<>I left my food in the oven for too long.
+   User : hahaha
+   themeBasicBot : Im glad i was able to make you smile !
+   User : thats awesome
+   themeBasicBot : thanks
+   User : do you have a sister ?
+   themeBasicBot : Umm no i dont really have any relatives :)
+   User : oh ok
+   themeBasicBot : cool
+   User : bye
+   themeBasicBot : Bye ! nice chatting with you !
+   User : @@
+   Process finished with exit code 0
+
+*******************
+Modules
+*******************
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Modules:
+   :maxdepth: 4
 
-   simbots/Bot
-   simbots/Context
-   simbots/Entity
-   simbots/Intent
+   simbots
 
 
 
