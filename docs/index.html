@@ -171,6 +171,11 @@
   </a>
   <ul class="visible nav section-nav flex-column">
    <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#chatbot-terminology">
+     Chatbot Terminology
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#quick-start">
      Quick Start
     </a>
@@ -205,8 +210,8 @@
                 
   <div class="section" id="welcome-to-simbots-s-documentation">
 <h1>Welcome to Simbots’s documentation!<a class="headerlink" href="#welcome-to-simbots-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Simple bots or Simbots is a library designed to create simple bots using the power of python. This library utilises Intent, Entity , Relation and Context
-model to create bots . It uses a multinomial NB classifier to create intent classifiers.</p>
+<p>Simple bots or Simbots is a library designed to create simple text based chatbots using the power of python. This library utilises Intent, Entity , Relation and Context
+model to create bots .It uses a multinomial NB classifier to create intent classifiers. Currently only english language is supported. More classifier models and languages to come in future releases !</p>
 </div>
 <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
@@ -217,7 +222,37 @@ model to create bots . It uses a multinomial NB classifier to create intent clas
 </div>
 <div class="section" id="usage-guide">
 <h1>Usage Guide<a class="headerlink" href="#usage-guide" title="Permalink to this headline">¶</a></h1>
-<p>Lets start building some bots</p>
+<p>This usage guide will help illuminate you about chatbots !</p>
+<div class="section" id="chatbot-terminology">
+<h2>Chatbot Terminology<a class="headerlink" href="#chatbot-terminology" title="Permalink to this headline">¶</a></h2>
+<p><strong>Intent</strong>: An intent is what the user intends to say . Lets say that a user types in</p>
+<ol class="arabic simple">
+<li><p>I want a Burger.</p></li>
+<li><p>Can you get me a diet coke ?</p></li>
+<li><p>I want a pizza.</p></li>
+</ol>
+<p>In all three cases the intent is to Order Food.</p>
+<p><strong>Entity</strong>: An entity is something that adds detail to the intent . These are often keywords in the sentence.</p>
+<ol class="arabic simple">
+<li><p>I want a burger. -&gt; Entity : Burger</p></li>
+<li><p>Can you get me a diet coke ? -&gt; Entity : diet coke</p></li>
+<li><p>I want a pizza. -&gt; Entity : pizza</p></li>
+</ol>
+<p>entities have multiple properties :</p>
+<ol class="loweralpha simple">
+<li><p>“value”:the value of the entity , In the first example it is ‘Burger’.</p></li>
+<li><p>“exactValue”:the exact value that occurs within the message text. In the first example it is ‘burger’.</p></li>
+<li><p>“kind”:the kind of the entity eg in the first example  Food , and in the second one Drinks</p></li>
+<li><p>“foundAt”:[start location , end location] -&gt; [9 15] the position where it is detected in text .</p></li>
+</ol>
+<p><strong>Relation</strong>: Often entities and intents together can help one determine the meaning of a sentence but sometimes entites interact together .
+A relation is established between sentences to help bring more clarity to what the user is saying. For example:</p>
+<ol class="arabic simple">
+<li><p>I want a cheese burger or a bean burger. -&gt; here entities are cheese burger , bean burger and there is an “or” relation between these two</p></li>
+<li><p>I want a cheese burger and fries. -&gt; here entities are cheese burger , fries and there is an “and” relation between these two</p></li>
+</ol>
+<p>you can read more about chatbots <a class="reference external" href="https://chatbotsmagazine.com/">here</a></p>
+</div>
 <div class="section" id="quick-start">
 <h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
 <p>In this Example we will set up a simple bot which can answer basic questions like</p>

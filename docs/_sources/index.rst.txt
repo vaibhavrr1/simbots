@@ -7,8 +7,8 @@
 Welcome to Simbots's documentation!
 ===================================
 
-Simple bots or Simbots is a library designed to create simple bots using the power of python. This library utilises Intent, Entity , Relation and Context
-model to create bots . It uses a multinomial NB classifier to create intent classifiers.
+Simple bots or Simbots is a library designed to create simple text based chatbots using the power of python. This library utilises Intent, Entity , Relation and Context
+model to create bots .It uses a multinomial NB classifier to create intent classifiers. Currently only english language is supported. More classifier models and languages to come in future releases !
 
 Installation
 ============
@@ -21,7 +21,42 @@ To install simply do
 
 Usage Guide
 ===========
-Lets start building some bots
+This usage guide will help illuminate you about chatbots !
+
+*******************
+Chatbot Terminology
+*******************
+
+**Intent**: An intent is what the user intends to say . Lets say that a user types in
+
+1) I want a Burger.
+2) Can you get me a diet coke ?
+3) I want a pizza.
+
+In all three cases the intent is to Order Food.
+
+**Entity**: An entity is something that adds detail to the intent . These are often keywords in the sentence.
+
+1) I want a burger. -> Entity : Burger
+2) Can you get me a diet coke ? -> Entity : diet coke
+3) I want a pizza. -> Entity : pizza
+
+entities have multiple properties :
+
+a) "value":the value of the entity , In the first example it is 'Burger'.
+b) "exactValue":the exact value that occurs within the message text. In the first example it is 'burger'.
+c) "kind":the kind of the entity eg in the first example  Food , and in the second one Drinks
+d) "foundAt":[start location , end location] -> [9 15] the position where it is detected in text .
+
+
+
+**Relation**: Often entities and intents together can help one determine the meaning of a sentence but sometimes entites interact together .
+A relation is established between sentences to help bring more clarity to what the user is saying. For example:
+
+1) I want a cheese burger or a bean burger. -> here entities are cheese burger , bean burger and there is an "or" relation between these two
+2) I want a cheese burger and fries. -> here entities are cheese burger , fries and there is an "and" relation between these two
+
+you can read more about chatbots `here <https://chatbotsmagazine.com/>`_
 
 *******************
 Quick Start
