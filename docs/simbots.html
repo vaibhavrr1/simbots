@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>simbots package &#8212; simbots 0.0.17 documentation</title>
+    <title>simbots package &#8212; simbots 0.0.18 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -59,7 +59,7 @@
       
       
       
-      <h1 class="site-logo" id="site-title">simbots 0.0.17 documentation</h1>
+      <h1 class="site-logo" id="site-title">simbots 0.0.18 documentation</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -226,9 +226,23 @@
 <span id="simbots-bot-module"></span><h2>simbots.Bot module<a class="headerlink" href="#module-simbots.Bot" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="simbots.Bot.Bot">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.Bot.</span></span><span class="sig-name descname"><span class="pre">Bot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intentExamples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entityExamples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidenceLimit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.Bot.</span></span><span class="sig-name descname"><span class="pre">Bot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intentExamples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entityExamples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidenceLimit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testCases</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Whenever a new bot is created it will inherit from the Bot class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.addConversationAsTestCase">
+<span class="sig-name descname"><span class="pre">addConversationAsTestCase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caseName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialogStart</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialogEnd</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.addConversationAsTestCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function can be used to add a sample conversation in the dev mode as a test case</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dialogStart</strong> – The test case will start from this dialog number</p></li>
+<li><p><strong>dialogEnd</strong> – The test case will end at this dialog number (the current dialog is included)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.Bot.getBotConfidence">
 <span class="sig-name descname"><span class="pre">getBotConfidence</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.getBotConfidence" title="Permalink to this definition">¶</a></dt>
@@ -262,6 +276,19 @@
 “tag”: Used to identify output message from the template
 “data”: To be used to fill the missing attributes in message to generate the complete message
 }</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'basic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dev'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.run" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theme</strong> – The theme name from bot responses</p></li>
+<li><p><strong>mode</strong> – The mode in which bot is to run , currently only ‘dev’ mode is supported</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

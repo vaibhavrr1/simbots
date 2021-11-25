@@ -9,16 +9,7 @@ class EntitySamples():
         """
         :return:
 
-        {'wsup': [{'tag': 'case-insensitive',
-                   'pattern': "\s[w]*[a]*[s]+[u]+[p]+\s",
-                   'type': 'regex'}],
-         'hi': [{'tag': 'case-insensitive',
-                 'pattern': "\s[h]+[i]+\s", 'type': 'regex'}],
-         'hello': [{'tag': 'case-insensitive',
-                    'pattern': "\s[h]+[e]+[l]+[o]+\s",
-                    'type': 'regex'}]}
-
-
+        {'wsup': [{'tag': 'case-insensitive','pattern': "\s[w]*[a]*[s]+[u]+[p]+\s",'type': 'regex'}],'hi': [{'tag': 'case-insensitive','pattern': "\s[h]+[i]+\s", 'type': 'regex'}],'hello': [{'tag': 'case-insensitive','pattern': "\s[h]+[e]+[l]+[o]+\s",'type': 'regex'}]}
 
         """
         return {'wsup': [{'tag': 'case-insensitive',

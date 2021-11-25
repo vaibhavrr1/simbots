@@ -1,7 +1,7 @@
 #from examples import entities as entitiesExtractorJson
 import re
 import json
-from simbots.utils.exceptions import SchemaException
+from .utils.exceptions import SchemaException
 
 class EntitiesHandler():
     """

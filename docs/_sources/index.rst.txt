@@ -241,8 +241,8 @@ which can be switched to give varied responses.
 
 
 
-Now lets define the bot . To do that you must always define the reason method in the bot class. Depending on the usecase ou might also have to change the
-say method.
+Now lets define the bot . To do that you must always define the reason method in the bot class. Depending on the usecase you might also have to change the
+'say' method.
 
 .. code:: python
 
@@ -307,23 +307,7 @@ Once we have defined the bot, lets run it !
 
    outputTheme = 'themeBasic'
 
-   print('Type @@ to exit bot ,@i to get intents ,@c to get context')
-   while True:
-
-       inputMessage = input('User : ')
-
-       if inputMessage == '@@':
-           break
-       elif inputMessage == '@i':
-           print('Bot Intents: ')
-           print(json.dumps(newB.getBotConfidence(), indent=2))
-       elif inputMessage == '@c':
-           print('Bot Context: ')
-           print(json.dumps(newB.getBotContext(), indent=2))
-       else:
-           inputMessage = ' {0} '.format(inputMessage)
-           output = newB.getBotOutput(inputMessage, outputTheme)
-           print('{0}Bot : {1}'.format(outputTheme, output))
+   newB.run(theme = outputTheme)
 
 ---------
 
@@ -339,7 +323,6 @@ Now heres the bot with a number of intents and entities added
    from simbots.utils.builtInIntents import IntentSamples
    from simbots.utils.builtInEntities import EntitySamples
    import json
-
 
 
 
@@ -479,24 +462,9 @@ Now heres the bot with a number of intents and entities added
                  confidenceLimit=0)
 
    outputTheme = 'themeBasic'
+   newB.run(theme = outputTheme)
 
-   print('Type @@ to exit bot ,@i to get intents ,@c to get context')
-   while True:
 
-       inputMessage = input('User : ')
-
-       if inputMessage == '@@':
-           break
-       elif inputMessage == '@i':
-           print('Bot Intents: ')
-           print(json.dumps(newB.getBotConfidence(), indent=2))
-       elif inputMessage == '@c':
-           print('Bot Context: ')
-           print(json.dumps(newB.getBotContext(), indent=2))
-       else:
-           inputMessage = ' {0} '.format(inputMessage)
-           output = newB.getBotOutput(inputMessage, outputTheme)
-           print('{0}Bot : {1}'.format(outputTheme, output))
 
 Some conversations with this bot :
 

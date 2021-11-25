@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to Simbots’s documentation! &#8212; simbots 0.0.17 documentation</title>
+    <title>Welcome to Simbots’s documentation! &#8212; simbots 0.0.18 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -58,7 +58,7 @@
       
       
       
-      <h1 class="site-logo" id="site-title">simbots 0.0.17 documentation</h1>
+      <h1 class="site-logo" id="site-title">simbots 0.0.18 documentation</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -415,8 +415,8 @@ which can be switched to give varied responses.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Now lets define the bot . To do that you must always define the reason method in the bot class. Depending on the usecase ou might also have to change the
-say method.</p>
+<p>Now lets define the bot . To do that you must always define the reason method in the bot class. Depending on the usecase you might also have to change the
+‘say’ method.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Bot</span> <span class="kn">import</span> <span class="n">Bot</span>
 <span class="k">class</span> <span class="nc">NewBot</span><span class="p">(</span><span class="n">Bot</span><span class="p">):</span>
 
@@ -476,23 +476,7 @@ say method.</p>
 <p>Once we have defined the bot, lets run it !</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">outputTheme</span> <span class="o">=</span> <span class="s1">&#39;themeBasic&#39;</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Type @@ to exit bot ,@i to get intents ,@c to get context&#39;</span><span class="p">)</span>
-<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-
-    <span class="n">inputMessage</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;User : &#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">inputMessage</span> <span class="o">==</span> <span class="s1">&#39;@@&#39;</span><span class="p">:</span>
-        <span class="k">break</span>
-    <span class="k">elif</span> <span class="n">inputMessage</span> <span class="o">==</span> <span class="s1">&#39;@i&#39;</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Bot Intents: &#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">newB</span><span class="o">.</span><span class="n">getBotConfidence</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
-    <span class="k">elif</span> <span class="n">inputMessage</span> <span class="o">==</span> <span class="s1">&#39;@c&#39;</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Bot Context: &#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">newB</span><span class="o">.</span><span class="n">getBotContext</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">inputMessage</span> <span class="o">=</span> <span class="s1">&#39; </span><span class="si">{0}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inputMessage</span><span class="p">)</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">newB</span><span class="o">.</span><span class="n">getBotOutput</span><span class="p">(</span><span class="n">inputMessage</span><span class="p">,</span> <span class="n">outputTheme</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">Bot : </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputTheme</span><span class="p">,</span> <span class="n">output</span><span class="p">))</span>
+<span class="n">newB</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">theme</span> <span class="o">=</span> <span class="n">outputTheme</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -504,7 +488,6 @@ say method.</p>
 <span class="kn">from</span> <span class="nn">simbots.utils.builtInIntents</span> <span class="kn">import</span> <span class="n">IntentSamples</span>
 <span class="kn">from</span> <span class="nn">simbots.utils.builtInEntities</span> <span class="kn">import</span> <span class="n">EntitySamples</span>
 <span class="kn">import</span> <span class="nn">json</span>
-
 
 
 
@@ -644,24 +627,7 @@ say method.</p>
               <span class="n">confidenceLimit</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">outputTheme</span> <span class="o">=</span> <span class="s1">&#39;themeBasic&#39;</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Type @@ to exit bot ,@i to get intents ,@c to get context&#39;</span><span class="p">)</span>
-<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-
-    <span class="n">inputMessage</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;User : &#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">inputMessage</span> <span class="o">==</span> <span class="s1">&#39;@@&#39;</span><span class="p">:</span>
-        <span class="k">break</span>
-    <span class="k">elif</span> <span class="n">inputMessage</span> <span class="o">==</span> <span class="s1">&#39;@i&#39;</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Bot Intents: &#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">newB</span><span class="o">.</span><span class="n">getBotConfidence</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
-    <span class="k">elif</span> <span class="n">inputMessage</span> <span class="o">==</span> <span class="s1">&#39;@c&#39;</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Bot Context: &#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">newB</span><span class="o">.</span><span class="n">getBotContext</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">inputMessage</span> <span class="o">=</span> <span class="s1">&#39; </span><span class="si">{0}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inputMessage</span><span class="p">)</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">newB</span><span class="o">.</span><span class="n">getBotOutput</span><span class="p">(</span><span class="n">inputMessage</span><span class="p">,</span> <span class="n">outputTheme</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">Bot : </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputTheme</span><span class="p">,</span> <span class="n">output</span><span class="p">))</span>
+<span class="n">newB</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">theme</span> <span class="o">=</span> <span class="n">outputTheme</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Some conversations with this bot :</p>
