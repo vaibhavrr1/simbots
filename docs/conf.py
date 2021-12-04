@@ -22,7 +22,7 @@ copyright = '2021, Vaibhav Arora'
 author = 'Vaibhav Arora'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.17'
+release = '0.0.19'
 
 
 # -- General configuration ---------------------------------------------------

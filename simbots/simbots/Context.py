@@ -5,7 +5,10 @@ import datetime
 
 class ContextManager():
     """
+
     Context handler class, This maintains context as a dict and also as a Object Path tree, to facilitate searching within the context
+    also provides functions to search within the context object
+
     """
 
     def __init__(self,entitiesExtractorJson,allIntentExamples):
@@ -30,7 +33,7 @@ class ContextManager():
 
         """
         self.context = newContext
-        self.contextTree =Tree(self.context)
+        self.updateContextTree()
 
     def clearContext(self):
         """
@@ -43,8 +46,6 @@ class ContextManager():
             "messages": []
         }
         self.setNewContext(context)
-
-
 
     def updateDialog(self,message,type="input"):
         """
@@ -93,7 +94,7 @@ class ContextManager():
         # update the tree
         self.contextTree =Tree(self.context)
 
-    def findStuff(self,filter=None,stuff="intents"):
+    def findStuff(self,_filter=None,stuff="intents"):
         """
         Basic method to search a particular part of the context ie Intent, Entities, Message
         :param filter: dict of terms to search
@@ -101,14 +102,14 @@ class ContextManager():
         :return: matched values as list
         """
         matchedStuff=[]
-        if filter:
+        if _filter:
             # $.intss[@.foo is 1][@.bar is b]
             query=["$.{0}".format(stuff)]
-            for key in filter:
+            for key in _filter:
                 if key != "confidence":
-                    query.append("[@.{0} is {1}]".format(key,filter[key]))
+                    query.append("[@.{0} is {1}]".format(key,_filter[key]))
                 else:
-                    query.append("[@.{0} > {1}]".format(key,filter[key]))
+                    query.append("[@.{0} > {1}]".format(key,_filter[key]))
 
             query="".join(query)
 
@@ -150,7 +151,7 @@ class ContextManager():
         return currentEntities
 
     @staticmethod
-    def findObjectInStuff(stuff,filter):
+    def findObjectInStuff(stuff,_filter):
         """
         Generalised method to search within any given dictionary using objectPath library
         :param stuff: the dictionary where the object is to be searched
@@ -164,11 +165,19 @@ class ContextManager():
         }
         stuffTree=Tree(allStuff)
         query=["$.allStuff"]
-        for key in filter:
-            query.append("[@.{0} is {1}]".format(key, filter[key]))
+        for key in _filter:
+            query.append("[@.{0} is {1}]".format(key, _filter[key]))
 
         query = "".join(query)
         return list(stuffTree.execute(query))
+
+    def updateContextTree(self):
+        """
+        Updates the contextTree with the current context  so that everything in the context is searchable,
+        this becomes useful when saving custom variables in context .
+
+        """
+        self.contextTree = Tree(self.context)
 
 
 

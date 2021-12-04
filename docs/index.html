@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to Simbots’s documentation! &#8212; simbots 0.0.18 documentation</title>
+    <title>Welcome to Simbots’s documentation! &#8212; simbots 0.0.19 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -58,7 +58,7 @@
       
       
       
-      <h1 class="site-logo" id="site-title">simbots 0.0.18 documentation</h1>
+      <h1 class="site-logo" id="site-title">simbots 0.0.19 documentation</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -181,8 +181,8 @@
     </a>
    </li>
    <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#a-more-responsive-bot">
-     A more responsive bot
+    <a class="reference internal nav-link" href="#a-bot-for-simple-conversation">
+     A Bot for simple conversation
     </a>
    </li>
    <li class="toc-h2 nav-item toc-entry">
@@ -417,7 +417,8 @@ which can be switched to give varied responses.</p>
 </div>
 <p>Now lets define the bot . To do that you must always define the reason method in the bot class. Depending on the usecase you might also have to change the
 ‘say’ method.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Bot</span> <span class="kn">import</span> <span class="n">Bot</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">simbots.Bot</span> <span class="kn">import</span> <span class="n">Bot</span>
+
 <span class="k">class</span> <span class="nc">NewBot</span><span class="p">(</span><span class="n">Bot</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">reason</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -481,9 +482,19 @@ which can be switched to give varied responses.</p>
 </div>
 </div>
 <hr class="docutils" />
-<div class="section" id="a-more-responsive-bot">
-<h2>A more responsive bot<a class="headerlink" href="#a-more-responsive-bot" title="Permalink to this headline">¶</a></h2>
-<p>Now heres the bot with a number of intents and entities added</p>
+<div class="section" id="a-bot-for-simple-conversation">
+<h2>A Bot for simple conversation<a class="headerlink" href="#a-bot-for-simple-conversation" title="Permalink to this headline">¶</a></h2>
+<p>Now here’s the bot with a number of intents and entities added .</p>
+<p>This will be able to answer to basic questions like</p>
+<ol class="arabic simple">
+<li><p>Hello</p></li>
+<li><p>what is your name ?</p></li>
+<li><p>Do you have any relatives</p></li>
+<li><p>What is your age ?</p></li>
+<li><p>Where were you born ?</p></li>
+<li><p>What can you do ?</p></li>
+<li><p>Tell me a joke</p></li>
+</ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">simbots.Bot</span> <span class="kn">import</span> <span class="n">Bot</span>
 <span class="kn">from</span> <span class="nn">simbots.utils.builtInIntents</span> <span class="kn">import</span> <span class="n">IntentSamples</span>
 <span class="kn">from</span> <span class="nn">simbots.utils.builtInEntities</span> <span class="kn">import</span> <span class="n">EntitySamples</span>

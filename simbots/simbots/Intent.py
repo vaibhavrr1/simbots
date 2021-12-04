@@ -296,13 +296,15 @@ class IntentsHandler():
                                   )
 
         for intentName in allIntentExamples.keys():
+            if "_" in intentName:
+                raise SchemaException("Intent", intentName,"Intent Name should not contain '_'  .")
+
             intentExamples = allIntentExamples[intentName]
 
             if type(intentExamples) != list:
                 raise SchemaException("Intent",intentName ,"Intent should be a list of type str , instead intent is {0} .".format(type(intentExamples)))
 
             for i,intentSample in enumerate(intentExamples):
-
                 if type(intentSample) != str:
                     raise SchemaException("Intent",intentName,"Intent should be a list of type str ,instead intent sample no {0} ({1}) is {2} .".format(i,intentSample,type(intentSample)))
 
@@ -322,7 +324,7 @@ class IntentsHandler():
     def intentSamplesAugment(self):
         """
 
-        Function to augment intent samples ,making sure each intent is atleast 100 samples long
+        Function to augment intent samples ,making sure each intent is at least 100 samples long
 
 
         """
@@ -363,7 +365,7 @@ class IntentsHandler():
 
     def getMessageIntents(self, message,dialogNumber=0):
         """
-
+        Get message intents for a given dialog number
         :param message: Message Text
         :param dialogNumber:  The current dialog number
         :return:

@@ -246,7 +246,8 @@ Now lets define the bot . To do that you must always define the reason method in
 
 .. code:: python
 
-   from Bot import Bot
+   from simbots.Bot import Bot
+
    class NewBot(Bot):
 
        def reason(self):
@@ -312,10 +313,21 @@ Once we have defined the bot, lets run it !
 ---------
 
 *********************
-A more responsive bot
+A Bot for simple conversation
 *********************
 
-Now heres the bot with a number of intents and entities added
+Now here's the bot with a number of intents and entities added .
+
+This will be able to answer to basic questions like
+
+1) Hello
+2) what is your name ?
+3) Do you have any relatives
+4) What is your age ?
+5) Where were you born ?
+6) What can you do ?
+7) Tell me a joke
+
 
 .. code:: python
 
