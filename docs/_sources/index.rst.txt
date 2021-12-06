@@ -83,11 +83,24 @@ How to Create Bots
 Quick Start
 *******************
 
+To create any bot we will need to define these things:
+
+1) Intents
+2) Entities
+3) Bot Templates (Reply messages)
+4) Reason
+
+What this bot will do
+**********************
+
 In this Example we will set up a simple bot which can answer basic questions like
 
 Who are you ?
 
 What is your age ?
+
+Intents
+*******
 
 Lets first setup some intent examples
 
@@ -182,6 +195,8 @@ Since these intents are frequently used in many bots therefore we have added the
     }
 
 
+Entities
+********
 
 Now we will add some entities here . Note that we dont have any interesting entities here . We have only added entities to help the bot identify certain
 intents like Greetings
@@ -217,7 +232,8 @@ Note that you can also import some commonly used entities.
     'GreetingsHelper': EntitySamples.greetingsHelper(),
     }
 
-
+Responses
+*********
 
 Now that we are done with the entities and intents lets setup the basic bot responses . Here we have created three themes (themeBasic,funky,cowboy)
 which can be switched to give varied responses.
@@ -260,6 +276,8 @@ which can be switched to give varied responses.
        },
    }
 
+Reason (Bot Logic)
+*****************
 
 
 Now lets define the bot . To do that you must always define the reason method in the bot class. Depending on the usecase you might also have to change the
@@ -339,6 +357,9 @@ A Bot for simple conversation
 
 Now here's the bot with a number of intents and entities added .
 
+What this bot will do
+**********************
+
 This will be able to answer to basic questions like
 
 1) Hello
@@ -349,6 +370,8 @@ This will be able to answer to basic questions like
 6) What can you do ?
 7) Tell me a joke
 
+Complete Code
+**********************
 
 .. code:: python
 
@@ -497,7 +520,8 @@ This will be able to answer to basic questions like
    outputTheme = 'themeBasic'
    newB.run(theme = outputTheme)
 
-
+Sample Conversations
+**********************
 
 Some conversations with this bot :
 
@@ -549,6 +573,9 @@ Reply Using Name
 Often you will need to detect names from messages and generate a reply using that name .
 There isn't any easy way to write a regex pattern to detect names .To do this you will need a Machine learning or Deep learning based solution.
 Spacy provides NER to detect person names . Of course, you can also define your own custom name detection mechanism .
+
+Entities
+**********************
 
 To start off you need to define an entity extractor and an entity substituter .
 
@@ -602,6 +629,9 @@ Next we need to create an entity for detecting names lets call it NameHelper
 
        }
 
+Intents
+**********************
+
 Also we will need to define Intents for name detection lets call it PersonName
 
 .. code:: json
@@ -609,6 +639,9 @@ Also we will need to define Intents for name detection lets call it PersonName
     {"PersonName": ["My name is Vaibhav","I am Vaibhav Arora .","You can call me Rahul ." ,
                     "I am Simon  . ","I am Riko .","You can call me Shiva . "]}
 
+
+Bot Messages
+**********************
 
 We need to write what the bot will output.
 
@@ -632,6 +665,9 @@ We need to write what the bot will output.
 
 		}
     }
+
+Reason (Bot Logic)
+**********************
 
 Lastly we need to alter the bot reason method to accomodate this
 
@@ -670,8 +706,8 @@ Lastly we need to alter the bot reason method to accomodate this
         reply = {'tag': '{0}.basic'.format(name), 'data': None}
 
 
-The complete Code will look like this
-
+The Complete Code
+*****************
 .. code:: python
 
    import spacy
@@ -922,6 +958,9 @@ The complete Code will look like this
    outputTheme = 'basic'
 
    newB.run(theme = outputTheme)
+
+Sample Conversation
+**********************
 
 Here is the output of the bot. Notice that the bot's greeting changes when you tell it your name .
 
