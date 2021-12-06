@@ -431,7 +431,7 @@ class Bot():
     ##
     ## Save Functions
     ##
-    def saveConversation(self,savePath,uid=None):
+    def saveConversation(self,savePath=None,uid=None):
 
         """
 
@@ -447,17 +447,19 @@ class Bot():
         if "conversationId" in  self.contextManager.context.keys():
             uid = self.contextManager.context["conversationId"]
 
+
         if uid is None:
             uid = str(uuid.uuid4())
 
         if savePath is None:
-            savePath = os.path.join(os.getcwd(),uid,".json")
-            data = self.contextManager.context
-            # add a conversation id
-            data["conversationId"] = uid
-            data["savedOn"] = datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
-            with open(savePath, 'w') as f:
-                json.dump(data, f)
+            savePath = os.path.join(os.getcwd(),uid)+ ".json"
+
+        data = self.contextManager.context
+        # add a conversation id
+        data["conversationId"] = uid
+        data["savedOn"] = datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+        with open(savePath, 'w') as f:
+            json.dump(data, f)
 
     def loadConversation(self,loadPath):
 

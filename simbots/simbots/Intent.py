@@ -23,8 +23,6 @@ class Intent(ABC):
 
         self.entityHandler = entityHandler
         self.allIntentExamples = allIntentExamples
-        if self.entityHandler:
-            self.substituteAllEntitiesInAllTrainingExamples()
 
         self.classifier = None
         self.vocab=vocab
@@ -33,28 +31,7 @@ class Intent(ABC):
         self.trained = False
         self.createIntent()
 
-    def substituteAllEntitiesInAllTrainingExamples(self):
 
-        """
-
-        For certain types of classifiers it is helpful to have entities substituted
-        Whenever a new intent is trained , all the entitiy values in the message texts get replaced by the entity kind values.
-        This is to help training the intents . Note that you can define certain entities to help increase the accuracy of intent
-
-
-        """
-
-        allIntentExamplesSubstituted = {}
-        allIntentExamplesCopy = copy.deepcopy(self.allIntentExamples)
-
-        for key in allIntentExamplesCopy:
-            dum = []
-            for mes in allIntentExamplesCopy[key]:
-                dum.append(self.entityHandler.substituteAllEntities(" {0} ".format(mes)))
-
-            allIntentExamplesSubstituted[key] = dum
-
-        self.allIntentExamples = allIntentExamplesSubstituted
 
     @abstractmethod
     def createIntent(self,clfName=None):
@@ -97,14 +74,6 @@ class MultinomialNBIntent(Intent):
         super().__init__(intentName=intentName,allIntentExamples=allIntentExamples,
                          entityHandler = entityHandler,testSize=0.25,vocab=vocab)
 
-
-    def substituteAllEntitiesInAllTrainingExamples(self):
-        """
-        No changes made to
-
-        :return:
-        """
-        super().substituteAllEntitiesInAllTrainingExamples()
 
 
     def createVocab(self):
@@ -235,7 +204,7 @@ class MultinomialNBIntent(Intent):
 
         """
         if not clfName:
-            clfName = self.intentName + "_multinomialNbClassifier"
+            clfName = self.intentName  # + "_multinomialNbClassifier"
 
         ##
         ## Create vocabulary
@@ -315,8 +284,10 @@ class IntentsHandler():
         ## Initialise intent
         ##
         self.allIntentExamples = allIntentExamples
+        self.entityHandler = entityHandler
+        self.substituteAllEntitiesInAllTrainingExamples()
         self.intentSamplesAugment()
-        self.entityHandler     = entityHandler
+
         self.trained    = False
         self.createAllTrainedIntents()
 
@@ -334,7 +305,28 @@ class IntentsHandler():
                 self.allIntentExamples[key].extend(self.allIntentExamples[key])
 
 
+    def substituteAllEntitiesInAllTrainingExamples(self):
 
+        """
+
+        For certain types of classifiers it is helpful to have entities substituted
+        Whenever a new intent is trained , all the entitiy values in the message texts get replaced by the entity kind values.
+        This is to help training the intents . Note that you can define certain entities to help increase the accuracy of intent
+
+
+        """
+
+        allIntentExamplesSubstituted = {}
+        allIntentExamplesCopy = copy.deepcopy(self.allIntentExamples)
+
+        for key in allIntentExamplesCopy:
+            dum = []
+            for mes in allIntentExamplesCopy[key]:
+                dum.append(self.entityHandler.substituteAllEntities(" {0} ".format(mes)))
+
+            allIntentExamplesSubstituted[key] = dum
+
+        self.allIntentExamples = allIntentExamplesSubstituted
 
     def createAllTrainedIntents(self):
         """

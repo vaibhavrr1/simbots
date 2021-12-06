@@ -7,8 +7,19 @@
 Welcome to Simbots's documentation!
 ===================================
 
-Simple bots or Simbots is a library designed to create simple text based chatbots using the power of python. This library utilises Intent, Entity , Relation and Context
-model to create bots .It uses a multinomial NB classifier to create intent classifiers. Currently only english language is supported. More classifier models and languages to come in future releases !
+Simple bots or Simbots is a library designed to create simple chat bots using the power of python. This library utilises Intent, Entity, Relation and Context
+model to create bots .
+
+Its Basic functions :-
+
+1) Uses machine learning to create Intents .
+2) Supports multiple ways of creating entities and relations .
+3) Also provides helper functions to query context stack .
+4) Provides a framework to create text based chatbots .
+5) Provides a framework to define test conversation of the bot and test it.
+6) Support saving and loading existing conversation .
+7) Support saving and loading trained Chatbot .
+
 
 Installation
 ============
@@ -276,7 +287,7 @@ Now lets define the bot . To do that you must always define the reason method in
                # # Person is greeting
                # #
 
-               name = currentTopIntent['name'].split('_')[0]
+               name = currentTopIntent['name']
                reply = {'tag': '{0}.basic'.format(name), 'data': None}
                # note if you had defined the botname response as "my name is {0}" , then you can change the botname
                # response by changing the data field here as this is set in the string.
@@ -449,7 +460,7 @@ This will be able to answer to basic questions like
                # # Person is greeting
                # #
 
-               name = currentTopIntent['name'].split('_')[0]
+               name = currentTopIntent['name']
                reply = {'tag': '{0}.basic'.format(name), 'data': None}
 
                # "message":""

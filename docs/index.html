@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to Simbots’s documentation! &#8212; simbots 0.0.19 documentation</title>
+    <title>Welcome to Simbots’s documentation! &#8212; simbots 0.0.20 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -58,7 +58,7 @@
       
       
       
-      <h1 class="site-logo" id="site-title">simbots 0.0.19 documentation</h1>
+      <h1 class="site-logo" id="site-title">simbots 0.0.20 documentation</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -210,8 +210,18 @@
                 
   <div class="section" id="welcome-to-simbots-s-documentation">
 <h1>Welcome to Simbots’s documentation!<a class="headerlink" href="#welcome-to-simbots-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Simple bots or Simbots is a library designed to create simple text based chatbots using the power of python. This library utilises Intent, Entity , Relation and Context
-model to create bots .It uses a multinomial NB classifier to create intent classifiers. Currently only english language is supported. More classifier models and languages to come in future releases !</p>
+<p>Simple bots or Simbots is a library designed to create simple chat bots using the power of python. This library utilises Intent, Entity, Relation and Context
+model to create bots .</p>
+<p>Its Basic functions :-</p>
+<ol class="arabic simple">
+<li><p>Uses machine learning to create Intents .</p></li>
+<li><p>Supports multiple ways of creating entities and relations .</p></li>
+<li><p>Also provides helper functions to query context stack .</p></li>
+<li><p>Provides a framework to create text based chatbots .</p></li>
+<li><p>Provides a framework to define test conversation of the bot and test it.</p></li>
+<li><p>Support saving and loading existing conversation .</p></li>
+<li><p>Support saving and loading trained Chatbot .</p></li>
+</ol>
 </div>
 <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
@@ -447,7 +457,7 @@ which can be switched to give varied responses.</p>
             <span class="c1"># # Person is greeting</span>
             <span class="c1"># #</span>
 
-            <span class="n">name</span> <span class="o">=</span> <span class="n">currentTopIntent</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">currentTopIntent</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
             <span class="n">reply</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.basic&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
             <span class="c1"># note if you had defined the botname response as &quot;my name is {0}&quot; , then you can change the botname</span>
             <span class="c1"># response by changing the data field here as this is set in the string.</span>
@@ -613,7 +623,7 @@ which can be switched to give varied responses.</p>
             <span class="c1"># # Person is greeting</span>
             <span class="c1"># #</span>
 
-            <span class="n">name</span> <span class="o">=</span> <span class="n">currentTopIntent</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">currentTopIntent</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
             <span class="n">reply</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.basic&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
 
             <span class="c1"># &quot;message&quot;:&quot;&quot;</span>
