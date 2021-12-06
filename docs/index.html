@@ -175,6 +175,13 @@
      Chatbot Terminology
     </a>
    </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#how-to-create-bots">
+   How to Create Bots
+  </a>
+  <ul class="visible nav section-nav flex-column">
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#quick-start">
      Quick Start
@@ -186,11 +193,16 @@
     </a>
    </li>
    <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#modules">
-     Modules
+    <a class="reference internal nav-link" href="#reply-using-name">
+     Reply Using Name
     </a>
    </li>
   </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#modules">
+   Modules
+  </a>
  </li>
  <li class="toc-h1 nav-item toc-entry">
   <a class="reference internal nav-link" href="#indices-and-tables">
@@ -261,8 +273,14 @@ A relation is established between sentences to help bring more clarity to what t
 <li><p>I want a cheese burger or a bean burger. -&gt; here entities are cheese burger , bean burger and there is an “or” relation between these two</p></li>
 <li><p>I want a cheese burger and fries. -&gt; here entities are cheese burger , fries and there is an “and” relation between these two</p></li>
 </ol>
+<p><strong>Context</strong>: Without Context any bot would only be able to reply to the message it just received and not the messages it received in the past .
+Context in the case of simbots is simply a stack of intent , entity and relations received over time. It also contains methods to query and manage the context stack.
+You can query the context method to retrieve anything in the context stack and formulate complex functionality .</p>
 <p>you can read more about chatbots <a class="reference external" href="https://chatbotsmagazine.com/">here</a></p>
 </div>
+</div>
+<div class="section" id="how-to-create-bots">
+<h1>How to Create Bots<a class="headerlink" href="#how-to-create-bots" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="quick-start">
 <h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
 <p>In this Example we will set up a simple bot which can answer basic questions like</p>
@@ -652,7 +670,15 @@ which can be switched to give varied responses.</p>
 </pre></div>
 </div>
 <p>Some conversations with this bot :</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Type @@ to <span class="nb">exit</span> bot ,@i to get intents ,@c to get context
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Type <span class="k">in</span> @@ to <span class="nb">exit</span> bot
+@i to get intents
+@c to get context
+@e to get entities
+@t to add a <span class="nb">test</span> <span class="k">case</span>
+@etc to evaluate a <span class="nb">test</span> <span class="k">case</span>
+@eatc to evaluate all <span class="nb">test</span> cases
+@ti to add intent
+
 User : hi
 themeBasicBot : Hello ! What can i <span class="k">do</span> <span class="k">for</span> you ?
 User : who are you ?
@@ -682,8 +708,393 @@ Process finished with <span class="nb">exit</span> code <span class="m">0</span>
 </pre></div>
 </div>
 </div>
+<hr class="docutils" />
+<div class="section" id="reply-using-name">
+<h2>Reply Using Name<a class="headerlink" href="#reply-using-name" title="Permalink to this headline">¶</a></h2>
+<p>Often you will need to detect names from messages and generate a reply using that name .
+There isn’t any easy way to write a regex pattern to detect names .To do this you will need a Machine learning or Deep learning based solution.
+Spacy provides NER to detect person names . Of course, you can also define your own custom name detection mechanism .</p>
+<p>To start off you need to define an entity extractor and an entity substituter .</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
+
+<span class="c1"># Load English tokenizer, tagger, parser and NER</span>
+<span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">extractor</span><span class="p">(</span><span class="n">messageText</span><span class="p">,</span><span class="n">dialogNumber</span><span class="p">):</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">messageText</span><span class="p">)</span>
+    <span class="n">extractedNamesFromText</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">ents</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">entity</span><span class="o">.</span><span class="n">label_</span> <span class="o">==</span><span class="s1">&#39;PERSON&#39;</span><span class="p">:</span>
+            <span class="n">extractedNamesFromText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+
+            <span class="p">{</span>
+                <span class="s2">&quot;value&quot;</span> <span class="p">:</span> <span class="n">entity</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+                <span class="s2">&quot;exactValue&quot;</span> <span class="p">:</span> <span class="n">entity</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+                <span class="s2">&quot;kind&quot;</span><span class="p">:</span><span class="s1">&#39;PERSON&#39;</span><span class="p">,</span>
+                <span class="s2">&quot;dialogNumber&quot;</span><span class="p">:</span> <span class="n">dialogNumber</span><span class="p">,</span>
+                <span class="s2">&quot;foundAt&quot;</span><span class="p">:[</span><span class="n">entity</span><span class="o">.</span><span class="n">start_char</span><span class="p">,</span> <span class="n">entity</span><span class="o">.</span><span class="n">end_char</span><span class="p">]</span>
+            <span class="p">}</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">extractedNamesFromText</span>
+
+
+<span class="k">def</span> <span class="nf">substituter</span><span class="p">(</span><span class="n">messageText</span><span class="p">):</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">messageText</span><span class="p">)</span>
+    <span class="n">textLabel</span> <span class="o">=</span> <span class="p">[(</span><span class="n">entity</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">entity</span><span class="o">.</span><span class="n">label_</span><span class="p">)</span> <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">ents</span> <span class="k">if</span> <span class="n">entity</span><span class="o">.</span><span class="n">label_</span><span class="o">==</span><span class="s1">&#39;PERSON&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">text</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">textLabel</span><span class="p">:</span>
+        <span class="n">messageText</span> <span class="o">=</span> <span class="n">messageText</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">messageText</span>
+</pre></div>
+</div>
+<p>Next we need to create an entity for detecting names lets call it NameHelper</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>&#39;NameHelper&#39;:{
+        &#39;personName&#39;:[{&#39;type&#39; : &#39;function&#39;,
+                       &#39;extractor&#39;: extractor,
+                       &#39;substituter&#39;:substituter,
+                       &#39;tag&#39;:&#39;case-insensitive&#39;
+        }]
+
+
+
+    }
+</pre></div>
+</div>
+<p>Also we will need to define Intents for name detection lets call it PersonName</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;PersonName&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;My name is Vaibhav&quot;</span><span class="p">,</span><span class="s2">&quot;I am Vaibhav Arora .&quot;</span><span class="p">,</span><span class="s2">&quot;You can call me Rahul .&quot;</span> <span class="p">,</span>
+                <span class="s2">&quot;I am Simon  . &quot;</span><span class="p">,</span><span class="s2">&quot;I am Riko .&quot;</span><span class="p">,</span><span class="s2">&quot;You can call me Shiva . &quot;</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>We need to write what the bot will output.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>{
+&#39;basic&#39;: {
+            &#39;Greetings&#39;: {
+                    &#39;basic&#39;: [&#39;Hello ! What can i do for you ?&#39;,
+                            &#39;Hi there ! what can I do for you ?&#39;, &#39;Hello&#39;
+                    ],
+        &quot;nameKnown&quot;:[
+            &quot;Hi {0} ! Its a pleasure to meet you !&quot;,
+            &quot;Hey {0} its a pleasure talking to you !&quot;
+        ]
+            },
+    &quot;PersonName&quot;: {
+                    &#39;basic&#39;: [&quot;Its a pleasure to meet you {0} .&quot;],
+                    &quot;nameNotFound&quot;: [&quot;Im sorry i couldn&#39;t get your name could you please write it in title case like -&gt; Riko  &quot;]
+
+
+            }
+}
+</pre></div>
+</div>
+<p>Lastly we need to alter the bot reason method to accomodate this</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># this goes in the reason method</span>
+
+<span class="n">name</span> <span class="o">=</span> <span class="n">currentTopIntent</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Greetings&#39;</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;sessionVariables&quot;</span> <span class="ow">in</span>  <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+
+    <span class="n">personName</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;sessionVariables&quot;</span><span class="p">][</span><span class="s2">&quot;PERSON&quot;</span><span class="p">]</span>
+
+    <span class="n">reply</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.nameKnown&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">personName</span><span class="p">}</span>
+
+
+<span class="k">elif</span> <span class="n">name</span> <span class="o">==</span><span class="s1">&#39;PersonName&#39;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">currentEntities</span><span class="p">)</span> <span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+
+    <span class="n">currentEntities</span> <span class="o">=</span><span class="p">[</span><span class="n">ent</span> <span class="k">for</span> <span class="n">ent</span> <span class="ow">in</span> <span class="n">currentEntities</span> <span class="k">if</span> <span class="n">ent</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">]</span> <span class="o">==</span><span class="s1">&#39;PERSON&#39;</span> <span class="ow">and</span> <span class="n">ent</span><span class="p">[</span><span class="s2">&quot;exactValue&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;riko&#39;</span><span class="p">]</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;sessionVariables&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+
+        <span class="s2">&quot;PERSON&quot;</span> <span class="p">:</span><span class="n">currentEntities</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;exactValue&quot;</span><span class="p">]</span>
+
+    <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">updateContextTree</span><span class="p">()</span>
+
+
+    <span class="n">reply</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.basic&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">currentEntities</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;exactValue&quot;</span><span class="p">]}</span>
+
+<span class="k">elif</span> <span class="n">name</span> <span class="o">==</span><span class="s1">&#39;PersonName&#39;</span><span class="p">:</span>
+
+    <span class="n">reply</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.nameNotFound&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+<span class="k">else</span><span class="p">:</span>
+     <span class="n">reply</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.basic&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>The complete Code will look like this</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
+
+<span class="c1"># Load English tokenizer, tagger, parser and NER</span>
+<span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">extractor</span><span class="p">(</span><span class="n">messageText</span><span class="p">,</span><span class="n">dialogNumber</span><span class="p">):</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">messageText</span><span class="p">)</span>
+    <span class="n">extractedNamesFromText</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">ents</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">entity</span><span class="o">.</span><span class="n">label_</span> <span class="o">==</span><span class="s1">&#39;PERSON&#39;</span><span class="p">:</span>
+            <span class="n">extractedNamesFromText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+
+            <span class="p">{</span>
+                <span class="s2">&quot;value&quot;</span> <span class="p">:</span> <span class="n">entity</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+                <span class="s2">&quot;exactValue&quot;</span> <span class="p">:</span> <span class="n">entity</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+                <span class="s2">&quot;kind&quot;</span><span class="p">:</span><span class="s1">&#39;PERSON&#39;</span><span class="p">,</span>
+                <span class="s2">&quot;dialogNumber&quot;</span><span class="p">:</span> <span class="n">dialogNumber</span><span class="p">,</span>
+                <span class="s2">&quot;foundAt&quot;</span><span class="p">:[</span><span class="n">entity</span><span class="o">.</span><span class="n">start_char</span><span class="p">,</span> <span class="n">entity</span><span class="o">.</span><span class="n">end_char</span><span class="p">]</span>
+            <span class="p">}</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">extractedNamesFromText</span>
+
+
+<span class="k">def</span> <span class="nf">substituter</span><span class="p">(</span><span class="n">messageText</span><span class="p">):</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">messageText</span><span class="p">)</span>
+    <span class="n">textLabel</span> <span class="o">=</span> <span class="p">[(</span><span class="n">entity</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">entity</span><span class="o">.</span><span class="n">label_</span><span class="p">)</span> <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">ents</span> <span class="k">if</span> <span class="n">entity</span><span class="o">.</span><span class="n">label_</span><span class="o">==</span><span class="s1">&#39;PERSON&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">text</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">textLabel</span><span class="p">:</span>
+        <span class="n">messageText</span> <span class="o">=</span> <span class="n">messageText</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">messageText</span>
+
+
+
+<span class="kn">from</span> <span class="nn">simbots.Bot</span> <span class="kn">import</span> <span class="n">Bot</span>
+<span class="kn">from</span> <span class="nn">simbots.utils.builtInIntents</span> <span class="kn">import</span> <span class="n">IntentSamples</span>
+<span class="kn">from</span> <span class="nn">simbots.utils.builtInEntities</span> <span class="kn">import</span> <span class="n">EntitySamples</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">intentExamples</span> <span class="o">=</span> <span class="p">{</span>
+
+    <span class="s2">&quot;PersonName&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;My name is Vaibhav&quot;</span><span class="p">,</span><span class="s2">&quot;I am Vaibhav Arora .&quot;</span><span class="p">,</span><span class="s2">&quot;You can call me Rahul .&quot;</span> <span class="p">,</span>
+                    <span class="s2">&quot;I am Simon  . &quot;</span><span class="p">,</span><span class="s2">&quot;I am Riko .&quot;</span><span class="p">,</span><span class="s2">&quot;You can call me Shiva . &quot;</span><span class="p">],</span>
+
+    <span class="s1">&#39;Greetings&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">greetingSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;BotName&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">botNameSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;Relatives&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">relativeSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;Age&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">ageSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;BirthPlace&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">birthPlaceSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;Abilities&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">abilitiesSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;Really&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">reallySamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;Laughter&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">laughterSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;Cool&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">coolSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;Praise&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">praiseSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;TrueT&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">trueSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;FalseT&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">falseSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;Bye&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">byeSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;Confirm&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">confirmSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;Thanks&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">thanksSamples</span><span class="p">(),</span>
+
+    <span class="s1">&#39;Irrelevant&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;the weather is fine today&#39;</span><span class="p">,</span><span class="s1">&#39;the sun rises in the east&#39;</span><span class="p">,</span><span class="s1">&#39;the quick brown fox jumps over the red carpet&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;the sun rises in the east&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;What is love , baby dont hurt me &#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;this is a new dawn a new day&#39;</span><span class="p">],</span>
+<span class="p">}</span>
+
+
+<span class="n">entityExamples</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;GreetingsHelper&#39;</span><span class="p">:</span> <span class="n">EntitySamples</span><span class="o">.</span><span class="n">greetingsHelper</span><span class="p">(),</span>
+    <span class="s1">&#39;LaughterHelper&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;haha&#39;</span><span class="p">:</span> <span class="p">[{</span> <span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;case-insensitive&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;pattern&#39;</span><span class="p">:</span> <span class="s2">&quot;\s(h+(a|e)+)+(h+)?\s&quot;</span><span class="p">,</span>
+                                 <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;regex&#39;</span><span class="p">}],</span>
+                       <span class="s1">&#39;happysmily&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;case-insensitive&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;pattern&#39;</span><span class="p">:</span> <span class="s2">&quot;\s\:\)\s&quot;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;regex&#39;</span><span class="p">}]},</span>
+    <span class="s1">&#39;CoolHelper&#39;</span><span class="p">:</span> <span class="n">EntitySamples</span><span class="o">.</span><span class="n">coolHelper</span><span class="p">(),</span>
+    <span class="s1">&#39;ByeHelper&#39;</span><span class="p">:</span> <span class="n">EntitySamples</span><span class="o">.</span><span class="n">byeHelper</span><span class="p">(),</span>
+    <span class="s1">&#39;NameHelper&#39;</span><span class="p">:{</span>
+        <span class="s1">&#39;personName&#39;</span><span class="p">:[{</span><span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;function&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;extractor&#39;</span><span class="p">:</span> <span class="n">extractor</span><span class="p">,</span>
+                       <span class="s1">&#39;substituter&#39;</span><span class="p">:</span><span class="n">substituter</span><span class="p">,</span>
+                       <span class="s1">&#39;tag&#39;</span><span class="p">:</span><span class="s1">&#39;case-insensitive&#39;</span>
+        <span class="p">}]</span>
+
+
+
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+
+<span class="n">botMessages</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;Greetings&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Hello ! What can i do for you ?&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Hi there ! what can I do for you ?&#39;</span><span class="p">,</span> <span class="s1">&#39;Hello&#39;</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;nameKnown&quot;</span><span class="p">:[</span>
+                <span class="s2">&quot;Hi </span><span class="si">{0}</span><span class="s2"> ! Its a pleasure to meet you !&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Hey </span><span class="si">{0}</span><span class="s2"> its a pleasure talking to you !&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;PersonName&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Its a pleasure to meet you </span><span class="si">{0}</span><span class="s2"> .&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;nameNotFound&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Im sorry i couldn&#39;t get your name could you please write it in title case like -&gt; Riko  &quot;</span><span class="p">]</span>
+
+
+        <span class="p">},</span>
+        <span class="s1">&#39;Age&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;I am two years old &#39;</span><span class="p">,</span> <span class="s1">&#39;I am two&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;BotName&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;I am riko&#39;</span><span class="p">,</span> <span class="s1">&#39;You can call me riko&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;Abilities&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;I am still learning ! So cant do much !&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;BirthPlace&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;I am from Punjab , india&#39;</span><span class="p">,</span> <span class="s1">&#39;I am punjabi&#39;</span><span class="p">,</span> <span class="s1">&#39;I am punjabi and i love food&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;Really&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;To the best of my knowledge&#39;</span><span class="p">,</span> <span class="s1">&#39;Im positive !&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;Laughter&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Im glad i was able to make you smile !&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;See I can be funny !&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;And they say I dont have a sense of humor :)&#39;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;Cool&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;cool&#39;</span><span class="p">,</span> <span class="s1">&#39;thanks&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;Bye&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Bubye !&#39;</span><span class="p">,</span> <span class="s1">&#39;Bye ! nice chatting with you !&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;Confirm&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;cool &#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;Discard&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;No it is then&#39;</span><span class="p">,</span> <span class="s1">&#39;agreed , no it is .&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;Praise&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Thanks ! now i think ill blush &#39;</span><span class="p">,</span>
+                <span class="s1">&#39;So nice of you to say that !&#39;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;Relatives&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Umm no i dont really have any relatives :)&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;Thanks&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Dont mention it &#39;</span><span class="p">,</span>
+                <span class="s1">&#39; Im glad , please dont mention it&#39;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;Irrelevant&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Im sorry Im not getting you :( &#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Im sorry could you please rephrase ?&#39;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">NewBot</span><span class="p">(</span><span class="n">Bot</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">reason</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># # find current dialogNumber</span>
+
+        <span class="n">currentDialogNumber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s1">&#39;dialogs&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">currentTopIntent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">findCurrentTopIntent</span><span class="p">()</span>
+
+        <span class="n">currentEntities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">findCurrentEntities</span><span class="p">()</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">currentTopIntent</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidenceLimit</span> <span class="ow">or</span> <span class="n">currentTopIntent</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Irrelevant&#39;</span><span class="p">:</span>
+            <span class="n">currentTopIntent</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">currentTopIntent</span><span class="p">:</span>
+            <span class="c1">##</span>
+            <span class="c1">## Getting the Intent name here</span>
+            <span class="c1">##</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">currentTopIntent</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Greetings&#39;</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;sessionVariables&quot;</span> <span class="ow">in</span>  <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+
+                <span class="n">personName</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;sessionVariables&quot;</span><span class="p">][</span><span class="s2">&quot;PERSON&quot;</span><span class="p">]</span>
+
+                <span class="n">reply</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.nameKnown&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">personName</span><span class="p">}</span>
+
+
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span><span class="s1">&#39;PersonName&#39;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">currentEntities</span><span class="p">)</span> <span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+
+                <span class="n">currentEntities</span> <span class="o">=</span><span class="p">[</span><span class="n">ent</span> <span class="k">for</span> <span class="n">ent</span> <span class="ow">in</span> <span class="n">currentEntities</span> <span class="k">if</span> <span class="n">ent</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">]</span> <span class="o">==</span><span class="s1">&#39;PERSON&#39;</span> <span class="ow">and</span> <span class="n">ent</span><span class="p">[</span><span class="s2">&quot;exactValue&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;riko&#39;</span><span class="p">]</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;sessionVariables&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+
+                    <span class="s2">&quot;PERSON&quot;</span> <span class="p">:</span><span class="n">currentEntities</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;exactValue&quot;</span><span class="p">]</span>
+
+                <span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">updateContextTree</span><span class="p">()</span>
+
+
+                <span class="n">reply</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.basic&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">currentEntities</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;exactValue&quot;</span><span class="p">]}</span>
+
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span><span class="s1">&#39;PersonName&#39;</span><span class="p">:</span>
+
+                <span class="n">reply</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.nameNotFound&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                 <span class="n">reply</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.basic&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reply</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="c1"># #</span>
+            <span class="c1"># #</span>
+            <span class="c1"># # Rule for irrelevant</span>
+            <span class="c1"># #</span>
+            <span class="c1"># #</span>
+
+            <span class="n">irrelevant</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;Irrelevant.basic&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">irrelevant</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="n">newB</span> <span class="o">=</span> <span class="n">NewBot</span><span class="p">(</span><span class="n">intentExamples</span><span class="p">,</span> <span class="n">entityExamples</span><span class="p">,</span> <span class="n">botMessages</span><span class="p">,</span>
+              <span class="n">confidenceLimit</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">outputTheme</span> <span class="o">=</span> <span class="s1">&#39;basic&#39;</span>
+
+<span class="n">newB</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">theme</span> <span class="o">=</span> <span class="n">outputTheme</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here is the output of the bot. Notice that the bot’s greeting changes when you tell it your name .</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Type <span class="k">in</span> @@ to <span class="nb">exit</span> bot
+@i to get intents
+@c to get context
+@e to get entities
+@t to add a <span class="nb">test</span> <span class="k">case</span>
+@etc to evaluate a <span class="nb">test</span> <span class="k">case</span>
+@eatc to evaluate all <span class="nb">test</span> cases
+@ti to add intent
+&lt;<span class="m">1</span>&gt; User : Hi
+&lt;<span class="m">1</span>&gt; basicBot : Hello ! What can i <span class="k">do</span> <span class="k">for</span> you ?
+&lt;<span class="m">2</span>&gt; User : My name is Abe Lincoln
+&lt;<span class="m">2</span>&gt; basicBot : Its a pleasure to meet you Abe Lincoln .
+&lt;<span class="m">3</span>&gt; User : Hi
+&lt;<span class="m">3</span>&gt; basicBot : Hi Abe Lincoln ! Its a pleasure to meet you !
+&lt;<span class="m">4</span>&gt; User : thanks
+&lt;<span class="m">4</span>&gt; basicBot : Dont mention it
+&lt;<span class="m">5</span>&gt; User : bye
+&lt;<span class="m">5</span>&gt; basicBot : Bubye !
+</pre></div>
+</div>
+</div>
+</div>
 <div class="section" id="modules">
-<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
+<h1>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="simbots.html">simbots package</a><ul>
@@ -707,7 +1118,6 @@ Process finished with <span class="nb">exit</span> code <span class="m">0</span>
 </ul>
 </li>
 </ul>
-</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">

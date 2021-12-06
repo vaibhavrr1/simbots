@@ -32,6 +32,7 @@ To install simply do
 
 Usage Guide
 ===========
+
 This usage guide will help illuminate you about chatbots !
 
 *******************
@@ -60,14 +61,23 @@ c) "kind":the kind of the entity eg in the first example  Food , and in the seco
 d) "foundAt":[start location , end location] -> [9 15] the position where it is detected in text .
 
 
-
 **Relation**: Often entities and intents together can help one determine the meaning of a sentence but sometimes entites interact together .
 A relation is established between sentences to help bring more clarity to what the user is saying. For example:
 
 1) I want a cheese burger or a bean burger. -> here entities are cheese burger , bean burger and there is an "or" relation between these two
 2) I want a cheese burger and fries. -> here entities are cheese burger , fries and there is an "and" relation between these two
 
+**Context**: Without Context any bot would only be able to reply to the message it just received and not the messages it received in the past .
+Context in the case of simbots is simply a stack of intent , entity and relations received over time. It also contains methods to query and manage the context stack.
+You can query the context method to retrieve anything in the context stack and formulate complex functionality .
+
+
+
 you can read more about chatbots `here <https://chatbotsmagazine.com/>`_
+
+
+How to Create Bots
+==================
 
 *******************
 Quick Start
@@ -493,7 +503,15 @@ Some conversations with this bot :
 
 .. code:: shell
 
-   Type @@ to exit bot ,@i to get intents ,@c to get context
+   Type in @@ to exit bot
+   @i to get intents
+   @c to get context
+   @e to get entities
+   @t to add a test case
+   @etc to evaluate a test case
+   @eatc to evaluate all test cases
+   @ti to add intent
+
    User : hi
    themeBasicBot : Hello ! What can i do for you ?
    User : who are you ?
@@ -521,9 +539,417 @@ Some conversations with this bot :
    User : @@
    Process finished with exit code 0
 
-*******************
+
+---------
+
+*********************
+Reply Using Name
+*********************
+
+Often you will need to detect names from messages and generate a reply using that name .
+There isn't any easy way to write a regex pattern to detect names .To do this you will need a Machine learning or Deep learning based solution.
+Spacy provides NER to detect person names . Of course, you can also define your own custom name detection mechanism .
+
+To start off you need to define an entity extractor and an entity substituter .
+
+
+.. code:: python
+
+   import spacy
+
+   # Load English tokenizer, tagger, parser and NER
+   nlp = spacy.load("en_core_web_sm")
+
+   def extractor(messageText,dialogNumber):
+       doc = nlp(messageText)
+       extractedNamesFromText = []
+       for entity in doc.ents:
+           if entity.label_ =='PERSON':
+               extractedNamesFromText.append(
+
+               {
+                   "value" : entity.text,
+                   "exactValue" : entity.text,
+                   "kind":'PERSON',
+                   "dialogNumber": dialogNumber,
+                   "foundAt":[entity.start_char, entity.end_char]
+               }
+               )
+       return extractedNamesFromText
+
+
+   def substituter(messageText):
+       doc = nlp(messageText)
+       textLabel = [(entity.text, entity.label_) for entity in doc.ents if entity.label_=='PERSON']
+       for text, label in textLabel:
+           messageText = messageText.replace(text, label)
+
+       return messageText
+
+
+Next we need to create an entity for detecting names lets call it NameHelper
+
+.. code:: json
+
+   'NameHelper':{
+           'personName':[{'type' : 'function',
+                          'extractor': extractor,
+                          'substituter':substituter,
+                          'tag':'case-insensitive'
+           }]
+
+
+
+       }
+
+Also we will need to define Intents for name detection lets call it PersonName
+
+.. code:: json
+
+    {"PersonName": ["My name is Vaibhav","I am Vaibhav Arora .","You can call me Rahul ." ,
+                    "I am Simon  . ","I am Riko .","You can call me Shiva . "]}
+
+
+We need to write what the bot will output.
+
+.. code:: json
+
+    {
+    'basic': {
+		'Greetings': {
+			'basic': ['Hello ! What can i do for you ?',
+				'Hi there ! what can I do for you ?', 'Hello'
+			],
+            "nameKnown":[
+                "Hi {0} ! Its a pleasure to meet you !",
+                "Hey {0} its a pleasure talking to you !"
+            ]
+		},
+        "PersonName": {
+			'basic': ["Its a pleasure to meet you {0} ."],
+			"nameNotFound": ["Im sorry i couldn't get your name could you please write it in title case like -> Riko  "]
+
+
+		}
+    }
+
+Lastly we need to alter the bot reason method to accomodate this
+
+
+.. code:: python
+
+   # this goes in the reason method
+
+   name = currentTopIntent['name']
+
+   if name == 'Greetings' and ("sessionVariables" in  self.contextManager.context.keys()):
+
+       personName =  self.contextManager.context["sessionVariables"]["PERSON"]
+
+       reply = {'tag': '{0}.nameKnown'.format(name), 'data': personName}
+
+
+   elif name =='PersonName' and len(currentEntities) >0:
+
+       currentEntities =[ent for ent in currentEntities if ent["kind"] =='PERSON' and ent["exactValue"].lower() != 'riko']
+
+       self.contextManager.context["sessionVariables"] = {
+
+           "PERSON" :currentEntities[0]["exactValue"]
+
+       }
+       self.contextManager.updateContextTree()
+
+
+       reply = {'tag': '{0}.basic'.format(name), 'data': currentEntities[0]["exactValue"]}
+
+   elif name =='PersonName':
+
+       reply = {'tag': '{0}.nameNotFound'.format(name), 'data': None}
+   else:
+        reply = {'tag': '{0}.basic'.format(name), 'data': None}
+
+
+The complete Code will look like this
+
+.. code:: python
+
+   import spacy
+
+   # Load English tokenizer, tagger, parser and NER
+   nlp = spacy.load("en_core_web_sm")
+
+   def extractor(messageText,dialogNumber):
+       doc = nlp(messageText)
+       extractedNamesFromText = []
+       for entity in doc.ents:
+           if entity.label_ =='PERSON':
+               extractedNamesFromText.append(
+
+               {
+                   "value" : entity.text,
+                   "exactValue" : entity.text,
+                   "kind":'PERSON',
+                   "dialogNumber": dialogNumber,
+                   "foundAt":[entity.start_char, entity.end_char]
+               }
+               )
+       return extractedNamesFromText
+
+
+   def substituter(messageText):
+       doc = nlp(messageText)
+       textLabel = [(entity.text, entity.label_) for entity in doc.ents if entity.label_=='PERSON']
+       for text, label in textLabel:
+           messageText = messageText.replace(text, label)
+
+       return messageText
+
+
+
+   from simbots.Bot import Bot
+   from simbots.utils.builtInIntents import IntentSamples
+   from simbots.utils.builtInEntities import EntitySamples
+   import json
+
+   intentExamples = {
+
+       "PersonName": ["My name is Vaibhav","I am Vaibhav Arora .","You can call me Rahul ." ,
+                       "I am Simon  . ","I am Riko .","You can call me Shiva . "],
+
+       'Greetings': IntentSamples.greetingSamples(),
+
+       'BotName': IntentSamples.botNameSamples(),
+
+       'Relatives': IntentSamples.relativeSamples(),
+
+       'Age': IntentSamples.ageSamples(),
+
+       'BirthPlace': IntentSamples.birthPlaceSamples(),
+
+       'Abilities': IntentSamples.abilitiesSamples(),
+
+       'Really': IntentSamples.reallySamples(),
+
+       'Laughter': IntentSamples.laughterSamples(),
+
+       'Cool': IntentSamples.coolSamples(),
+
+       'Praise': IntentSamples.praiseSamples(),
+
+       'TrueT': IntentSamples.trueSamples(),
+
+       'FalseT': IntentSamples.falseSamples(),
+
+       'Bye': IntentSamples.byeSamples(),
+
+       'Confirm': IntentSamples.confirmSamples(),
+
+       'Thanks': IntentSamples.thanksSamples(),
+
+       'Irrelevant': ['the weather is fine today','the sun rises in the east','the quick brown fox jumps over the red carpet',
+                      'the sun rises in the east',
+                      'What is love , baby dont hurt me ',
+                      'this is a new dawn a new day'],
+   }
+
+
+   entityExamples = {
+       'GreetingsHelper': EntitySamples.greetingsHelper(),
+       'LaughterHelper': {'haha': [{ 'tag': 'case-insensitive',
+                                    'pattern': "\s(h+(a|e)+)+(h+)?\s",
+                                    'type': 'regex'}],
+                          'happysmily': [{'tag': 'case-insensitive',
+                                          'pattern': "\s\:\)\s", 'type': 'regex'}]},
+       'CoolHelper': EntitySamples.coolHelper(),
+       'ByeHelper': EntitySamples.byeHelper(),
+       'NameHelper':{
+           'personName':[{'type' : 'function',
+                          'extractor': extractor,
+                          'substituter':substituter,
+                          'tag':'case-insensitive'
+           }]
+
+
+
+       }
+   }
+
+
+
+   botMessages = {
+       'basic': {
+           'Greetings': {
+               'basic': ['Hello ! What can i do for you ?',
+                   'Hi there ! what can I do for you ?', 'Hello'
+               ],
+               "nameKnown":[
+                   "Hi {0} ! Its a pleasure to meet you !",
+                   "Hey {0} its a pleasure talking to you !"
+               ]
+           },
+           "PersonName": {
+               'basic': ["Its a pleasure to meet you {0} ."],
+               "nameNotFound": ["Im sorry i couldn't get your name could you please write it in title case like -> Riko  "]
+
+
+           },
+           'Age': {
+               'basic': ['I am two years old ', 'I am two']
+           },
+           'BotName': {
+               'basic': ['I am riko', 'You can call me riko']
+           },
+           'Abilities': {
+               'basic': ['I am still learning ! So cant do much !']
+           },
+           'BirthPlace': {
+               'basic': ['I am from Punjab , india', 'I am punjabi', 'I am punjabi and i love food']
+           },
+           'Really': {
+               'basic': ['To the best of my knowledge', 'Im positive !']
+           },
+           'Laughter': {
+               'basic': ['Im glad i was able to make you smile !',
+                   'See I can be funny !',
+                   'And they say I dont have a sense of humor :)'
+               ]
+           },
+           'Cool': {
+               'basic': ['cool', 'thanks']
+           },
+           'Bye': {
+               'basic': ['Bubye !', 'Bye ! nice chatting with you !']
+           },
+           'Confirm': {
+               'basic': ['cool ']
+           },
+           'Discard': {
+               'basic': ['No it is then', 'agreed , no it is .']
+           },
+           'Praise': {
+               'basic': ['Thanks ! now i think ill blush ',
+                   'So nice of you to say that !'
+               ]
+           },
+           'Relatives': {
+               'basic': ['Umm no i dont really have any relatives :)']
+           },
+           'Thanks': {
+               'basic': ['Dont mention it ',
+                   ' Im glad , please dont mention it'
+               ]
+           },
+           'Irrelevant': {
+               'basic': ['Im sorry Im not getting you :( ',
+                   'Im sorry could you please rephrase ?'
+               ]
+           },
+       }
+   }
+
+   class NewBot(Bot):
+
+       def reason(self):
+
+           # # find current dialogNumber
+
+           currentDialogNumber = self.contextManager.context['dialogs'][-1]
+
+           currentTopIntent = self.contextManager.findCurrentTopIntent()
+
+           currentEntities = self.contextManager.findCurrentEntities()
+
+           output = []
+
+           if currentTopIntent['confidence'] < self.confidenceLimit or currentTopIntent['name'] == 'Irrelevant':
+               currentTopIntent = {}
+
+           if currentTopIntent:
+               ##
+               ## Getting the Intent name here
+               ##
+               name = currentTopIntent['name']
+
+               if name == 'Greetings' and ("sessionVariables" in  self.contextManager.context.keys()):
+
+                   personName =  self.contextManager.context["sessionVariables"]["PERSON"]
+
+                   reply = {'tag': '{0}.nameKnown'.format(name), 'data': personName}
+
+
+               elif name =='PersonName' and len(currentEntities) >0:
+
+                   currentEntities =[ent for ent in currentEntities if ent["kind"] =='PERSON' and ent["exactValue"].lower() != 'riko']
+
+                   self.contextManager.context["sessionVariables"] = {
+
+                       "PERSON" :currentEntities[0]["exactValue"]
+
+                   }
+                   self.contextManager.updateContextTree()
+
+
+                   reply = {'tag': '{0}.basic'.format(name), 'data': currentEntities[0]["exactValue"]}
+
+               elif name =='PersonName':
+
+                   reply = {'tag': '{0}.nameNotFound'.format(name), 'data': None}
+               else:
+                    reply = {'tag': '{0}.basic'.format(name), 'data': None}
+
+
+               output.append(reply)
+
+           else:
+
+               # #
+               # #
+               # # Rule for irrelevant
+               # #
+               # #
+
+               irrelevant = {'tag': 'Irrelevant.basic', 'data': None}
+
+               output.append(irrelevant)
+
+           return output
+
+
+   newB = NewBot(intentExamples, entityExamples, botMessages,
+                 confidenceLimit=0.5)
+
+   outputTheme = 'basic'
+
+   newB.run(theme = outputTheme)
+
+Here is the output of the bot. Notice that the bot's greeting changes when you tell it your name .
+
+.. code:: shell
+
+   Type in @@ to exit bot
+   @i to get intents
+   @c to get context
+   @e to get entities
+   @t to add a test case
+   @etc to evaluate a test case
+   @eatc to evaluate all test cases
+   @ti to add intent
+   <1> User : Hi
+   <1> basicBot : Hello ! What can i do for you ?
+   <2> User : My name is Abe Lincoln
+   <2> basicBot : Its a pleasure to meet you Abe Lincoln .
+   <3> User : Hi
+   <3> basicBot : Hi Abe Lincoln ! Its a pleasure to meet you !
+   <4> User : thanks
+   <4> basicBot : Dont mention it
+   <5> User : bye
+   <5> basicBot : Bubye !
+
+
+
 Modules
-*******************
+=========
 
 
 .. toctree::
