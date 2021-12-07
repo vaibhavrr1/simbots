@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 
-Welcome to Simbots's documentation!
+Welcome to Simbots documentation!
 ===================================
 
 Simple bots or Simbots is a library designed to create simple chat bots using the power of python. This library utilises Intent, Entity, Relation and Context
