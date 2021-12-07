@@ -165,7 +165,6 @@ class IntentSamples():
         'what can you do ?',
         'what can you do ?',
         'Can you jump ?',
-        'can you shit ?',
         'could you do this ?',
         'could you please do this ?',
     ]

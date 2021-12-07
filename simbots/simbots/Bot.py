@@ -66,7 +66,9 @@ class Bot():
         self.templates = templates
         self.confidenceLimit = confidenceLimit
 
-        if not testCases:
+
+        self.testCases = testCases
+        if not self.testCases :
             self.testCases  = dict()
         else:
             if type(self.testCases) != dict:
@@ -322,6 +324,12 @@ class Bot():
                     self.listAllTestCases()
                     testCaseName = input("enter the test case name : ")
                     print(json.dumps(self.evaluateTestCase(testCaseName,theme),indent=2))
+
+                elif inputMessage == '@eatc':
+                    for testCaseName in self.testCases.keys():
+                        print("Evaluating : ",testCaseName)
+                        print(json.dumps(self.evaluateTestCase(testCaseName, theme), indent=2))
+
                 elif inputMessage =='@ti':
                     print("Intents available are : {0}".format("\n".join(self.intentExamples.keys())))
                     intentName = input("Enter intent name to update : ")
