@@ -200,6 +200,11 @@
        DialogNumber
       </a>
      </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#subconversations">
+       SubConversations
+      </a>
+     </li>
     </ul>
    </li>
   </ul>
@@ -220,12 +225,12 @@
       </a>
      </li>
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id2">
+      <a class="reference internal nav-link" href="#id1">
        Intents
       </a>
      </li>
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id3">
+      <a class="reference internal nav-link" href="#id2">
        Entities
       </a>
      </li>
@@ -247,7 +252,7 @@
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id5">
+      <a class="reference internal nav-link" href="#id4">
        What this bot will do
       </a>
      </li>
@@ -269,12 +274,12 @@
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id7">
+      <a class="reference internal nav-link" href="#id6">
        Entities
       </a>
      </li>
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id8">
+      <a class="reference internal nav-link" href="#id7">
        Intents
       </a>
      </li>
@@ -367,6 +372,31 @@
        Sub Conversations
       </a>
      </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#subconversation1">
+       SubConversation1
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#subconversation2">
+       SubConversation2
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#bot-logic">
+       Bot Logic
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id11">
+       Sample Conversation
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#what-next">
+       What Next ?
+      </a>
+     </li>
     </ul>
    </li>
   </ul>
@@ -440,10 +470,10 @@ model to create bots .</p>
 </ol>
 <p>entities have multiple properties :</p>
 <ol class="loweralpha simple">
-<li><p>“value”:the value of the entity , In the first example it is ‘Burger’.</p></li>
-<li><p>“exactValue”:the exact value that occurs within the message text. In the first example it is ‘burger’.</p></li>
-<li><p>“kind”:the kind of the entity eg in the first example  Food , and in the second one Drinks</p></li>
-<li><p>“foundAt”:[start location , end location] -&gt; [9 15] the position where it is detected in text .</p></li>
+<li><p><strong>value</strong>:the value of the entity , In the first example it is ‘Burger’.</p></li>
+<li><p><strong>exactValue</strong>:the exact value that occurs within the message text. In the first example it is ‘burger’.</p></li>
+<li><p><strong>kind</strong>:the kind of the entity eg in the first example  Food , and in the second one Drinks</p></li>
+<li><p><strong>foundAt</strong>:[start location , end location] -&gt; [9 15] the position where it is detected in text .</p></li>
 </ol>
 </div>
 <div class="section" id="relations">
@@ -465,7 +495,14 @@ You can query the context method to retrieve anything in the context stack and f
 <h3>DialogNumber<a class="headerlink" href="#dialognumber" title="Permalink to this headline">¶</a></h3>
 <p>Each user and chatbot message pair is treated as a dialog , the bot in dev mode will always show the <strong>dialog number</strong> .</p>
 <img alt="_images/dialogNumber.png" src="_images/dialogNumber.png" />
-<p>you can read more about chatbots <a class="reference external" href="https://chatbotsmagazine.com/">here</a></p>
+</div>
+<div class="section" id="subconversations">
+<h3>SubConversations<a class="headerlink" href="#subconversations" title="Permalink to this headline">¶</a></h3>
+<p>For complex bot’s its useful to divide the conversation into subconverations . For example lets say we want to make a bot to capture orders from users.
+1) We will possibly have some conversation about the user’s identity or address
+2) We will possible have some conversation about the user’s order/orders.
+3) User may want to inquire about previous orders , track order.</p>
+<p>We can think of each of these as subconversations . For more info look at Take Order Bots .</p>
 </div>
 </div>
 </div>
@@ -487,8 +524,8 @@ You can query the context method to retrieve anything in the context stack and f
 <p>Who are you ?</p>
 <p>What is your age ?</p>
 </div>
-<div class="section" id="id2">
-<h3>Intents<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h3>Intents<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>Lets first setup some intent examples</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
@@ -578,8 +615,8 @@ You can query the context method to retrieve anything in the context stack and f
 </pre></div>
 </div>
 </div>
-<div class="section" id="id3">
-<h3>Entities<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Entities<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>Now we will add some entities here . Note that we dont have any interesting entities here . We have only added entities to help the bot identify certain
 intents like Greetings</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">entityExamples</span> <span class="o">=</span> <span class="p">{</span>
@@ -698,8 +735,8 @@ corresponding basic template message.</p>
 <div class="section" id="a-bot-for-simple-conversation">
 <h2>A Bot for simple conversation<a class="headerlink" href="#a-bot-for-simple-conversation" title="Permalink to this headline">¶</a></h2>
 <p>Now here’s the bot with a number of intents and entities added . In case you want to see the jupyter notebook use <a class="reference external" href="https://github.com/vaibhavrr1/simbots/blob/main/sampleBots/BotForSimpleConversation.ipynb">here</a> .</p>
-<div class="section" id="id5">
-<h3>What this bot will do<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>What this bot will do<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>This will be able to answer to basic questions like</p>
 <ol class="arabic simple">
 <li><p>Hello</p></li>
@@ -947,8 +984,8 @@ corresponding basic template message.</p>
 There isn’t any easy way to write a regex pattern to detect names .To do this you will need a Machine learning or Deep learning based solution.
 Spacy provides NER ( Named Entity Recognition )to detect person names . Of course, you can also define your own custom name detection mechanism .</p>
 <p>You can find the complete code for the bot <a class="reference external" href="https://github.com/vaibhavrr1/simbots/blob/main/sampleBots/ReplyUsingNameBot.ipynb">here</a>.</p>
-<div class="section" id="id7">
-<h3>Entities<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Entities<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>To start off you need to define an entity extractor and an entity substituter .</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
 
@@ -996,8 +1033,8 @@ Spacy provides NER ( Named Entity Recognition )to detect person names . Of cours
 </pre></div>
 </div>
 </div>
-<div class="section" id="id8">
-<h3>Intents<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>Intents<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p>Also we will need to define Intents for name detection lets call it PersonName</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;PersonName&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;My name is Vaibhav&quot;</span><span class="p">,</span><span class="s2">&quot;I am Vaibhav Arora .&quot;</span><span class="p">,</span><span class="s2">&quot;You can call me Rahul .&quot;</span> <span class="p">,</span>
                 <span class="s2">&quot;I am Simon  . &quot;</span><span class="p">,</span><span class="s2">&quot;I am Riko .&quot;</span><span class="p">,</span><span class="s2">&quot;You can call me Shiva . &quot;</span><span class="p">]}</span>
@@ -3700,7 +3737,7 @@ We will start by building a bot to capture simple customer orders and then modif
 <p>In case you need to see the full code first you can find it <a class="reference external" href="https://github.com/vaibhavrr1/simbots/blob/main/sampleBots/TakeOrderBotV1.ipynb">here</a></p>
 <div class="section" id="how-conversation-with-this-bot-should-look-like">
 <h3>How conversation with this bot should look like<a class="headerlink" href="#how-conversation-with-this-bot-should-look-like" title="Permalink to this headline">¶</a></h3>
-<p>Now we are starting to get into some serious bots ! .</p>
+<p>Now we are starting to get into some serious bots !</p>
 <p>Its very useful to write out what an idealised  bot conversation should look like  to get an idea about how the bot should behave .
 Since we have already created the bot we will just show the output here . For your case you should write out a few sample conversations by hand !</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>&lt;<span class="m">1</span>&gt; User : hi
@@ -3952,8 +3989,8 @@ Also some entities lets say pizza and burger.</p>
 <p>You’ll notice that we have divided the whole conversation into two subconversations .</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p>SubConversation1 is about everything except making an order</p></li>
-<li><p>SubConversation2 is about making sure we have all things to complete the order.</p></li>
+<li><p><strong>SubConversation1</strong> is about everything except making an order</p></li>
+<li><p><strong>SubConversation2</strong> is about making sure we have all things to complete the order.</p></li>
 </ol>
 </div></blockquote>
 <p>This helps us segregate the bot reason into multiple subparts or subconversations.</p>
@@ -3966,6 +4003,250 @@ Also some entities lets say pizza and burger.</p>
 <li><p><strong>exitOnLogic</strong>  : This is a function that describes the bot logic on exiting the SubConversation . Takes in contextManager and bots previous outputs returning modified contextManager and outputs.</p></li>
 </ol>
 </div></blockquote>
+<p>Also a useful thing to have is the <strong>isHappening</strong> property of the subConversation which can be used to check if the bot is in that particular conversation.</p>
+<p>Now let’s tackle each of these subconversations separately .</p>
+</div>
+<div class="section" id="subconversation1">
+<h3>SubConversation1<a class="headerlink" href="#subconversation1" title="Permalink to this headline">¶</a></h3>
+<p>This subconversation will handle everything except making the order .
+Note that we never will stay in this subconversation for more than a single message so we don’t need an exitOnlogic or exit method for this.</p>
+<p>we just need the enter method and enterOnLogic method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">simbots.Bot</span> <span class="kn">import</span> <span class="n">SubConversation</span>
+
+<span class="k">def</span> <span class="nf">enterAllElse</span><span class="p">(</span><span class="n">contextManager</span><span class="p">):</span>
+
+    <span class="n">currentIntentName</span> <span class="o">=</span> <span class="n">contextManager</span><span class="o">.</span><span class="n">findCurrentTopIntent</span><span class="p">()[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">currentIntentName</span> <span class="o">!=</span> <span class="s2">&quot;OrderFood&quot;</span>
+
+<span class="k">def</span> <span class="nf">enterLogicAllElse</span><span class="p">(</span><span class="n">contextManager</span><span class="p">,</span><span class="n">outputs</span> <span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">outputs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">intentName</span> <span class="o">=</span> <span class="n">contextManager</span><span class="o">.</span><span class="n">findCurrentTopIntent</span><span class="p">()[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+
+    <span class="n">reply</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.basic&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">intentName</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+    <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reply</span><span class="p">)</span>
+
+    <span class="n">stayInSubConversation</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">stayInSubConversation</span><span class="p">,</span> <span class="n">contextManager</span><span class="p">,</span> <span class="n">outputs</span>
+
+
+ <span class="n">subConversation1</span>  <span class="o">=</span> <span class="n">SubConversation</span><span class="p">(</span>
+                                     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;allElse&quot;</span> <span class="p">,</span>
+                                     <span class="n">enter</span> <span class="o">=</span> <span class="n">enterAllElse</span><span class="p">,</span>
+                                     <span class="n">onEnterLogic</span> <span class="o">=</span> <span class="n">enterLogicAllElse</span>
+ <span class="p">)</span>
+</pre></div>
+</div>
+<p>done ! we will enter this subconversation everytime we dont have an OrderFood intent .</p>
+</div>
+<div class="section" id="subconversation2">
+<h3>SubConversation2<a class="headerlink" href="#subconversation2" title="Permalink to this headline">¶</a></h3>
+<p>Now for subconversation2</p>
+<p>we will enter this subconversation when we have the order food intent</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">enterTakeOrder</span><span class="p">(</span><span class="n">contextManager</span><span class="p">):</span>
+
+    <span class="c1"># Will enter this loop if intent is order food</span>
+
+    <span class="n">currentIntentName</span> <span class="o">=</span> <span class="n">contextManager</span><span class="o">.</span><span class="n">findCurrentTopIntent</span><span class="p">()[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">currentIntentName</span> <span class="o">==</span> <span class="s2">&quot;OrderFood&quot;</span>
+</pre></div>
+</div>
+<p>Now once we enter this subconversation we will</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Check if we have any entities relating to food .</p></li>
+<li><p>Update the context manager with any entites found.</p></li>
+<li><p>If everything we need to complete order is there we create a completed order message and set <strong>stayInSubConversation</strong> to false ie. exit the subconversation.</p></li>
+<li><p>If we don’t have everything we need to complete the order we create message for missing items and set <strong>stayInSubConversation</strong> to true . this will set the <strong>isHappening</strong> property of the subconversation to be true which you can later access in the bots reason method.</p></li>
+</ol>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">checkIfPresentInSessionVariables</span><span class="p">(</span><span class="n">entityKind</span><span class="p">,</span><span class="n">sessionVariables</span><span class="p">):</span>
+
+    <span class="n">entityKindPresent</span> <span class="o">=</span>   <span class="n">entityKind</span> <span class="ow">in</span> <span class="n">sessionVariables</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+    <span class="n">entityValue</span>       <span class="o">=</span>   <span class="n">sessionVariables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">entityKind</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">entityKindPresent</span><span class="p">,</span><span class="n">entityValue</span>
+
+
+
+<span class="k">def</span> <span class="nf">enterLogicTakeOrder</span><span class="p">(</span><span class="n">contextManager</span><span class="p">,</span><span class="n">outputs</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">outputs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Get Already Existing Entities</span>
+
+    <span class="k">if</span> <span class="s2">&quot;sessionVariables&quot;</span> <span class="ow">in</span> <span class="n">contextManager</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">sessionVariables</span>  <span class="o">=</span> <span class="n">contextManager</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;sessionVariables&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sessionVariables</span><span class="o">=</span><span class="p">{}</span>
+
+    <span class="n">currentEntities</span> <span class="o">=</span> <span class="p">[</span><span class="n">entity</span> <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">contextManager</span><span class="o">.</span><span class="n">findCurrentEntities</span><span class="p">()</span> <span class="k">if</span> <span class="s2">&quot;Food&quot;</span> <span class="ow">in</span> <span class="n">entity</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">]]</span>
+
+    <span class="c1"># Update entites in context</span>
+
+    <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">currentEntities</span><span class="p">:</span>
+
+        <span class="n">sessionVariables</span><span class="p">[</span><span class="n">entity</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">entity</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+
+    <span class="n">contextManager</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;sessionVariables&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="n">sessionVariables</span>
+
+    <span class="n">contextManager</span><span class="o">.</span><span class="n">updateContextTree</span><span class="p">()</span>
+
+
+    <span class="c1"># Formulate reply</span>
+
+
+
+    <span class="n">foodTypePresent</span><span class="p">,</span><span class="n">foodType</span> <span class="o">=</span> <span class="n">checkIfPresentInSessionVariables</span><span class="p">(</span><span class="s2">&quot;FoodType&quot;</span><span class="p">,</span><span class="n">sessionVariables</span><span class="p">)</span>
+    <span class="n">foodSizePresent</span><span class="p">,</span><span class="n">foodSize</span> <span class="o">=</span> <span class="n">checkIfPresentInSessionVariables</span><span class="p">(</span><span class="s2">&quot;FoodSize&quot;</span><span class="p">,</span><span class="n">sessionVariables</span><span class="p">)</span>
+    <span class="n">foodNamePresent</span><span class="p">,</span><span class="n">foodName</span> <span class="o">=</span> <span class="n">checkIfPresentInSessionVariables</span><span class="p">(</span><span class="s2">&quot;FoodName&quot;</span><span class="p">,</span><span class="n">sessionVariables</span><span class="p">)</span>
+
+
+
+    <span class="k">if</span>  <span class="n">foodNamePresent</span> <span class="ow">and</span> <span class="n">foodTypePresent</span> <span class="ow">and</span> <span class="n">foodSizePresent</span> <span class="p">:</span>
+        <span class="n">stayInSubConversation</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">contextManager</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;sessionVariables&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="p">{}</span>
+        <span class="n">contextManager</span><span class="o">.</span><span class="n">updateContextTree</span><span class="p">()</span>
+        <span class="n">foodType</span> <span class="o">=</span> <span class="n">foodType</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;pizza&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;burger&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Write function to save context variables here</span>
+
+        <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;OrderFood.basic&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">foodName</span><span class="p">,</span><span class="n">foodSize</span><span class="p">,</span><span class="n">foodType</span><span class="p">]})</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">stayInSubConversation</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;OrderFood.missing&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">foodName</span><span class="p">,</span><span class="n">foodSize</span><span class="p">,</span><span class="n">foodType</span><span class="p">]})</span>
+
+    <span class="k">return</span> <span class="n">stayInSubConversation</span><span class="p">,</span> <span class="n">contextManager</span><span class="p">,</span> <span class="n">outputs</span>
+</pre></div>
+</div>
+<p>done !</p>
+<p>We will exit when we have a discard intent. No need to define <strong>exitOnLogic</strong> as subconversation1 will give us output message for discarding/cancelling the order.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">exitTakeOrder</span><span class="p">(</span><span class="n">contextManager</span><span class="p">):</span>
+
+   <span class="c1"># Will exit loop if intent is Discard</span>
+
+   <span class="n">currentIntentName</span> <span class="o">=</span> <span class="n">contextManager</span><span class="o">.</span><span class="n">findCurrentTopIntent</span><span class="p">()[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+
+   <span class="k">return</span> <span class="n">currentIntentName</span> <span class="o">==</span> <span class="s2">&quot;Discard&quot;</span>
+</pre></div>
+</div>
+<p>now lets create the subconversation</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">subConversation2</span> <span class="o">=</span> <span class="n">SubConversation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;TakingOrder&quot;</span><span class="p">,</span>
+                                      <span class="n">enter</span> <span class="o">=</span> <span class="n">enterTakeOrder</span><span class="p">,</span>
+                                      <span class="n">exit</span>   <span class="o">=</span> <span class="n">exitTakeOrder</span><span class="p">,</span>
+                                      <span class="n">onEnterLogic</span> <span class="o">=</span> <span class="n">enterLogicTakeOrder</span><span class="p">,</span>
+
+                                      <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="bot-logic">
+<h3>Bot Logic<a class="headerlink" href="#bot-logic" title="Permalink to this headline">¶</a></h3>
+<p>Now we need to enter subconversation1 if enter condition is satified and   subconversation2 if its happenning or we satisfy the enter condition.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">simbots.Bot</span> <span class="kn">import</span> <span class="n">Bot</span>
+<span class="kn">from</span> <span class="nn">simbots.utils.builtInIntents</span> <span class="kn">import</span> <span class="n">IntentSamples</span>
+<span class="kn">from</span> <span class="nn">simbots.utils.builtInEntities</span> <span class="kn">import</span> <span class="n">EntitySamples</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">subConversations</span> <span class="o">=</span><span class="p">[</span>
+
+    <span class="n">subConversation1</span><span class="p">,</span>
+    <span class="n">subConversation2</span><span class="p">,</span>
+
+
+<span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">NewBot</span><span class="p">(</span><span class="n">Bot</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">reason</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># If user has asked any of the other questions except placing order execute this</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subConversations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">enterOn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="p">,</span><span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subConversations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="p">,</span><span class="n">outputs</span><span class="p">)</span>
+
+        <span class="c1"># If user was in the process of making an order execute this</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subConversations</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isHappening</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">subConversations</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">enterOn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="p">,</span><span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subConversations</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="p">,</span><span class="n">outputs</span><span class="p">)</span>
+
+
+        <span class="k">return</span> <span class="n">outputs</span>
+
+
+<span class="n">newB</span> <span class="o">=</span> <span class="n">NewBot</span><span class="p">(</span><span class="n">intentExamples</span><span class="p">,</span> <span class="n">entityExamples</span><span class="p">,</span> <span class="n">botMessages</span><span class="p">,</span>
+              <span class="n">confidenceLimit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">subConversations</span><span class="o">=</span><span class="n">subConversations</span><span class="p">)</span>
+
+<span class="n">outputTheme</span> <span class="o">=</span> <span class="s1">&#39;themeBasic&#39;</span>
+<span class="n">newB</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">theme</span> <span class="o">=</span> <span class="n">outputTheme</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Done !</p>
+</div>
+<div class="section" id="id11">
+<h3>Sample Conversation<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>&lt;<span class="m">1</span>&gt; User : hi
+&lt;<span class="m">1</span>&gt; themeBasicBot : Hi there ! what can I <span class="k">do</span> <span class="k">for</span> you ?
+&lt;<span class="m">2</span>&gt; User : what can you <span class="k">do</span> ?
+&lt;<span class="m">2</span>&gt; themeBasicBot : I am learning to make basic conversation ! Im taking orders <span class="k">if</span> you want something to eat !
+&lt;<span class="m">3</span>&gt; User : thats awesome !
+&lt;<span class="m">3</span>&gt; themeBasicBot : cool
+&lt;<span class="m">4</span>&gt; User : get me a pizza <span class="k">then</span>
+&lt;<span class="m">4</span>&gt; themeBasicBot : Just need a few more details to <span class="nb">complete</span> your order :
+ <span class="m">1</span><span class="o">)</span> Name : pizza
+ <span class="m">2</span><span class="o">)</span> Size :
+ <span class="m">3</span><span class="o">)</span> Type :
+&lt;<span class="m">5</span>&gt; User : i want to know you name ?
+&lt;<span class="m">5</span>&gt; themeBasicBot : You can call me riko
+Just need a few more details to <span class="nb">complete</span> your order :
+ <span class="m">1</span><span class="o">)</span> Name : pizza
+ <span class="m">2</span><span class="o">)</span> Size :
+ <span class="m">3</span><span class="o">)</span> Type :
+&lt;<span class="m">6</span>&gt; User : i changed my mind on the pizza
+&lt;<span class="m">6</span>&gt; themeBasicBot : Im cancelling your order
+&lt;<span class="m">7</span>&gt; User : can you show me the menu ?
+&lt;<span class="m">7</span>&gt; themeBasicBot : We currently serve
+ <span class="m">1</span><span class="o">)</span> Pizza <span class="o">[</span>cheese and corn , Margherita <span class="o">]</span>
+ <span class="m">2</span><span class="o">)</span> Burger <span class="o">[</span>Alu tikki , Bean<span class="o">]</span>
+&lt;<span class="m">8</span>&gt; User : ahh i guess ill have a bean burger
+&lt;<span class="m">8</span>&gt; themeBasicBot : Just need a few more details to <span class="nb">complete</span> your order :
+ <span class="m">1</span><span class="o">)</span> Name : burger
+ <span class="m">2</span><span class="o">)</span> Size :
+ <span class="m">3</span><span class="o">)</span> Type : burgerBean
+&lt;<span class="m">9</span>&gt; User : make it a large one
+&lt;<span class="m">9</span>&gt; themeBasicBot : Thanks <span class="k">for</span> placing your order . Your order is :
+ <span class="m">1</span><span class="o">)</span> Name : burger
+ <span class="m">2</span><span class="o">)</span> Size : large
+ <span class="m">3</span><span class="o">)</span> Type : Bean
+
+&lt;<span class="m">10</span>&gt; User : thanks <span class="k">for</span> the order !
+&lt;<span class="m">10</span>&gt; themeBasicBot : Dont mention it
+&lt;<span class="m">11</span>&gt; User : bye
+&lt;<span class="m">11</span>&gt; themeBasicBot : Bubye !
+</pre></div>
+</div>
+</div>
+<div class="section" id="what-next">
+<h3>What Next ?<a class="headerlink" href="#what-next" title="Permalink to this headline">¶</a></h3>
+<p>This looks good but a couple of things are off..</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>there’s no quantity indicator.</p></li>
+<li><p>We haven’t ensured that food types and food Names match ie its possible to have a bean pizza :)</p></li>
+<li><p>We need some relations.</p></li>
+<li><p>We haven’t saved the order anywhere !</p></li>
+<li><p>Maybe we can improve the conversation dialogue ?</p></li>
+</ol>
+</div></blockquote>
+<p>More on this in the next section .</p>
 </div>
 </div>
 </div>

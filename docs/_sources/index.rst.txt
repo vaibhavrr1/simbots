@@ -61,10 +61,10 @@ An **Entity** is something that adds detail to the intent . These are often keyw
 
 entities have multiple properties :
 
-a) "value":the value of the entity , In the first example it is 'Burger'.
-b) "exactValue":the exact value that occurs within the message text. In the first example it is 'burger'.
-c) "kind":the kind of the entity eg in the first example  Food , and in the second one Drinks
-d) "foundAt":[start location , end location] -> [9 15] the position where it is detected in text .
+a) **value**:the value of the entity , In the first example it is 'Burger'.
+b) **exactValue**:the exact value that occurs within the message text. In the first example it is 'burger'.
+c) **kind**:the kind of the entity eg in the first example  Food , and in the second one Drinks
+d) **foundAt**:[start location , end location] -> [9 15] the position where it is detected in text .
 
 Relations
 *********
@@ -90,7 +90,17 @@ Each user and chatbot message pair is treated as a dialog , the bot in dev mode 
 
 .. image:: dialogNumber.png
 
-you can read more about chatbots `here <https://chatbotsmagazine.com/>`_
+
+SubConversations
+*****************
+
+For complex bot's its useful to divide the conversation into subconverations . For example lets say we want to make a bot to capture orders from users.
+1) We will possibly have some conversation about the user's identity or address
+2) We will possible have some conversation about the user's order/orders.
+3) User may want to inquire about previous orders , track order.
+
+We can think of each of these as subconversations . For more info look at Take Order Bots .
+
 
 
 How to Create Bots
@@ -3432,7 +3442,7 @@ In case you need to see the full code first you can find it `here <https://githu
 How conversation with this bot should look like
 ************************************************
 
-Now we are starting to get into some serious bots ! .
+Now we are starting to get into some serious bots !
 
 Its very useful to write out what an idealised  bot conversation should look like  to get an idea about how the bot should behave .
 Since we have already created the bot we will just show the output here . For your case you should write out a few sample conversations by hand !
@@ -3695,8 +3705,8 @@ Sub Conversations
 
 You'll notice that we have divided the whole conversation into two subconversations .
 
-    1) SubConversation1 is about everything except making an order
-    2) SubConversation2 is about making sure we have all things to complete the order.
+    1) **SubConversation1** is about everything except making an order
+    2) **SubConversation2** is about making sure we have all things to complete the order.
 
 This helps us segregate the bot reason into multiple subparts or subconversations.
 
@@ -3707,6 +3717,274 @@ Each Sub Conversation will have
    3) **enterOnLogic** : This is a function that describes the bot logic on enterring the SubConversation . Takes in contextManager and bots previous outputs ,returning three things namely stayInSubConversation, contextManager , outputs . Where stayInSubConversation indicates if the bot should stay in the current subconversation.
    4) **exitOnLogic**  : This is a function that describes the bot logic on exiting the SubConversation . Takes in contextManager and bots previous outputs returning modified contextManager and outputs.
 
+Also a useful thing to have is the **isHappening** property of the subConversation which can be used to check if the bot is in that particular conversation.
+
+Now let's tackle each of these subconversations separately .
+
+
+SubConversation1
+*****************
+
+This subconversation will handle everything except making the order .
+Note that we never will stay in this subconversation for more than a single message so we don't need an exitOnlogic or exit method for this.
+
+we just need the enter method and enterOnLogic method.
+
+
+.. code:: python
+
+   from simbots.Bot import SubConversation
+
+   def enterAllElse(contextManager):
+
+       currentIntentName = contextManager.findCurrentTopIntent()['name']
+       return currentIntentName != "OrderFood"
+
+   def enterLogicAllElse(contextManager,outputs =None):
+
+       if outputs is None:
+           outputs = []
+
+       intentName = contextManager.findCurrentTopIntent()['name']
+
+       reply = {'tag': '{0}.basic'.format(intentName), 'data': None}
+
+       outputs.append(reply)
+
+       stayInSubConversation = False
+
+       return stayInSubConversation, contextManager, outputs
+
+
+    subConversation1  = SubConversation(
+                                        name = "allElse" ,
+                                        enter = enterAllElse,
+                                        onEnterLogic = enterLogicAllElse
+    )
+
+
+done ! we will enter this subconversation everytime we dont have an OrderFood intent .
+
+SubConversation2
+****************
+
+Now for subconversation2
+
+we will enter this subconversation when we have the order food intent
+
+.. code:: python
+
+   def enterTakeOrder(contextManager):
+
+       # Will enter this loop if intent is order food
+
+       currentIntentName = contextManager.findCurrentTopIntent()['name']
+
+       return currentIntentName == "OrderFood"
+
+
+Now once we enter this subconversation we will
+
+
+    1) Check if we have any entities relating to food .
+    2) Update the context manager with any entites found.
+    3) If everything we need to complete order is there we create a completed order message and set **stayInSubConversation** to false ie. exit the subconversation.
+    4) If we don't have everything we need to complete the order we create message for missing items and set **stayInSubConversation** to true . this will set the **isHappening** property of the subconversation to be true which you can later access in the bots reason method.
+
+.. code:: python
+
+   def checkIfPresentInSessionVariables(entityKind,sessionVariables):
+
+       entityKindPresent =   entityKind in sessionVariables.keys()
+
+       entityValue       =   sessionVariables.get(entityKind, "")
+
+       return entityKindPresent,entityValue
+
+
+
+   def enterLogicTakeOrder(contextManager,outputs = None):
+
+       if outputs is None:
+           outputs = []
+
+       # Get Already Existing Entities
+
+       if "sessionVariables" in contextManager.context.keys():
+           sessionVariables  = contextManager.context["sessionVariables"]
+       else:
+           sessionVariables={}
+
+       currentEntities = [entity for entity in contextManager.findCurrentEntities() if "Food" in entity["kind"]]
+
+       # Update entites in context
+
+       for entity in currentEntities:
+
+           sessionVariables[entity["kind"]] = entity["value"]
+
+       contextManager.context["sessionVariables"] =  sessionVariables
+
+       contextManager.updateContextTree()
+
+
+       # Formulate reply
+
+
+
+       foodTypePresent,foodType = checkIfPresentInSessionVariables("FoodType",sessionVariables)
+       foodSizePresent,foodSize = checkIfPresentInSessionVariables("FoodSize",sessionVariables)
+       foodNamePresent,foodName = checkIfPresentInSessionVariables("FoodName",sessionVariables)
+
+
+
+       if  foodNamePresent and foodTypePresent and foodSizePresent :
+           stayInSubConversation = False
+
+           contextManager.context["sessionVariables"] =  {}
+           contextManager.updateContextTree()
+           foodType = foodType.replace("pizza","").replace("burger","")
+
+           # Write function to save context variables here
+
+           outputs.append({'tag': 'OrderFood.basic', 'data': [foodName,foodSize,foodType]})
+
+       else:
+           stayInSubConversation = True
+           outputs.append({'tag': 'OrderFood.missing', 'data': [foodName,foodSize,foodType]})
+
+       return stayInSubConversation, contextManager, outputs
+
+done !
+
+We will exit when we have a discard intent. No need to define **exitOnLogic** as subconversation1 will give us output message for discarding/cancelling the order.
+
+.. code:: python
+
+    def exitTakeOrder(contextManager):
+
+       # Will exit loop if intent is Discard
+
+       currentIntentName = contextManager.findCurrentTopIntent()['name']
+
+       return currentIntentName == "Discard"
+
+
+now lets create the subconversation
+
+
+.. code:: python
+
+    subConversation2 = SubConversation(name="TakingOrder",
+                                          enter = enterTakeOrder,
+                                          exit   = exitTakeOrder,
+                                          onEnterLogic = enterLogicTakeOrder,
+
+                                          )
+
+Bot Logic
+*********
+
+Now we need to enter subconversation1 if enter condition is satified and   subconversation2 if its happenning or we satisfy the enter condition.
+
+.. code:: python
+
+   from simbots.Bot import Bot
+   from simbots.utils.builtInIntents import IntentSamples
+   from simbots.utils.builtInEntities import EntitySamples
+   import json
+
+   subConversations =[
+
+       subConversation1,
+       subConversation2,
+
+
+   ]
+
+   class NewBot(Bot):
+
+       def reason(self):
+
+           outputs = []
+           # If user has asked any of the other questions except placing order execute this
+           if self.subConversations[0].enterOn(self.contextManager):
+               self.contextManager,outputs = self.subConversations[0].execute(self.contextManager,outputs)
+
+           # If user was in the process of making an order execute this
+           if self.subConversations[1].isHappening or self.subConversations[1].enterOn(self.contextManager):
+               self.contextManager,outputs = self.subConversations[1].execute(self.contextManager,outputs)
+
+
+           return outputs
+
+
+   newB = NewBot(intentExamples, entityExamples, botMessages,
+                 confidenceLimit=0,subConversations=subConversations)
+
+   outputTheme = 'themeBasic'
+   newB.run(theme = outputTheme)
+
+
+Done !
+
+Sample Conversation
+*******************
+
+.. code:: shell
+
+
+   <1> User : hi
+   <1> themeBasicBot : Hi there ! what can I do for you ?
+   <2> User : what can you do ?
+   <2> themeBasicBot : I am learning to make basic conversation ! Im taking orders if you want something to eat !
+   <3> User : thats awesome !
+   <3> themeBasicBot : cool
+   <4> User : get me a pizza then
+   <4> themeBasicBot : Just need a few more details to complete your order :
+    1) Name : pizza
+    2) Size :
+    3) Type :
+   <5> User : i want to know you name ?
+   <5> themeBasicBot : You can call me riko
+   Just need a few more details to complete your order :
+    1) Name : pizza
+    2) Size :
+    3) Type :
+   <6> User : i changed my mind on the pizza
+   <6> themeBasicBot : Im cancelling your order
+   <7> User : can you show me the menu ?
+   <7> themeBasicBot : We currently serve
+    1) Pizza [cheese and corn , Margherita ]
+    2) Burger [Alu tikki , Bean]
+   <8> User : ahh i guess ill have a bean burger
+   <8> themeBasicBot : Just need a few more details to complete your order :
+    1) Name : burger
+    2) Size :
+    3) Type : burgerBean
+   <9> User : make it a large one
+   <9> themeBasicBot : Thanks for placing your order . Your order is :
+    1) Name : burger
+    2) Size : large
+    3) Type : Bean
+
+   <10> User : thanks for the order !
+   <10> themeBasicBot : Dont mention it
+   <11> User : bye
+   <11> themeBasicBot : Bubye !
+
+What Next ?
+***********
+
+This looks good but a couple of things are off..
+
+    1) there's no quantity indicator.
+    2) We haven't ensured that food types and food Names match ie its possible to have a bean pizza :)
+    3) We need some relations.
+    4) We haven't saved the order anywhere !
+    5) Maybe we can improve the conversation dialogue ?
+
+More on this in the next section .
 
 
 
