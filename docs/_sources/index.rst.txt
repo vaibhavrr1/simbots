@@ -1042,6 +1042,8 @@ faq's to get data for the bot .
 It assumes you have `yake <https://pypi.org/project/yake/>`_ and `beautiful soup <https://pypi.org/project/beautifulsoup4/>`_ installed
 and some knowledge of web scraping .
 
+the complete code for this tutorial can be found `here <https://github.com/vaibhavrr1/simbots/blob/main/sampleBots/FaqsBot.ipynb>`_ .
+
 this one is going to be one long tutorial :) lets get started !
 
 Getting the Initial Data
