@@ -19,6 +19,7 @@ Its Basic functions :-
 5) Provides a framework to define test conversation of the bot and test it.
 6) Support saving and loading existing conversation .
 7) Support saving and loading trained Chatbot .
+8) Supports Sub Conversation management and creation .
 
 
 Installation
@@ -3382,6 +3383,14 @@ consequently any new bot can be loaded by
 
    newB.loadBot("botSession1.p")
 
+*******************
+Take Order Bot V1
+*******************
+
+Whew ! we have made it so far ! lets now start making a bot to capture orders from customers . This tutorial will introduce you to the concept of Sub Conversations and Context Management.
+We will start by building a bot to capture simple customer orders and then modify the bot for better conversational experience in Take Order Bot V2 !
+
+lets get started !
 
 
 
