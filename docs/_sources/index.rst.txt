@@ -320,7 +320,22 @@ Once we have defined the bot, lets run it !
 
 The output should look like
 
-.. image:: quickStartBotOutput.png
+.. code:: shell
+
+   Type in @@ to exit bot
+   @i to get intents
+   @c to get context
+   @e to get entities
+   @t to add a test case
+   @etc to evaluate a test case
+   @eatc to evaluate all test cases
+   @ti to add intent
+   <1> User : hi
+   <1> themeBasicBot : Hello
+   <2> User : who are you ?
+   <2> themeBasicBot : I am riko
+   <3> User : hey riko !
+   <3> themeBasicBot : Hi there ! what can I do for you ?
 
 
 Note that the bot can only answer two questions , because thats all we tought it to do !
@@ -336,7 +351,7 @@ If you simply want the bots output as text .
 A Bot for simple conversation
 *********************
 
-Now here's the bot with a number of intents and entities added .
+Now here's the bot with a number of intents and entities added . In case you want to see the jupyter notebook use `here <https://github.com/vaibhavrr1/simbots/blob/main/sampleBots/BotForSimpleConversation.ipynb>`_ .
 
 What this bot will do
 **********************
@@ -446,60 +461,12 @@ Complete Code
                                           ]}}}
 
 
-   class NewBot(Bot):
-
-       def reason(self):
-
-           # # find current dialogNumber
-
-           currentDialogNumber = self.contextManager.context['dialogs'][-1]
-
-           currentTopIntent = self.contextManager.findCurrentTopIntent()
-
-           currentEntities = self.contextManager.findCurrentEntities()
-
-           output = []
-
-           if currentTopIntent['confidence'] < self.confidenceLimit \
-                   or currentTopIntent['name'] == 'Irrelevant':
-               currentTopIntent = {}
-
-           if currentTopIntent:
-
-               # #
-               # # Rule For All
-               # #
-               # if currentTopIntent["name"]=="Greetings":
-               # #
-               # # Person is greeting
-               # #
-
-               name = currentTopIntent['name']
-               reply = {'tag': '{0}.basic'.format(name), 'data': None}
-
-               # "message":""
-
-               output.append(reply)
-           else:
-
-               # #
-               # #
-               # # Rule for irrelevant
-               # #
-               # #
-
-               irrelevant = {'tag': 'Irrelevant.basic', 'data': None}
-
-               output.append(irrelevant)
-
-           return output
-
-
-   newB = NewBot(intentExamples, entityExamples, botMessages,
-                 confidenceLimit=0)
+   newB = Bot(intentExamples, entityExamples, botMessages,
+              confidenceLimit=0)
 
    outputTheme = 'themeBasic'
    newB.run(theme = outputTheme)
+
 
 Sample Conversations
 **********************
@@ -516,36 +483,35 @@ Some conversations with this bot :
    @etc to evaluate a test case
    @eatc to evaluate all test cases
    @ti to add intent
-
-   User : hi
-   themeBasicBot : Hello ! What can i do for you ?
-   User : who are you ?
-   themeBasicBot : I am riko
-   User : hey riko
-   themeBasicBot : Hello ! What can i do for you ?
-   User : what can you do ?
-   themeBasicBot : I am learning to make basic conversation !
+   <1> User : hi
+   <1> themeBasicBot : Hello
+   <2> User : who are you ?
+   <2> themeBasicBot : I am riko
+   <3> User : hey riko !
+   <3> themeBasicBot : Hi there ! what can I do for you ?
+   <4> User : what can you do ?
+   <4> themeBasicBot : I am learning to make basic conversation !
     ... and i can tell you a couple of jokes :)
-   User : tell me one then
-   themeBasicBot :
+   <5> User : sure tell me one
+   <5> themeBasicBot :
 
     Sure here is one
-    I burned 2000 calories today<>I left my food in the oven for too long.
-   User : hahaha
-   themeBasicBot : Im glad i was able to make you smile !
-   User : thats awesome
-   themeBasicBot : thanks
-   User : do you have a sister ?
-   themeBasicBot : Umm no i dont really have any relatives :)
-   User : oh ok
-   themeBasicBot : cool
-   User : bye
-   themeBasicBot : Bye ! nice chatting with you !
-   User : @@
-   Process finished with exit code 0
+    What did one pirate say to the other when he beat him at chess? Checkmatey.
+   <6> User : hahah
+   <6> themeBasicBot : Im glad i was able to make you smile !
+   <7> User : thats amazing !
+   <7> themeBasicBot : So nice of you to say that !
+   <8> User : do you have a sister perhaps ?
+   <8> themeBasicBot : Umm no i dont really have any relatives :)
+   <9> User : oh thats too bad
+   <9> themeBasicBot : I know right
+   <10> User : thanks for talking to me !
+   <10> themeBasicBot : Thanks ! now i think ill blush
+   <11> User : bye then
+   <11> themeBasicBot : Bye ! nice chatting with you !
+   <12> User : @@
 
 
----------
 
 *********************
 Reply Using Name

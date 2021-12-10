@@ -247,7 +247,7 @@
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id4">
+      <a class="reference internal nav-link" href="#id5">
        What this bot will do
       </a>
      </li>
@@ -269,12 +269,12 @@
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id5">
+      <a class="reference internal nav-link" href="#id6">
        Entities
       </a>
      </li>
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id6">
+      <a class="reference internal nav-link" href="#id7">
        Intents
       </a>
      </li>
@@ -654,7 +654,22 @@ corresponding basic template message.</p>
 </pre></div>
 </div>
 <p>The output should look like</p>
-<img alt="_images/quickStartBotOutput.png" src="_images/quickStartBotOutput.png" />
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Type <span class="k">in</span> @@ to <span class="nb">exit</span> bot
+@i to get intents
+@c to get context
+@e to get entities
+@t to add a <span class="nb">test</span> <span class="k">case</span>
+@etc to evaluate a <span class="nb">test</span> <span class="k">case</span>
+@eatc to evaluate all <span class="nb">test</span> cases
+@ti to add intent
+&lt;<span class="m">1</span>&gt; User : hi
+&lt;<span class="m">1</span>&gt; themeBasicBot : Hello
+&lt;<span class="m">2</span>&gt; User : who are you ?
+&lt;<span class="m">2</span>&gt; themeBasicBot : I am riko
+&lt;<span class="m">3</span>&gt; User : hey riko !
+&lt;<span class="m">3</span>&gt; themeBasicBot : Hi there ! what can I <span class="k">do</span> <span class="k">for</span> you ?
+</pre></div>
+</div>
 <p>Note that the bot can only answer two questions , because thats all we tought it to do !</p>
 <p>If you simply want the bots output as text .</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="o">=</span> <span class="n">newB</span><span class="o">.</span><span class="n">getBotOutput</span><span class="p">(</span><span class="s2">&quot;hi who are you ?&quot;</span><span class="p">,</span><span class="n">outputTheme</span> <span class="o">=</span><span class="s2">&quot;themeBasic&quot;</span><span class="p">)</span>
@@ -665,9 +680,9 @@ corresponding basic template message.</p>
 </div>
 <div class="section" id="a-bot-for-simple-conversation">
 <h2>A Bot for simple conversation<a class="headerlink" href="#a-bot-for-simple-conversation" title="Permalink to this headline">¶</a></h2>
-<p>Now here’s the bot with a number of intents and entities added .</p>
-<div class="section" id="id4">
-<h3>What this bot will do<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Now here’s the bot with a number of intents and entities added . In case you want to see the jupyter notebook use <a class="reference external" href="https://github.com/vaibhavrr1/simbots/blob/main/sampleBots/BotForSimpleConversation.ipynb">here</a> .</p>
+<div class="section" id="id5">
+<h3>What this bot will do<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>This will be able to answer to basic questions like</p>
 <ol class="arabic simple">
 <li><p>Hello</p></li>
@@ -771,57 +786,8 @@ corresponding basic template message.</p>
                                        <span class="p">]}}}</span>
 
 
-<span class="k">class</span> <span class="nc">NewBot</span><span class="p">(</span><span class="n">Bot</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="nf">reason</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-        <span class="c1"># # find current dialogNumber</span>
-
-        <span class="n">currentDialogNumber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s1">&#39;dialogs&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-        <span class="n">currentTopIntent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">findCurrentTopIntent</span><span class="p">()</span>
-
-        <span class="n">currentEntities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contextManager</span><span class="o">.</span><span class="n">findCurrentEntities</span><span class="p">()</span>
-
-        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">if</span> <span class="n">currentTopIntent</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidenceLimit</span> \
-                <span class="ow">or</span> <span class="n">currentTopIntent</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Irrelevant&#39;</span><span class="p">:</span>
-            <span class="n">currentTopIntent</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="k">if</span> <span class="n">currentTopIntent</span><span class="p">:</span>
-
-            <span class="c1"># #</span>
-            <span class="c1"># # Rule For All</span>
-            <span class="c1"># #</span>
-            <span class="c1"># if currentTopIntent[&quot;name&quot;]==&quot;Greetings&quot;:</span>
-            <span class="c1"># #</span>
-            <span class="c1"># # Person is greeting</span>
-            <span class="c1"># #</span>
-
-            <span class="n">name</span> <span class="o">=</span> <span class="n">currentTopIntent</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
-            <span class="n">reply</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.basic&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
-
-            <span class="c1"># &quot;message&quot;:&quot;&quot;</span>
-
-            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reply</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-
-            <span class="c1"># #</span>
-            <span class="c1"># #</span>
-            <span class="c1"># # Rule for irrelevant</span>
-            <span class="c1"># #</span>
-            <span class="c1"># #</span>
-
-            <span class="n">irrelevant</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;Irrelevant.basic&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
-
-            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">irrelevant</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">output</span>
-
-
-<span class="n">newB</span> <span class="o">=</span> <span class="n">NewBot</span><span class="p">(</span><span class="n">intentExamples</span><span class="p">,</span> <span class="n">entityExamples</span><span class="p">,</span> <span class="n">botMessages</span><span class="p">,</span>
-              <span class="n">confidenceLimit</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">newB</span> <span class="o">=</span> <span class="n">Bot</span><span class="p">(</span><span class="n">intentExamples</span><span class="p">,</span> <span class="n">entityExamples</span><span class="p">,</span> <span class="n">botMessages</span><span class="p">,</span>
+           <span class="n">confidenceLimit</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">outputTheme</span> <span class="o">=</span> <span class="s1">&#39;themeBasic&#39;</span>
 <span class="n">newB</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">theme</span> <span class="o">=</span> <span class="n">outputTheme</span><span class="p">)</span>
@@ -839,45 +805,44 @@ corresponding basic template message.</p>
 @etc to evaluate a <span class="nb">test</span> <span class="k">case</span>
 @eatc to evaluate all <span class="nb">test</span> cases
 @ti to add intent
-
-User : hi
-themeBasicBot : Hello ! What can i <span class="k">do</span> <span class="k">for</span> you ?
-User : who are you ?
-themeBasicBot : I am riko
-User : hey riko
-themeBasicBot : Hello ! What can i <span class="k">do</span> <span class="k">for</span> you ?
-User : what can you <span class="k">do</span> ?
-themeBasicBot : I am learning to make basic conversation !
+&lt;<span class="m">1</span>&gt; User : hi
+&lt;<span class="m">1</span>&gt; themeBasicBot : Hello
+&lt;<span class="m">2</span>&gt; User : who are you ?
+&lt;<span class="m">2</span>&gt; themeBasicBot : I am riko
+&lt;<span class="m">3</span>&gt; User : hey riko !
+&lt;<span class="m">3</span>&gt; themeBasicBot : Hi there ! what can I <span class="k">do</span> <span class="k">for</span> you ?
+&lt;<span class="m">4</span>&gt; User : what can you <span class="k">do</span> ?
+&lt;<span class="m">4</span>&gt; themeBasicBot : I am learning to make basic conversation !
  ... and i can tell you a couple of jokes :<span class="o">)</span>
-User : tell me one <span class="k">then</span>
-themeBasicBot :
+&lt;<span class="m">5</span>&gt; User : sure tell me one
+&lt;<span class="m">5</span>&gt; themeBasicBot :
 
  Sure here is one
- I burned <span class="m">2000</span> calories today&lt;&gt;I left my food <span class="k">in</span> the oven <span class="k">for</span> too long.
-User : hahaha
-themeBasicBot : Im glad i was able to make you smile !
-User : thats awesome
-themeBasicBot : thanks
-User : <span class="k">do</span> you have a sister ?
-themeBasicBot : Umm no i dont really have any relatives :<span class="o">)</span>
-User : oh ok
-themeBasicBot : cool
-User : bye
-themeBasicBot : Bye ! nice chatting with you !
-User : @@
-Process finished with <span class="nb">exit</span> code <span class="m">0</span>
+ What did one pirate say to the other when he beat him at chess? Checkmatey.
+&lt;<span class="m">6</span>&gt; User : hahah
+&lt;<span class="m">6</span>&gt; themeBasicBot : Im glad i was able to make you smile !
+&lt;<span class="m">7</span>&gt; User : thats amazing !
+&lt;<span class="m">7</span>&gt; themeBasicBot : So nice of you to say that !
+&lt;<span class="m">8</span>&gt; User : <span class="k">do</span> you have a sister perhaps ?
+&lt;<span class="m">8</span>&gt; themeBasicBot : Umm no i dont really have any relatives :<span class="o">)</span>
+&lt;<span class="m">9</span>&gt; User : oh thats too bad
+&lt;<span class="m">9</span>&gt; themeBasicBot : I know right
+&lt;<span class="m">10</span>&gt; User : thanks <span class="k">for</span> talking to me !
+&lt;<span class="m">10</span>&gt; themeBasicBot : Thanks ! now i think ill blush
+&lt;<span class="m">11</span>&gt; User : bye <span class="k">then</span>
+&lt;<span class="m">11</span>&gt; themeBasicBot : Bye ! nice chatting with you !
+&lt;<span class="m">12</span>&gt; User : @@
 </pre></div>
 </div>
 </div>
 </div>
-<hr class="docutils" />
 <div class="section" id="reply-using-name">
 <h2>Reply Using Name<a class="headerlink" href="#reply-using-name" title="Permalink to this headline">¶</a></h2>
 <p>Often you will need to detect names from messages and generate a reply using that name .
 There isn’t any easy way to write a regex pattern to detect names .To do this you will need a Machine learning or Deep learning based solution.
 Spacy provides NER to detect person names . Of course, you can also define your own custom name detection mechanism .</p>
-<div class="section" id="id5">
-<h3>Entities<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Entities<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>To start off you need to define an entity extractor and an entity substituter .</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
 
@@ -925,8 +890,8 @@ Spacy provides NER to detect person names . Of course, you can also define your 
 </pre></div>
 </div>
 </div>
-<div class="section" id="id6">
-<h3>Intents<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>Intents<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p>Also we will need to define Intents for name detection lets call it PersonName</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;PersonName&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;My name is Vaibhav&quot;</span><span class="p">,</span><span class="s2">&quot;I am Vaibhav Arora .&quot;</span><span class="p">,</span><span class="s2">&quot;You can call me Rahul .&quot;</span> <span class="p">,</span>
                 <span class="s2">&quot;I am Simon  . &quot;</span><span class="p">,</span><span class="s2">&quot;I am Riko .&quot;</span><span class="p">,</span><span class="s2">&quot;You can call me Shiva . &quot;</span><span class="p">]}</span>
