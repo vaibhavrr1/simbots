@@ -7,8 +7,8 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name = "simbots",
-    version = "0.0.21",
-    description = "Simple bots or Simbots is a library designed to create simple bots using the power of python.",
+    version = "0.0.22",
+    description = "Simple bots or Simbots is a library designed to create simple bots  .",
     packages =["simbots","simbots\\utils"],
     package_dir = {'':'simbots'},
     classifiers = ["Development Status :: 1 - Planning","Operating System :: OS Independent","License :: OSI Approved :: MIT License","Programming Language :: Python :: 3"],

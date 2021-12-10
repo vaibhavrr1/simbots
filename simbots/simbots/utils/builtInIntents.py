@@ -413,6 +413,13 @@ class IntentSamples():
             'Never',
             'Cancel that',
             'Build a new one',
+            'cancel ',
+            "i do not want to do that",
+            "i changed my mind",
+            "i have had a change of heart",
+            "i think i want to cancel",
+            "please dont",
+            "please do not do that"
         ]
 
     @staticmethod

@@ -7,7 +7,7 @@ class ContextManager():
     """
 
     Context handler class, This maintains context as a dict and also as a Object Path tree, to facilitate searching within the context
-    also provides functions to search within the context object
+    also provides functions to search within the context object. Context manager also manages and handles subconversations .
 
     """
 
@@ -25,6 +25,8 @@ class ContextManager():
             "messages":[]
         }
         self.contextTree = Tree(self.context)
+
+
 
     def setNewContext(self,newContext):
         """
@@ -178,6 +180,8 @@ class ContextManager():
 
         """
         self.contextTree = Tree(self.context)
+
+
 
 
 

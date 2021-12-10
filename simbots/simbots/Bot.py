@@ -8,20 +8,24 @@ import json
 import datetime
 import pickle as p
 import copy
+import uuid
 
 class Bot():
+
     """
+
     Whenever a new bot is created it will inherit from the Bot class.
 
     """
 
-    def __init__(self, intentExamples, entityExamples, templates, confidenceLimit=0,testCases=None):
+    def __init__(self, intentExamples, entityExamples, templates, confidenceLimit=0,testCases=None,subConversations=None):
         """
 
         :param intentExamples: The Intents need to be in a json format as accepted by IntentsHandler
         :param entityExamples: The Entities need to be in a json format as accepted by entities handler
         :param templates:  Bot output message templates
         :param confidenceLimit: Confidence limit for any intent to be accepted to generate a response
+        :param subConversations: a list of SubConversationObjects which may be used to execute reason
         """
 
 
@@ -66,6 +70,16 @@ class Bot():
         self.templates = templates
         self.confidenceLimit = confidenceLimit
 
+        # Subconversation Management
+
+        if subConversations is not None:
+            self.subConversations = subConversations
+        else:
+            self.subConversations = []
+
+
+
+        # Test Case Management
 
         self.testCases = testCases
         if not self.testCases :
@@ -207,8 +221,12 @@ class Bot():
             queryResults = self.templatesTree.execute(query)
             message = random.choice(queryResults)
             data = component["data"]
+
             if data:
-                message = message.format(data)
+                if type(data) not in [list,tuple]:
+                    data=[data]
+
+                message = message.format(*data)
             botSpeech.append(message)
 
         return botSpeech
@@ -688,3 +706,105 @@ class Bot():
         self.testCases   = data["testCases"]
         self.intentExamples = data["intentExamples"]
         self.entityExamples = data["entityExamples"]
+
+
+    def findCurrentlyHappeningSubconversation(self):
+
+        # check if any sub conversation is already happening
+        for i, subConv in enumerate(self.subConversations):
+            if subConv.isHappening:
+                return [i, subConv.subConversationId]
+
+        # check if any sub conversation should now happen
+        contextManagerCopy = copy.deepcopy(self.contextManager)
+        for i, subConv in enumerate(self.subConversations):
+            if subConv.enterOn(contextManagerCopy):
+                return [i, subConv.subConversationId]
+
+        return [None, None]
+
+    def executeCurrentSubConversation(self, outputs=None):
+        if outputs is None:
+            outputs = []
+
+        convIndex, convId = self.findCurrentlyHappeningSubconversation()
+
+        if convIndex is not None:
+            # Overwrite the existing context manager
+            self.contextManager, outputs =  self.subConversations[convIndex].execute(self.contextManager, outputs)
+
+
+        return outputs
+
+
+class SubConversation():
+
+    def __init__(self, name=str(uuid.uuid4()), subConversationId=str(uuid.uuid4()), enter=None, exit=None,
+                 onEnterLogic=None, onExitLogic=None):
+
+        self.name = name
+
+        self.isHappening = False
+
+        self.subConversationId = subConversationId
+
+        if enter is not None:
+
+            self.enter = enter
+
+        else:
+
+            self.enter = lambda x: False
+
+        if exit is not None:
+
+            self.exit = exit
+
+        else:
+
+            self.exit = lambda x: False
+
+        if onEnterLogic is not None:
+
+            self.onEnterLogic = onEnterLogic
+
+        else:
+
+            self.onEnterLogic = lambda x, y: (False, x, y)
+
+        if onExitLogic is not None:
+
+            self.onExitLogic = onExitLogic
+
+        else:
+
+            self.onExitLogic = lambda x, y: (x, y)
+
+    def enterOn(self, contextManager):
+
+        self.isHappening = self.enter(contextManager)
+
+        return self.isHappening
+
+    def exitOn(self, contextManager):
+
+        self.isHappening = self.exit(contextManager)
+
+        return self.isHappening
+
+    def execute(self, contextManager, outputs):
+
+        if self.exitOn(contextManager):
+            # hard exit the bot if exit on condition is fulfilled
+            self.isHappening = False
+
+            contextManger, outputs = self.onExitLogic(contextManager, outputs)
+
+            return contextManager, outputs
+        else:
+
+            remainInSubConversation, contextManager, outputs = self.onEnterLogic(contextManager, outputs)
+
+            self.isHappening = remainInSubConversation
+
+            return contextManager, outputs
