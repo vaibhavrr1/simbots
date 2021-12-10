@@ -174,6 +174,33 @@
     <a class="reference internal nav-link" href="#chatbot-terminology">
      Chatbot Terminology
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#intents">
+       Intents
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#entities">
+       Entities
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#relations">
+       Relations
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#context">
+       Context
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#dialognumber">
+       DialogNumber
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -193,12 +220,12 @@
       </a>
      </li>
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#intents">
+      <a class="reference internal nav-link" href="#id1">
        Intents
       </a>
      </li>
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#entities">
+      <a class="reference internal nav-link" href="#id2">
        Entities
       </a>
      </li>
@@ -220,7 +247,7 @@
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id1">
+      <a class="reference internal nav-link" href="#id3">
        What this bot will do
       </a>
      </li>
@@ -242,12 +269,12 @@
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id2">
+      <a class="reference internal nav-link" href="#id4">
        Entities
       </a>
      </li>
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id3">
+      <a class="reference internal nav-link" href="#id5">
        Intents
       </a>
      </li>
@@ -257,7 +284,7 @@
       </a>
      </li>
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id4">
+      <a class="reference internal nav-link" href="#id6">
        Reason (Bot Logic)
       </a>
      </li>
@@ -376,17 +403,22 @@ model to create bots .</p>
 <p>This usage guide will help illuminate you about chatbots !</p>
 <div class="section" id="chatbot-terminology">
 <h2>Chatbot Terminology<a class="headerlink" href="#chatbot-terminology" title="Permalink to this headline">¶</a></h2>
-<p><strong>Intent</strong>: An intent is what the user intends to say . Lets say that a user types in</p>
+<div class="section" id="intents">
+<h3>Intents<a class="headerlink" href="#intents" title="Permalink to this headline">¶</a></h3>
+<p>An <strong>Intent</strong> is what the user intends to say . Lets say that a user types in</p>
 <ol class="arabic simple">
 <li><p>I want a Burger.</p></li>
 <li><p>Can you get me a diet coke ?</p></li>
 <li><p>I want a pizza.</p></li>
 </ol>
 <p>In all three cases the intent is to Order Food.</p>
-<p><strong>Entity</strong>: An entity is something that adds detail to the intent . These are often keywords in the sentence.</p>
+</div>
+<div class="section" id="entities">
+<h3>Entities<a class="headerlink" href="#entities" title="Permalink to this headline">¶</a></h3>
+<p>An <strong>Entity</strong> is something that adds detail to the intent . These are often keywords in the sentence.</p>
 <ol class="arabic simple">
-<li><p>I want a burger. -&gt; Entity : Burger</p></li>
-<li><p>Can you get me a diet coke ? -&gt; Entity : diet coke</p></li>
+<li><p>I want a <strong>burger</strong>.  , Entity : Burger</p></li>
+<li><p>Can you get me a <strong>diet coke</strong> ? , Entity : diet coke</p></li>
 <li><p>I want a pizza. -&gt; Entity : pizza</p></li>
 </ol>
 <p>entities have multiple properties :</p>
@@ -396,18 +428,28 @@ model to create bots .</p>
 <li><p>“kind”:the kind of the entity eg in the first example  Food , and in the second one Drinks</p></li>
 <li><p>“foundAt”:[start location , end location] -&gt; [9 15] the position where it is detected in text .</p></li>
 </ol>
-<p><strong>Relation</strong>: Often entities and intents together can help one determine the meaning of a sentence but sometimes entites interact together .
-A relation is established between sentences to help bring more clarity to what the user is saying. For example:</p>
+</div>
+<div class="section" id="relations">
+<h3>Relations<a class="headerlink" href="#relations" title="Permalink to this headline">¶</a></h3>
+<p>Often entities and intents together can help one determine the meaning of a sentence but sometimes entities interact together .
+A <strong>Relation</strong> is established between sentences to help bring more clarity to what the user is saying. For example:</p>
 <ol class="arabic simple">
-<li><p>I want a cheese burger or a bean burger. -&gt; here entities are cheese burger , bean burger and there is an “or” relation between these two</p></li>
-<li><p>I want a cheese burger and fries. -&gt; here entities are cheese burger , fries and there is an “and” relation between these two</p></li>
+<li><p>I want a cheese burger <strong>or</strong> a bean burger. -&gt; here entities are cheese burger , bean burger and there is an “or” relation between these two</p></li>
+<li><p>I want a cheese burger <strong>and</strong> fries. -&gt; here entities are cheese burger , fries and there is an “and” relation between these two</p></li>
 </ol>
-<p><strong>Context</strong>: Without Context any bot would only be able to reply to the message it just received and not the messages it received in the past .
+</div>
+<div class="section" id="context">
+<h3>Context<a class="headerlink" href="#context" title="Permalink to this headline">¶</a></h3>
+<p>Without <strong>Context</strong> any bot would only be able to reply to the message it just received and not the messages it received in the past .
 Context in the case of simbots is simply a stack of intent , entity and relations received over time. It also contains methods to query and manage the context stack.
 You can query the context method to retrieve anything in the context stack and formulate complex functionality .</p>
-<p><strong>DialogNumber</strong>: Each user and chatbot message pair is treated as a dialog , the bot in dev mode will always show the dialog number .</p>
+</div>
+<div class="section" id="dialognumber">
+<h3>DialogNumber<a class="headerlink" href="#dialognumber" title="Permalink to this headline">¶</a></h3>
+<p>Each user and chatbot message pair is treated as a dialog , the bot in dev mode will always show the <strong>dialog number</strong> .</p>
 <img alt="_images/dialogNumber.png" src="_images/dialogNumber.png" />
 <p>you can read more about chatbots <a class="reference external" href="https://chatbotsmagazine.com/">here</a></p>
+</div>
 </div>
 </div>
 <div class="section" id="how-to-create-bots">
@@ -427,8 +469,8 @@ You can query the context method to retrieve anything in the context stack and f
 <p>Who are you ?</p>
 <p>What is your age ?</p>
 </div>
-<div class="section" id="intents">
-<h3>Intents<a class="headerlink" href="#intents" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h3>Intents<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>Lets first setup some intent examples</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
@@ -518,8 +560,8 @@ You can query the context method to retrieve anything in the context stack and f
 </pre></div>
 </div>
 </div>
-<div class="section" id="entities">
-<h3>Entities<a class="headerlink" href="#entities" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Entities<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>Now we will add some entities here . Note that we dont have any interesting entities here . We have only added entities to help the bot identify certain
 intents like Greetings</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">entityExamples</span> <span class="o">=</span> <span class="p">{</span>
@@ -666,8 +708,8 @@ which can be switched to give varied responses.</p>
 <div class="section" id="a-bot-for-simple-conversation">
 <h2>A Bot for simple conversation<a class="headerlink" href="#a-bot-for-simple-conversation" title="Permalink to this headline">¶</a></h2>
 <p>Now here’s the bot with a number of intents and entities added .</p>
-<div class="section" id="id1">
-<h3>What this bot will do<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>What this bot will do<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>This will be able to answer to basic questions like</p>
 <ol class="arabic simple">
 <li><p>Hello</p></li>
@@ -876,8 +918,8 @@ Process finished with <span class="nb">exit</span> code <span class="m">0</span>
 <p>Often you will need to detect names from messages and generate a reply using that name .
 There isn’t any easy way to write a regex pattern to detect names .To do this you will need a Machine learning or Deep learning based solution.
 Spacy provides NER to detect person names . Of course, you can also define your own custom name detection mechanism .</p>
-<div class="section" id="id2">
-<h3>Entities<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Entities<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>To start off you need to define an entity extractor and an entity substituter .</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
 
@@ -925,8 +967,8 @@ Spacy provides NER to detect person names . Of course, you can also define your 
 </pre></div>
 </div>
 </div>
-<div class="section" id="id3">
-<h3>Intents<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Intents<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>Also we will need to define Intents for name detection lets call it PersonName</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;PersonName&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;My name is Vaibhav&quot;</span><span class="p">,</span><span class="s2">&quot;I am Vaibhav Arora .&quot;</span><span class="p">,</span><span class="s2">&quot;You can call me Rahul .&quot;</span> <span class="p">,</span>
                 <span class="s2">&quot;I am Simon  . &quot;</span><span class="p">,</span><span class="s2">&quot;I am Riko .&quot;</span><span class="p">,</span><span class="s2">&quot;You can call me Shiva . &quot;</span><span class="p">]}</span>
@@ -957,8 +999,8 @@ Spacy provides NER to detect person names . Of course, you can also define your 
 </pre></div>
 </div>
 </div>
-<div class="section" id="id4">
-<h3>Reason (Bot Logic)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Reason (Bot Logic)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>Lastly we need to alter the bot reason method to accomodate this</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># this goes in the reason method</span>
 

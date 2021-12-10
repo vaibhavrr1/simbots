@@ -40,7 +40,10 @@ This usage guide will help illuminate you about chatbots !
 Chatbot Terminology
 *******************
 
-**Intent**: An intent is what the user intends to say . Lets say that a user types in
+Intents
+********
+
+An **Intent** is what the user intends to say . Lets say that a user types in
 
 1) I want a Burger.
 2) Can you get me a diet coke ?
@@ -48,10 +51,12 @@ Chatbot Terminology
 
 In all three cases the intent is to Order Food.
 
-**Entity**: An entity is something that adds detail to the intent . These are often keywords in the sentence.
+Entities
+********
+An **Entity** is something that adds detail to the intent . These are often keywords in the sentence.
 
-1) I want a burger. -> Entity : Burger
-2) Can you get me a diet coke ? -> Entity : diet coke
+1) I want a **burger**.  , Entity : Burger
+2) Can you get me a **diet coke** ? , Entity : diet coke
 3) I want a pizza. -> Entity : pizza
 
 entities have multiple properties :
@@ -61,18 +66,26 @@ b) "exactValue":the exact value that occurs within the message text. In the firs
 c) "kind":the kind of the entity eg in the first example  Food , and in the second one Drinks
 d) "foundAt":[start location , end location] -> [9 15] the position where it is detected in text .
 
+Relations
+*********
 
-**Relation**: Often entities and intents together can help one determine the meaning of a sentence but sometimes entites interact together .
-A relation is established between sentences to help bring more clarity to what the user is saying. For example:
+Often entities and intents together can help one determine the meaning of a sentence but sometimes entities interact together .
+A **Relation** is established between sentences to help bring more clarity to what the user is saying. For example:
 
-1) I want a cheese burger or a bean burger. -> here entities are cheese burger , bean burger and there is an "or" relation between these two
-2) I want a cheese burger and fries. -> here entities are cheese burger , fries and there is an "and" relation between these two
+1) I want a cheese burger **or** a bean burger. -> here entities are cheese burger , bean burger and there is an "or" relation between these two
+2) I want a cheese burger **and** fries. -> here entities are cheese burger , fries and there is an "and" relation between these two
 
-**Context**: Without Context any bot would only be able to reply to the message it just received and not the messages it received in the past .
+Context
+********
+
+Without **Context** any bot would only be able to reply to the message it just received and not the messages it received in the past .
 Context in the case of simbots is simply a stack of intent , entity and relations received over time. It also contains methods to query and manage the context stack.
 You can query the context method to retrieve anything in the context stack and formulate complex functionality .
 
-**DialogNumber**: Each user and chatbot message pair is treated as a dialog , the bot in dev mode will always show the dialog number .
+DialogNumber
+************
+
+Each user and chatbot message pair is treated as a dialog , the bot in dev mode will always show the **dialog number** .
 
 .. image:: dialogNumber.png
 
