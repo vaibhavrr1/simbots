@@ -88,7 +88,7 @@ DialogNumber
 Each user and chatbot message pair is treated as a dialog , the bot in dev mode will always show the **dialog number** .
 
 
-.. image:: dialogNumber.PNG
+.. image:: dialogNumber.png
 
 you can read more about chatbots `here <https://chatbotsmagazine.com/>`_
 
@@ -107,7 +107,7 @@ To create any bot we will need to define these things:
 3) Bot Templates (Reply messages)
 4) Reason
 
-Note you can find the complete code for this bot `here <https://github.com/vaibhavrr1/simbots/blob/main/sampleBots/QuickStartBot.ipynb>`_
+Note you can find the complete code for this bot `here <https://github.com/vaibhavrr1/simbots/blob/main/sampleBots/QuickStartBot.ipynb>`_ .
 
 What this bot will do
 **********************
