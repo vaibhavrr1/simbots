@@ -72,7 +72,9 @@ A relation is established between sentences to help bring more clarity to what t
 Context in the case of simbots is simply a stack of intent , entity and relations received over time. It also contains methods to query and manage the context stack.
 You can query the context method to retrieve anything in the context stack and formulate complex functionality .
 
+**DialogNumber**: Each user and chatbot message pair is treated as a dialog , the bot in dev mode will always show the dialog number .
 
+.. image:: dialogNumber.png
 
 you can read more about chatbots `here <https://chatbotsmagazine.com/>`_
 
