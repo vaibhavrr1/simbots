@@ -376,8 +376,6 @@ Complete Code
    from simbots.utils.builtInEntities import EntitySamples
    import json
 
-
-
    intentExamples = {
        'Greetings': IntentSamples.greetingSamples(),
        'BotName': IntentSamples.botNameSamples(),
@@ -408,57 +406,150 @@ Complete Code
        'CoolHelper': EntitySamples.coolHelper(),
        'ByeHelper': EntitySamples.byeHelper(),
    }
+   someJokes = ['''Sure here is one {0}'''.format(el.replace('...'
+                , '''''')) for el in ['What did one pirate say to the other when he beat him at chess? Checkmatey.',
+               'I burned 2000 calories today<>I left my food in the oven for too long.'
+                ]]
 
-   botMessages = {'themeBasic': {
-       'Greetings': {'basic': ['Hello ! What can i do for you ?',
-                               'Hi there ! what can I do for you ?', 'Hello']},
-       'Age': {'basic': ['I am two years old ', 'I am two']},
-       'BotName': {'basic': ['I am riko', 'You can call me riko']},
-       'Abilities': {'basic': ['I am learning to make basic conversation ! \n ... and i can tell you a couple of jokes :) '
-                               ]},
-       'BirthPlace': {'basic': ['I am from  India', 'I am an Indian'
-           , 'I am punjabi and i love food']},
-       'Really': {'basic': ['To the best of my knowledge', 'Im positive !'
-                            ]},
-       'Laughter': {'basic': ['Im glad i was able to make you smile !',
-                              'See I can be funny !',
-                              'And they say I dont have a sense of humor :)']},
-       'Cool': {'basic': ['cool', 'thanks']},
-       'Bye': {'basic': ['Bubye !', 'Bye ! nice chatting with you !']},
-       'Confirm': {'basic': ['cool ']},
-       'Discard': {'basic': ['No it is then', 'agreed , no it is .']},
-       'TrueT': {'basic': ['I know right', 'that makes me ']},
-       'FalseT': {'basic': ['Im still learning ... I sometimes make mistakes '
-                            ]},
-       'Praise': {'basic': ['Thanks ! now i think ill blush ',
-                            'So nice of you to say that !']},
-       'Relatives': {'basic': ['Umm no i dont really have any relatives :)'
-                               ]},
-       'Thanks': {'basic': ['Dont mention it ',
-                            ' Im glad , please dont mention it']},
-       'Joke': {'basic': ['''
-
-    Sure here is one
-    {0}'''.format(el.replace('...'
-                             , '''
-
-   ''')) for el in
-                          ['What did one pirate say to the other when he beat him at chess? Checkmatey.'
-                              ,
-                           'I burned 2000 calories today<>I left my food in the oven for too long.'
-                           ]]},
-       'Question': {'basic': ['i dont know !']},
-       'Irrelevant': {'basic': ['Im sorry Im not getting you :( ',
-                                'Im sorry could you please rephrase ?']},
-   },
-       'funky': {'Greetings': {'basic': ['Hey Yo Wassup Bro What can i do for ya ?'
-           , 'Heyo what ya want ?']},
-                 'Abilities': {'basic': ['Yo I can get ya somethin to eat '
-                                         ]}},
-       'cowboy': {'Greetings': {'basic': ['Howdy partner what can i do for you greenhorn'
-           , ' Howdy ! Pleasure meeting ya ?']},
-                  'Abilities': {'basic': ['You up for some food ? cause i can help you with that '
-                                          ]}}}
+   botMessages = {
+      "themeBasic":{
+         "Greetings":{
+            "basic":[
+               "Hello ! What can i do for you ?",
+               "Hi there ! what can I do for you ?",
+               "Hello"
+            ]
+         },
+         "Age":{
+            "basic":[
+               "I am two years old ",
+               "I am two"
+            ]
+         },
+         "BotName":{
+            "basic":[
+               "I am riko",
+               "You can call me riko"
+            ]
+         },
+         "Abilities":{
+            "basic":[
+               "I am learning to make basic conversation ! \n ... and i can tell you a couple of jokes :) "
+            ]
+         },
+         "BirthPlace":{
+            "basic":[
+               "I am from  India",
+               "I am an Indian",
+               "I am punjabi and i love food"
+            ]
+         },
+         "Really":{
+            "basic":[
+               "To the best of my knowledge",
+               "Im positive !"
+            ]
+         },
+         "Laughter":{
+            "basic":[
+               "Im glad i was able to make you smile !",
+               "See I can be funny !",
+               "And they say I dont have a sense of humor :)"
+            ]
+         },
+         "Cool":{
+            "basic":[
+               "cool",
+               "thanks"
+            ]
+         },
+         "Bye":{
+            "basic":[
+               "Bubye !",
+               "Bye ! nice chatting with you !"
+            ]
+         },
+         "Confirm":{
+            "basic":[
+               "cool "
+            ]
+         },
+         "Discard":{
+            "basic":[
+               "No it is then",
+               "agreed , no it is ."
+            ]
+         },
+         "TrueT":{
+            "basic":[
+               "I know right",
+               "that makes me "
+            ]
+         },
+         "FalseT":{
+            "basic":[
+               "Im still learning ... I sometimes make mistakes "
+            ]
+         },
+         "Praise":{
+            "basic":[
+               "Thanks ! now i think ill blush ",
+               "So nice of you to say that !"
+            ]
+         },
+         "Relatives":{
+            "basic":[
+               "Umm no i dont really have any relatives :)"
+            ]
+         },
+         "Thanks":{
+            "basic":[
+               "Dont mention it ",
+               " Im glad , please dont mention it"
+            ]
+         },
+         "Joke":{
+            "basic":someJokes
+         },
+         "Question":{
+            "basic":[
+               "i dont know !"
+            ]
+         },
+         "Irrelevant":{
+            "basic":[
+               "Im sorry Im not getting you :( ",
+               "Im sorry could you please rephrase ?"
+            ]
+         }
+      },
+      "funky":{
+         "Greetings":{
+            "basic":[
+               "Hey Yo Wassup Bro What can i do for ya ?",
+               "Heyo what ya want ?"
+            ]
+         },
+         "Abilities":{
+            "basic":[
+               "Yo I can get ya somethin to eat "
+            ]
+         }
+      },
+      "cowboy":{
+         "Greetings":{
+            "basic":[
+               "Howdy partner what can i do for you greenhorn",
+               " Howdy ! Pleasure meeting ya ?"
+            ]
+         },
+         "Abilities":{
+            "basic":[
+               "You up for some food ? cause i can help you with that "
+            ]
+         }
+      }
+   }
 
 
    newB = Bot(intentExamples, entityExamples, botMessages,
@@ -484,33 +575,29 @@ Some conversations with this bot :
    @eatc to evaluate all test cases
    @ti to add intent
    <1> User : hi
-   <1> themeBasicBot : Hello
-   <2> User : who are you ?
-   <2> themeBasicBot : I am riko
+   <1> themeBasicBot : Hello ! What can i do for you ?
+   <2> User : who are you?
+   <2> themeBasicBot : You can call me riko
    <3> User : hey riko !
-   <3> themeBasicBot : Hi there ! what can I do for you ?
+   <3> themeBasicBot : Hello ! What can i do for you ?
    <4> User : what can you do ?
    <4> themeBasicBot : I am learning to make basic conversation !
     ... and i can tell you a couple of jokes :)
    <5> User : sure tell me one
-   <5> themeBasicBot :
-
-    Sure here is one
-    What did one pirate say to the other when he beat him at chess? Checkmatey.
+   <5> themeBasicBot : Sure here is one I burned 2000 calories today<>I left my food in the oven for too long.
    <6> User : hahah
-   <6> themeBasicBot : Im glad i was able to make you smile !
+   <6> themeBasicBot : And they say I dont have a sense of humor :)
    <7> User : thats amazing !
    <7> themeBasicBot : So nice of you to say that !
    <8> User : do you have a sister perhaps ?
    <8> themeBasicBot : Umm no i dont really have any relatives :)
-   <9> User : oh thats too bad
+   <9> User : oh that's too bad
    <9> themeBasicBot : I know right
    <10> User : thanks for talking to me !
-   <10> themeBasicBot : Thanks ! now i think ill blush
-   <11> User : bye then
-   <11> themeBasicBot : Bye ! nice chatting with you !
+   <10> themeBasicBot : So nice of you to say that !
+   <11> User :  bye then
+   <11> themeBasicBot : Bubye !
    <12> User : @@
-
 
 
 *********************
@@ -519,7 +606,9 @@ Reply Using Name
 
 Often you will need to detect names from messages and generate a reply using that name .
 There isn't any easy way to write a regex pattern to detect names .To do this you will need a Machine learning or Deep learning based solution.
-Spacy provides NER to detect person names . Of course, you can also define your own custom name detection mechanism .
+Spacy provides NER ( Named Entity Recognition )to detect person names . Of course, you can also define your own custom name detection mechanism .
+
+You can find the complete code for the bot `here <https://github.com/vaibhavrr1/simbots/blob/main/sampleBots/ReplyUsingNameBot.ipynb>`_.
 
 Entities
 **********************
@@ -616,12 +705,13 @@ We need to write what the bot will output.
 Reason (Bot Logic)
 **********************
 
-Lastly we need to alter the bot reason method to accomodate this
+Since we are doing some operations based on intents and entities we need to modify the bot reason method to accomodate this.
+We will make a new bot class that inherits from our original Bot class.
 
 
 .. code:: python
 
-   # this goes in the reason method
+   # this goes in the reason method of the bot class
 
    name = currentTopIntent['name']
 

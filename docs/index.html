@@ -269,12 +269,12 @@
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id6">
+      <a class="reference internal nav-link" href="#id7">
        Entities
       </a>
      </li>
      <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id7">
+      <a class="reference internal nav-link" href="#id8">
        Intents
       </a>
      </li>
@@ -701,8 +701,6 @@ corresponding basic template message.</p>
 <span class="kn">from</span> <span class="nn">simbots.utils.builtInEntities</span> <span class="kn">import</span> <span class="n">EntitySamples</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
-
-
 <span class="n">intentExamples</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;Greetings&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">greetingSamples</span><span class="p">(),</span>
     <span class="s1">&#39;BotName&#39;</span><span class="p">:</span> <span class="n">IntentSamples</span><span class="o">.</span><span class="n">botNameSamples</span><span class="p">(),</span>
@@ -733,57 +731,150 @@ corresponding basic template message.</p>
     <span class="s1">&#39;CoolHelper&#39;</span><span class="p">:</span> <span class="n">EntitySamples</span><span class="o">.</span><span class="n">coolHelper</span><span class="p">(),</span>
     <span class="s1">&#39;ByeHelper&#39;</span><span class="p">:</span> <span class="n">EntitySamples</span><span class="o">.</span><span class="n">byeHelper</span><span class="p">(),</span>
 <span class="p">}</span>
+<span class="n">someJokes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;&#39;Sure here is one </span><span class="si">{0}</span><span class="s1">&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;...&#39;</span>
+             <span class="p">,</span> <span class="s1">&#39;&#39;&#39;&#39;&#39;&#39;</span><span class="p">))</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;What did one pirate say to the other when he beat him at chess? Checkmatey.&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;I burned 2000 calories today&lt;&gt;I left my food in the oven for too long.&#39;</span>
+             <span class="p">]]</span>
 
-<span class="n">botMessages</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;themeBasic&#39;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s1">&#39;Greetings&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Hello ! What can i do for you ?&#39;</span><span class="p">,</span>
-                            <span class="s1">&#39;Hi there ! what can I do for you ?&#39;</span><span class="p">,</span> <span class="s1">&#39;Hello&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;Age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;I am two years old &#39;</span><span class="p">,</span> <span class="s1">&#39;I am two&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;BotName&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;I am riko&#39;</span><span class="p">,</span> <span class="s1">&#39;You can call me riko&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;Abilities&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;I am learning to make basic conversation ! </span><span class="se">\n</span><span class="s1"> ... and i can tell you a couple of jokes :) &#39;</span>
-                            <span class="p">]},</span>
-    <span class="s1">&#39;BirthPlace&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;I am from  India&#39;</span><span class="p">,</span> <span class="s1">&#39;I am an Indian&#39;</span>
-        <span class="p">,</span> <span class="s1">&#39;I am punjabi and i love food&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;Really&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;To the best of my knowledge&#39;</span><span class="p">,</span> <span class="s1">&#39;Im positive !&#39;</span>
-                         <span class="p">]},</span>
-    <span class="s1">&#39;Laughter&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Im glad i was able to make you smile !&#39;</span><span class="p">,</span>
-                           <span class="s1">&#39;See I can be funny !&#39;</span><span class="p">,</span>
-                           <span class="s1">&#39;And they say I dont have a sense of humor :)&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;Cool&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;cool&#39;</span><span class="p">,</span> <span class="s1">&#39;thanks&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;Bye&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Bubye !&#39;</span><span class="p">,</span> <span class="s1">&#39;Bye ! nice chatting with you !&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;Confirm&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;cool &#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;Discard&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;No it is then&#39;</span><span class="p">,</span> <span class="s1">&#39;agreed , no it is .&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;TrueT&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;I know right&#39;</span><span class="p">,</span> <span class="s1">&#39;that makes me &#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;FalseT&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Im still learning ... I sometimes make mistakes &#39;</span>
-                         <span class="p">]},</span>
-    <span class="s1">&#39;Praise&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Thanks ! now i think ill blush &#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;So nice of you to say that !&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;Relatives&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Umm no i dont really have any relatives :)&#39;</span>
-                            <span class="p">]},</span>
-    <span class="s1">&#39;Thanks&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Dont mention it &#39;</span><span class="p">,</span>
-                         <span class="s1">&#39; Im glad , please dont mention it&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;Joke&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;&#39;&#39;</span>
-
-<span class="s1"> Sure here is one</span>
-<span class="s1"> </span><span class="si">{0}</span><span class="s1">&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;...&#39;</span>
-                          <span class="p">,</span> <span class="s1">&#39;&#39;&#39;</span>
-
-<span class="s1">&#39;&#39;&#39;</span><span class="p">))</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span>
-                       <span class="p">[</span><span class="s1">&#39;What did one pirate say to the other when he beat him at chess? Checkmatey.&#39;</span>
-                           <span class="p">,</span>
-                        <span class="s1">&#39;I burned 2000 calories today&lt;&gt;I left my food in the oven for too long.&#39;</span>
-                        <span class="p">]]},</span>
-    <span class="s1">&#39;Question&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;i dont know !&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;Irrelevant&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Im sorry Im not getting you :( &#39;</span><span class="p">,</span>
-                             <span class="s1">&#39;Im sorry could you please rephrase ?&#39;</span><span class="p">]},</span>
-<span class="p">},</span>
-    <span class="s1">&#39;funky&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Greetings&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Hey Yo Wassup Bro What can i do for ya ?&#39;</span>
-        <span class="p">,</span> <span class="s1">&#39;Heyo what ya want ?&#39;</span><span class="p">]},</span>
-              <span class="s1">&#39;Abilities&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Yo I can get ya somethin to eat &#39;</span>
-                                      <span class="p">]}},</span>
-    <span class="s1">&#39;cowboy&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Greetings&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Howdy partner what can i do for you greenhorn&#39;</span>
-        <span class="p">,</span> <span class="s1">&#39; Howdy ! Pleasure meeting ya ?&#39;</span><span class="p">]},</span>
-               <span class="s1">&#39;Abilities&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;You up for some food ? cause i can help you with that &#39;</span>
-                                       <span class="p">]}}}</span>
+<span class="n">botMessages</span> <span class="o">=</span> <span class="p">{</span>
+   <span class="s2">&quot;themeBasic&quot;</span><span class="p">:{</span>
+      <span class="s2">&quot;Greetings&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;Hello ! What can i do for you ?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Hi there ! what can I do for you ?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Hello&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Age&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;I am two years old &quot;</span><span class="p">,</span>
+            <span class="s2">&quot;I am two&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;BotName&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;I am riko&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;You can call me riko&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Abilities&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;I am learning to make basic conversation ! </span><span class="se">\n</span><span class="s2"> ... and i can tell you a couple of jokes :) &quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;BirthPlace&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;I am from  India&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;I am an Indian&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;I am punjabi and i love food&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Really&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;To the best of my knowledge&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Im positive !&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Laughter&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;Im glad i was able to make you smile !&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;See I can be funny !&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;And they say I dont have a sense of humor :)&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Cool&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;cool&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;thanks&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Bye&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;Bubye !&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Bye ! nice chatting with you !&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Confirm&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;cool &quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Discard&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;No it is then&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;agreed , no it is .&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;TrueT&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;I know right&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;that makes me &quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;FalseT&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;Im still learning ... I sometimes make mistakes &quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Praise&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;Thanks ! now i think ill blush &quot;</span><span class="p">,</span>
+            <span class="s2">&quot;So nice of you to say that !&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Relatives&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;Umm no i dont really have any relatives :)&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Thanks&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;Dont mention it &quot;</span><span class="p">,</span>
+            <span class="s2">&quot; Im glad , please dont mention it&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Joke&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:</span><span class="n">someJokes</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Question&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;i dont know !&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Irrelevant&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;Im sorry Im not getting you :( &quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Im sorry could you please rephrase ?&quot;</span>
+         <span class="p">]</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;funky&quot;</span><span class="p">:{</span>
+      <span class="s2">&quot;Greetings&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;Hey Yo Wassup Bro What can i do for ya ?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Heyo what ya want ?&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Abilities&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;Yo I can get ya somethin to eat &quot;</span>
+         <span class="p">]</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;cowboy&quot;</span><span class="p">:{</span>
+      <span class="s2">&quot;Greetings&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;Howdy partner what can i do for you greenhorn&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; Howdy ! Pleasure meeting ya ?&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;Abilities&quot;</span><span class="p">:{</span>
+         <span class="s2">&quot;basic&quot;</span><span class="p">:[</span>
+            <span class="s2">&quot;You up for some food ? cause i can help you with that &quot;</span>
+         <span class="p">]</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
 
 
 <span class="n">newB</span> <span class="o">=</span> <span class="n">Bot</span><span class="p">(</span><span class="n">intentExamples</span><span class="p">,</span> <span class="n">entityExamples</span><span class="p">,</span> <span class="n">botMessages</span><span class="p">,</span>
@@ -797,41 +888,38 @@ corresponding basic template message.</p>
 <div class="section" id="sample-conversations">
 <h3>Sample Conversations<a class="headerlink" href="#sample-conversations" title="Permalink to this headline">¶</a></h3>
 <p>Some conversations with this bot :</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Type <span class="k">in</span> @@ to <span class="nb">exit</span> bot
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Type in @@ to exit bot
 @i to get intents
 @c to get context
 @e to get entities
-@t to add a <span class="nb">test</span> <span class="k">case</span>
-@etc to evaluate a <span class="nb">test</span> <span class="k">case</span>
-@eatc to evaluate all <span class="nb">test</span> cases
+@t to add a test case
+@etc to evaluate a test case
+@eatc to evaluate all test cases
 @ti to add intent
-&lt;<span class="m">1</span>&gt; User : hi
-&lt;<span class="m">1</span>&gt; themeBasicBot : Hello
-&lt;<span class="m">2</span>&gt; User : who are you ?
-&lt;<span class="m">2</span>&gt; themeBasicBot : I am riko
-&lt;<span class="m">3</span>&gt; User : hey riko !
-&lt;<span class="m">3</span>&gt; themeBasicBot : Hi there ! what can I <span class="k">do</span> <span class="k">for</span> you ?
-&lt;<span class="m">4</span>&gt; User : what can you <span class="k">do</span> ?
-&lt;<span class="m">4</span>&gt; themeBasicBot : I am learning to make basic conversation !
- ... and i can tell you a couple of jokes :<span class="o">)</span>
-&lt;<span class="m">5</span>&gt; User : sure tell me one
-&lt;<span class="m">5</span>&gt; themeBasicBot :
-
- Sure here is one
- What did one pirate say to the other when he beat him at chess? Checkmatey.
-&lt;<span class="m">6</span>&gt; User : hahah
-&lt;<span class="m">6</span>&gt; themeBasicBot : Im glad i was able to make you smile !
-&lt;<span class="m">7</span>&gt; User : thats amazing !
-&lt;<span class="m">7</span>&gt; themeBasicBot : So nice of you to say that !
-&lt;<span class="m">8</span>&gt; User : <span class="k">do</span> you have a sister perhaps ?
-&lt;<span class="m">8</span>&gt; themeBasicBot : Umm no i dont really have any relatives :<span class="o">)</span>
-&lt;<span class="m">9</span>&gt; User : oh thats too bad
-&lt;<span class="m">9</span>&gt; themeBasicBot : I know right
-&lt;<span class="m">10</span>&gt; User : thanks <span class="k">for</span> talking to me !
-&lt;<span class="m">10</span>&gt; themeBasicBot : Thanks ! now i think ill blush
-&lt;<span class="m">11</span>&gt; User : bye <span class="k">then</span>
-&lt;<span class="m">11</span>&gt; themeBasicBot : Bye ! nice chatting with you !
-&lt;<span class="m">12</span>&gt; User : @@
+&lt;1&gt; User : hi
+&lt;1&gt; themeBasicBot : Hello ! What can i do for you ?
+&lt;2&gt; User : who are you?
+&lt;2&gt; themeBasicBot : You can call me riko
+&lt;3&gt; User : hey riko !
+&lt;3&gt; themeBasicBot : Hello ! What can i do for you ?
+&lt;4&gt; User : what can you do ?
+&lt;4&gt; themeBasicBot : I am learning to make basic conversation !
+ ... and i can tell you a couple of jokes :)
+&lt;5&gt; User : sure tell me one
+&lt;5&gt; themeBasicBot : Sure here is one I burned 2000 calories today&lt;&gt;I left my food in the oven for too long.
+&lt;6&gt; User : hahah
+&lt;6&gt; themeBasicBot : And they say I dont have a sense of humor :)
+&lt;7&gt; User : thats amazing !
+&lt;7&gt; themeBasicBot : So nice of you to say that !
+&lt;8&gt; User : do you have a sister perhaps ?
+&lt;8&gt; themeBasicBot : Umm no i dont really have any relatives :)
+&lt;9&gt; User : oh that&#39;s too bad
+&lt;9&gt; themeBasicBot : I know right
+&lt;10&gt; User : thanks for talking to me !
+&lt;10&gt; themeBasicBot : So nice of you to say that !
+&lt;11&gt; User :  bye then
+&lt;11&gt; themeBasicBot : Bubye !
+&lt;12&gt; User : @@
 </pre></div>
 </div>
 </div>
@@ -840,9 +928,10 @@ corresponding basic template message.</p>
 <h2>Reply Using Name<a class="headerlink" href="#reply-using-name" title="Permalink to this headline">¶</a></h2>
 <p>Often you will need to detect names from messages and generate a reply using that name .
 There isn’t any easy way to write a regex pattern to detect names .To do this you will need a Machine learning or Deep learning based solution.
-Spacy provides NER to detect person names . Of course, you can also define your own custom name detection mechanism .</p>
-<div class="section" id="id6">
-<h3>Entities<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+Spacy provides NER ( Named Entity Recognition )to detect person names . Of course, you can also define your own custom name detection mechanism .</p>
+<p>You can find the complete code for the bot <a class="reference external" href="https://github.com/vaibhavrr1/simbots/blob/main/sampleBots/ReplyUsingNameBot.ipynb">here</a>.</p>
+<div class="section" id="id7">
+<h3>Entities<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p>To start off you need to define an entity extractor and an entity substituter .</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
 
@@ -890,8 +979,8 @@ Spacy provides NER to detect person names . Of course, you can also define your 
 </pre></div>
 </div>
 </div>
-<div class="section" id="id7">
-<h3>Intents<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>Intents<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p>Also we will need to define Intents for name detection lets call it PersonName</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;PersonName&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;My name is Vaibhav&quot;</span><span class="p">,</span><span class="s2">&quot;I am Vaibhav Arora .&quot;</span><span class="p">,</span><span class="s2">&quot;You can call me Rahul .&quot;</span> <span class="p">,</span>
                 <span class="s2">&quot;I am Simon  . &quot;</span><span class="p">,</span><span class="s2">&quot;I am Riko .&quot;</span><span class="p">,</span><span class="s2">&quot;You can call me Shiva . &quot;</span><span class="p">]}</span>
@@ -924,8 +1013,9 @@ Spacy provides NER to detect person names . Of course, you can also define your 
 </div>
 <div class="section" id="reason-bot-logic">
 <h3>Reason (Bot Logic)<a class="headerlink" href="#reason-bot-logic" title="Permalink to this headline">¶</a></h3>
-<p>Lastly we need to alter the bot reason method to accomodate this</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># this goes in the reason method</span>
+<p>Since we are doing some operations based on intents and entities we need to modify the bot reason method to accomodate this.
+We will make a new bot class that inherits from our original Bot class.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># this goes in the reason method of the bot class</span>
 
 <span class="n">name</span> <span class="o">=</span> <span class="n">currentTopIntent</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
 
