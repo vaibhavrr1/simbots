@@ -1,0 +1,496 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>simbots.utils package &#8212; simbots 0.0.22 documentation</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="simbots package" href="simbots.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">simbots 0.0.22 documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="simbots.html">
+   simbots package
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     simbots.utils package
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/simbots.utils.rst.txt"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.rst</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#submodules">
+   Submodules
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#module-simbots.utils.builtInEntities">
+   simbots.utils.builtInEntities module
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#module-simbots.utils.builtInIntents">
+   simbots.utils.builtInIntents module
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#module-simbots.utils.exceptions">
+   simbots.utils.exceptions module
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#module-simbots.utils">
+   Module contents
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="simbots-utils-package">
+<h1>simbots.utils package<a class="headerlink" href="#simbots-utils-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-simbots.utils.builtInEntities">
+<span id="simbots-utils-builtinentities-module"></span><h2>simbots.utils.builtInEntities module<a class="headerlink" href="#module-simbots.utils.builtInEntities" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="simbots.utils.builtInEntities.EntitySamples">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.utils.builtInEntities.</span></span><span class="sig-name descname"><span class="pre">EntitySamples</span></span><a class="headerlink" href="#simbots.utils.builtInEntities.EntitySamples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Contains samples for frequently used entities</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInEntities.EntitySamples.byeHelper">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">byeHelper</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInEntities.EntitySamples.byeHelper" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+<p>{‘bye’: [{‘tag’: ‘case-insensitive’,’pattern’: “s(goo+d)?b+y+e+s”, ‘type’: ‘regex’}]}</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInEntities.EntitySamples.coolHelper">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">coolHelper</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInEntities.EntitySamples.coolHelper" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+<p>{‘cool’: [{‘tag’: ‘case-insensitive’,’pattern’: “sc+oo+l+s”, ‘type’: ‘regex’}]}</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInEntities.EntitySamples.greetingsHelper">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">greetingsHelper</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInEntities.EntitySamples.greetingsHelper" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+<p>{‘wsup’: [{‘tag’: ‘case-insensitive’,’pattern’: “s[w]*[a]*[s]+[u]+[p]+s”,’type’: ‘regex’}],’hi’: [{‘tag’: ‘case-insensitive’,’pattern’: “s[h]+[i]+s”, ‘type’: ‘regex’}],’hello’: [{‘tag’: ‘case-insensitive’,’pattern’: “s[h]+[e]+[l]+[o]+s”,’type’: ‘regex’}]}</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInEntities.EntitySamples.laughterHelper">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">laughterHelper</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInEntities.EntitySamples.laughterHelper" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+<p>{‘haha’: [{‘tag’: ‘case-insensitive’,’pattern’: “s(h+(a|e)+)+(h+)?s”,’type’: ‘regex’}],’happysmily’: [{‘tag’: ‘case-insensitive’,’pattern’: “s:)s”, ‘type’: ‘regex’}]}</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-simbots.utils.builtInIntents">
+<span id="simbots-utils-builtinintents-module"></span><h2>simbots.utils.builtInIntents module<a class="headerlink" href="#module-simbots.utils.builtInIntents" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.utils.builtInIntents.</span></span><span class="sig-name descname"><span class="pre">IntentSamples</span></span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Contains samples for frequently used intents, which can be used to train intents .Each method returns a list of samples</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.abilitiesSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">abilitiesSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.abilitiesSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘what can you do ? ‘ , “what are your capabilities ?”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.ageSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ageSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.ageSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘what is your age’ , “how old are you ?”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.birthPlaceSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">birthPlaceSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.birthPlaceSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘where were you born ‘ , “where are you from ?”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.botNameSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">botNameSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.botNameSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘Who is this?’, ‘Hi’ ,’Who are you’,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.byeSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">byeSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.byeSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘bye ‘ , “goodbye”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.confirmSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">confirmSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.confirmSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘confirm that’ , “yes”,”do that please”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.coolSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">coolSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.coolSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  “thats cool !”,”cool”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.discardSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">discardSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.discardSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘No”,”cancel that “</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.falseSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">falseSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.falseSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘thats false ‘ , “you are wrong “</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.greetingSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">greetingSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.greetingSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘Hello !’, ‘Hi , How are you ?’,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.jokeSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jokeSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.jokeSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  “can you tell me a joke”,”tell a joke”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.laughterSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">laughterSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.laughterSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘hahaha’ , “thats very funny”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.praiseSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">praiseSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.praiseSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘you are awesome ‘ , “thats incredible !”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.reallySamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reallySamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.reallySamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘is that so ? ‘ , “really ?”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.relativeSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">relativeSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.relativeSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘Do you have any relatives ‘ , “do you have any siblings ?”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.thanksSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">thanksSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.thanksSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  “Thanks”,” Thank you”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.utils.builtInIntents.IntentSamples.trueSamples">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">trueSamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.builtInIntents.IntentSamples.trueSamples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of samples like  ‘thats true’ , “thats evident”</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-simbots.utils.exceptions">
+<span id="simbots-utils-exceptions-module"></span><h2>simbots.utils.exceptions module<a class="headerlink" href="#module-simbots.utils.exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="simbots.utils.exceptions.IndexingError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.utils.exceptions.</span></span><span class="sig-name descname"><span class="pre">IndexingError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.exceptions.IndexingError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised for errors in the input.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>expression – input expression in which the error occurred
+message – explanation of the error</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="simbots.utils.exceptions.SchemaException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.utils.exceptions.</span></span><span class="sig-name descname"><span class="pre">SchemaException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.utils.exceptions.SchemaException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised for errors in schema.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-simbots.utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-simbots.utils" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+              </div>
+              
+        
+            <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="simbots.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">simbots package</p>
+        </div>
+    </a>
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Vaibhav Arora<br/>
+        
+            &copy; Copyright 2021, Vaibhav Arora.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,945 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>simbots package &#8212; simbots 0.0.22 documentation</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="simbots.utils package" href="simbots.utils.html" />
+    <link rel="prev" title="Welcome to Simbots documentation!" href="index.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">simbots 0.0.22 documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
+  <a class="current reference internal" href="#">
+   simbots package
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="simbots.utils.html">
+     simbots.utils package
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/simbots.rst.txt"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.rst</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#subpackages">
+   Subpackages
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#submodules">
+   Submodules
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#module-simbots.Bot">
+   simbots.Bot module
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#module-simbots.Context">
+   simbots.Context module
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#module-simbots.Entity">
+   simbots.Entity module
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#module-simbots.Intent">
+   simbots.Intent module
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#module-simbots">
+   Module contents
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="simbots-package">
+<h1>simbots package<a class="headerlink" href="#simbots-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="simbots.utils.html">simbots.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="simbots.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simbots.utils.html#module-simbots.utils.builtInEntities">simbots.utils.builtInEntities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simbots.utils.html#module-simbots.utils.builtInIntents">simbots.utils.builtInIntents module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simbots.utils.html#module-simbots.utils.exceptions">simbots.utils.exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simbots.utils.html#module-simbots.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-simbots.Bot">
+<span id="simbots-bot-module"></span><h2>simbots.Bot module<a class="headerlink" href="#module-simbots.Bot" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="simbots.Bot.Bot">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.Bot.</span></span><span class="sig-name descname"><span class="pre">Bot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intentExamples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entityExamples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidenceLimit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testCases</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subConversations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Whenever a new bot is created it will inherit from the Bot class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.addConversationAsTestCase">
+<span class="sig-name descname"><span class="pre">addConversationAsTestCase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caseName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caseDescription</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialogStart</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialogEnd</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.addConversationAsTestCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function can be used to add a sample conversation in the dev mode as a test case</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>caseName</strong> – The case name</p></li>
+<li><p><strong>caseDescription</strong> – Case Description (string)</p></li>
+<li><p><strong>dialogStart</strong> – The test case will start from this dialog number</p></li>
+<li><p><strong>dialogEnd</strong> – The test case will end at this dialog number (the current dialog is included)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.evaluateAllTestCases">
+<span class="sig-name descname"><span class="pre">evaluateAllTestCases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.evaluateAllTestCases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.evaluateTestCase">
+<span class="sig-name descname"><span class="pre">evaluateTestCase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caseName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputTheme</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.evaluateTestCase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.executeCurrentSubConversation">
+<span class="sig-name descname"><span class="pre">executeCurrentSubConversation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.executeCurrentSubConversation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.findCurrentlyHappeningSubconversation">
+<span class="sig-name descname"><span class="pre">findCurrentlyHappeningSubconversation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.findCurrentlyHappeningSubconversation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.getBotConfidence">
+<span class="sig-name descname"><span class="pre">getBotConfidence</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.getBotConfidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the bot confidence as list of tuples
+:return: [(intentName,intentConfidence) ..]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.getBotContext">
+<span class="sig-name descname"><span class="pre">getBotContext</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.getBotContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns bot context
+:return: context as json</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.getBotOutput">
+<span class="sig-name descname"><span class="pre">getBotOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputTheme</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.getBotOutput" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.listAllTestCases">
+<span class="sig-name descname"><span class="pre">listAllTestCases</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.listAllTestCases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.listTestCase">
+<span class="sig-name descname"><span class="pre">listTestCase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caseName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.listTestCase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.loadBot">
+<span class="sig-name descname"><span class="pre">loadBot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loadPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.loadBot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads trained bot from the path specified, note that context stack (conversation) is not loaded
+:param loadPath: path to a pickle file for loading the bot</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.loadConversation">
+<span class="sig-name descname"><span class="pre">loadConversation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loadPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.loadConversation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Will load existing conversation from json file
+:param loadPath: Path to json file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.reason">
+<span class="sig-name descname"><span class="pre">reason</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.reason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bot reasoning is done here , use bot intents and entities to create message logic here</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+<p>Should return a list of
+{
+“tag”: Used to identify output message from the template
+“data”: To be used to fill the missing attributes in message to generate the complete message
+}</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'basic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dev'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.run" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theme</strong> – The theme name from bot responses</p></li>
+<li><p><strong>mode</strong> – The mode in which bot is to run , currently only ‘dev’ mode is supported</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.saveBot">
+<span class="sig-name descname"><span class="pre">saveBot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">savePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.saveBot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the trained bot to a pickle file , note that the context stack is not saved
+:param savePath: path to a pickle file for saving the bot contents</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.saveConversation">
+<span class="sig-name descname"><span class="pre">saveConversation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">savePath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.saveConversation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the current conversation (context stack ) to a json file which can be loaded in later to 
+continue the conversation
+:param savePath: Path to save the conversation
+:param uid: Unique Conversation Id (str) , if not supplied will be randomly generated</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.say">
+<span class="sig-name descname"><span class="pre">say</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputTheme</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.say" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate bot output message by adding message to the output components
+:param output:
+:param outputTheme:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.updateConversationInputs">
+<span class="sig-name descname"><span class="pre">updateConversationInputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.updateConversationInputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the conversation by updating the context with the input message
+:param message:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.updateConversationOutputs">
+<span class="sig-name descname"><span class="pre">updateConversationOutputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.updateConversationOutputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the conversation by updating the context with the output message
+:param message:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.updateIntentsAndEntitiesInContextManager">
+<span class="sig-name descname"><span class="pre">updateIntentsAndEntitiesInContextManager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.updateIntentsAndEntitiesInContextManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use this function when you need to retrain the bot with newly added intent and entity examples</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="simbots.Bot.SubConversation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.Bot.</span></span><span class="sig-name descname"><span class="pre">SubConversation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'04b974b5-d2d2-452d-bce5-662ca687d94e'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subConversationId</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'4470cf68-5c67-4e6d-bf4a-4c3ab65456f4'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onEnterLogic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onExitLogic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.SubConversation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.SubConversation.enterOn">
+<span class="sig-name descname"><span class="pre">enterOn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contextManager</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.SubConversation.enterOn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.SubConversation.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contextManager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.SubConversation.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.SubConversation.exitOn">
+<span class="sig-name descname"><span class="pre">exitOn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contextManager</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.SubConversation.exitOn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-simbots.Context">
+<span id="simbots-context-module"></span><h2>simbots.Context module<a class="headerlink" href="#module-simbots.Context" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="simbots.Context.ContextManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.Context.</span></span><span class="sig-name descname"><span class="pre">ContextManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entitiesExtractorJson</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allIntentExamples</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Context.ContextManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Context handler class, This maintains context as a dict and also as a Object Path tree, to facilitate searching within the context
+also provides functions to search within the context object. Context manager also manages and handles subconversations .</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Context.ContextManager.clearContext">
+<span class="sig-name descname"><span class="pre">clearContext</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Context.ContextManager.clearContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears context</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Context.ContextManager.findCurrentEntities">
+<span class="sig-name descname"><span class="pre">findCurrentEntities</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Context.ContextManager.findCurrentEntities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the entities detected in the current message
+:return: currentEntities : the entities detected in the current message as list</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Context.ContextManager.findCurrentTopIntent">
+<span class="sig-name descname"><span class="pre">findCurrentTopIntent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Context.ContextManager.findCurrentTopIntent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the the top intent in the current message
+:return: topIntent: the Top intent ie intent with rank 1</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Context.ContextManager.findObjectInStuff">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">findObjectInStuff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stuff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Context.ContextManager.findObjectInStuff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generalised method to search within any given dictionary using objectPath library
+:param stuff: the dictionary where the object is to be searched
+:param filter: the filter
+:return: list of matched objects</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Context.ContextManager.findStuff">
+<span class="sig-name descname"><span class="pre">findStuff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stuff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'intents'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Context.ContextManager.findStuff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic method to search a particular part of the context ie Intent, Entities, Message
+:param filter: dict of terms to search
+:param stuff: part of context that needs to be searched ie Intent, Entities, Message
+:return: matched values as list</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Context.ContextManager.setNewContext">
+<span class="sig-name descname"><span class="pre">setNewContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newContext</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Context.ContextManager.setNewContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the old context and sets a new one .
+:param newContext: the new context object as json</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Context.ContextManager.updateContextTree">
+<span class="sig-name descname"><span class="pre">updateContextTree</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Context.ContextManager.updateContextTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the contextTree with the current context  so that everything in the context is searchable,
+this becomes useful when saving custom variables in context .</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Context.ContextManager.updateDialog">
+<span class="sig-name descname"><span class="pre">updateDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'input'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Context.ContextManager.updateDialog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the context by
+1) Computing all entities present in the message
+2) Extracting all intents in the message
+3) Updating the current dialog number
+4) Updating messages in the context</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> – Message text</p></li>
+<li><p><strong>type</strong> – message type : “input” or “output”</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-simbots.Entity">
+<span id="simbots-entity-module"></span><h2>simbots.Entity module<a class="headerlink" href="#module-simbots.Entity" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="simbots.Entity.EntitiesHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.Entity.</span></span><span class="sig-name descname"><span class="pre">EntitiesHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entitiesExtractorJson</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Entity.EntitiesHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class is responsible for handling entities within the bot
+The init method for the EntitiesHandler Class</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param entitiesExtractorJson</dt>
+<dd class="field-odd"><p>this is a json which specifies the type of entities and their definitions . Note currently no schema checks have been implemented .</p>
+</dd>
+</dl>
+<p><strong>Sample Json accepted</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>{
+        &quot;GreetingsHelper&quot;:{
+            &quot;wsup&quot; : [{
+                        &quot;tag&quot;:&quot;case-insensitive&quot;,
+                        &quot;pattern&quot;:&quot;\s[w]*[a]*[s]+[u]+[p]+\s&quot;,
+                        &quot;type&quot;:&quot;regex&quot;
+            }
+                    ],
+            &quot;hi&quot;:[
+                {
+                    &quot;tag&quot;:&quot;case-insensitive&quot;,
+                    &quot;pattern&quot;:&quot;\s[h]+[i]+\s&quot;,
+                    &quot;type&quot;:&quot;regex&quot;
+
+
+                }
+
+            ],
+            &quot;hello&quot;:[
+                {
+                    &quot;tag&quot;:&quot;case-insensitive&quot;,
+                    &quot;pattern&quot;:&quot;\s[h]+[e]+[l]+[o]+\s&quot;,
+                    &quot;type&quot;:&quot;regex&quot;
+
+
+                },
+                {
+                   &quot;tag&quot;:&quot;case-insensitive&quot;,
+                   &quot;extractor&quot;:helloExtractorFunc -&gt;
+                   &quot;type&quot;:&quot;function&quot;
+
+                }
+
+            ]
+
+
+        },
+
+        &quot;LaughterHelper&quot;:{
+
+            &quot;haha&quot; : [{
+                        &quot;tag&quot;:&quot;case-insensitive&quot;,
+                        &quot;pattern&quot;:&quot;\s(h+(a|e)+)+(h+)?\s&quot;,
+                        &quot;type&quot;:&quot;regex&quot;
+
+
+            }
+                    ],
+            &quot;happysmily&quot;:[
+                {
+                    &quot;tag&quot;:&quot;case-insensitive&quot;,
+                    &quot;pattern&quot;:&quot;\s\:\)\s&quot;,
+                    &quot;type&quot;:&quot;regex&quot;
+
+
+                }
+
+            ],
+
+        },
+        &quot;CoolHelper&quot;:{
+            &quot;cool&quot;:[
+                {
+                    &quot;tag&quot;:&quot;case-insensitive&quot;,
+                    &quot;pattern&quot;:&quot;\sc+oo+l+\s&quot;,
+                    &quot;type&quot;:&quot;regex&quot;
+
+                }
+
+
+            ]
+
+
+        },
+        &quot;ByeHelper&quot;:{
+            &quot;bye&quot;:[
+                {
+                    &quot;tag&quot;:&quot;case-insensitive&quot;,
+                    &quot;pattern&quot;:&quot;\s(goo+d)?b+y+e+\s&quot;,
+                    &quot;type&quot;:&quot;regex&quot;
+
+                }
+            ]
+
+        }
+
+    }
+</pre></div>
+</div>
+<p><strong>kind</strong> : Here GreetingsHelper,LaughterHelper,CoolHelper,ByeHelper are entity kinds.
+also “wsup”,”hi”,”hello” are entity values assosciated with the entity kind GreetingsHelper</p>
+<p><strong>type</strong>: Only two types are supported -&gt; regex and function.</p>
+<p><strong>pattern</strong> : the pattern of the regex, only used if type is regex,</p>
+<p><strong>extractor</strong>: A function that extracts the given entity from the message text should be present if type is function,</p>
+<p>Note that any function used should take in two arguments messageText and dialogNumber and should
+return A list of dicts of the format</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>[{
+            &quot;value&quot;:the value of the entity , for more details look at the sample json.,
+            &quot;exactValue&quot;:the exact value that occurs within the message text.,
+            &quot;kind&quot;:the kind of the entity eg  food in case of pizza.,
+            &quot;dialogNumber&quot;:the dialog number of the current message -&gt; same as the input param.,
+            &quot;foundAt&quot;:[start location , end location],
+
+}]
+</pre></div>
+</div>
+<p><strong>substituter</strong>: A custom substitution function to substitute entity by another value, This function takes in the message text and should
+return the substituted message text this should always be present if type is “function”. should return substituted message text.</p>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Entity.EntitiesHandler.extractAllEntities">
+<span class="sig-name descname"><span class="pre">extractAllEntities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialogNumber</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Entity.EntitiesHandler.extractAllEntities" title="Permalink to this definition">¶</a></dt>
+<dd><dl>
+<dt>This function extracts all entities from the message .</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param message</dt>
+<dd class="field-odd"><p>The message text</p>
+</dd>
+<dt class="field-even">param dialogNumber</dt>
+<dd class="field-even"><p>the current dialog number</p>
+</dd>
+<dt class="field-odd">return</dt>
+<dd class="field-odd"><p>A list of dicts of the format</p>
+</dd>
+</dl>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>[{
+            &quot;value&quot;:the value of the entity , for more details look at the sample json.,
+            &quot;exactValue&quot;:the exact value that occurs within the message text.,
+            &quot;kind&quot;:the kind of the entity eg : food in case of pizza.,
+            &quot;dialogNumber&quot;:the dialog number of the current message -&gt; same as the input param.,
+            &quot;foundAt&quot;:[start location , end location],
+
+}]
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Entity.EntitiesHandler.extractEntitySynonym">
+<span class="sig-name descname"><span class="pre">extractEntitySynonym</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialogNumber</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Entity.EntitiesHandler.extractEntitySynonym" title="Permalink to this definition">¶</a></dt>
+<dd><dl>
+<dt>This function extracts the entities and synonyms from the text message and returns a json. Currently it does not extract any synonyms</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param message</dt>
+<dd class="field-odd"><p>The text message str eg “I want to buy a pizza”</p>
+</dd>
+<dt class="field-even">param pattern</dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd">param value</dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">param kind</dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd">param tag</dt>
+<dd class="field-odd"><p>can be “case-insensitive” if we want the extractor to ignore the casing (uppercase or lowercase) of the entity text</p>
+</dd>
+<dt class="field-even">param dialogNumber</dt>
+<dd class="field-even"><p>the dialog number of the message string.</p>
+</dd>
+<dt class="field-odd">return</dt>
+<dd class="field-odd"><p>A list of dicts of the format</p>
+</dd>
+</dl>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>[{
+            &quot;value&quot;:the value of the entity , for more details look at the sample json.,
+            &quot;exactValue&quot;:the exact value that occurs within the message text.,
+            &quot;kind&quot;:the kind of the entity eg : food in case of pizza.,
+            &quot;dialogNumber&quot;:the dialog number of the current message -&gt; same as the input param.,
+            &quot;foundAt&quot;:[start location , end location],
+
+}]
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Entity.EntitiesHandler.substituteAllEntities">
+<span class="sig-name descname"><span class="pre">substituteAllEntities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Entity.EntitiesHandler.substituteAllEntities" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function substitutes all entity values with entity kinds</dt><dd><p>:param message:The message text
+:return: substituted message text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Entity.EntitiesHandler.substituteEntityKind">
+<span class="sig-name descname"><span class="pre">substituteEntityKind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Entity.EntitiesHandler.substituteEntityKind" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function substitutes an entity value for its kind in the message text and returns the substituted message text .
+Note this function is currently unstable and a better version needs to be written to substitute entities effectively .</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param message</dt>
+<dd class="field-odd"><p>The message text</p>
+</dd>
+<dt class="field-even">param pattern</dt>
+<dd class="field-even"><p>the entity pattern</p>
+</dd>
+<dt class="field-odd">param by</dt>
+<dd class="field-odd"><p>the value to be substituted by eg if we need to substitute the word “equivalent” by “alike” then by =”alike”</p>
+</dd>
+</dl>
+<p>or if pizza then it will be kind
+:param tag:”case-insensitive” or not
+:return: the substituted message text</p>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-simbots.Intent">
+<span id="simbots-intent-module"></span><h2>simbots.Intent module<a class="headerlink" href="#module-simbots.Intent" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="simbots.Intent.Intent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.Intent.</span></span><span class="sig-name descname"><span class="pre">Intent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intentName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Irrelevant'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allIntentExamples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entityHandler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testSize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.Intent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>The abstract method for any intent.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Intent.Intent.createIntent">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">createIntent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clfName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.Intent.createIntent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to create intent will be overridden in the derived class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>clfName</strong> – Classifier Name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the inherited class should return a classifier</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Intent.Intent.train">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.Intent.train" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_train</strong> – Training examples</p></li>
+<li><p><strong>y_train</strong> – Training labels</p></li>
+<li><p><strong>params</strong> – Any additional parameters that may be needed can be defined here</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="simbots.Intent.IntentsHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.Intent.</span></span><span class="sig-name descname"><span class="pre">IntentsHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allIntentExamples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entityHandler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.IntentsHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for creating and handling multiple intents</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Intent.IntentsHandler.createAllTrainedIntents">
+<span class="sig-name descname"><span class="pre">createAllTrainedIntents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.IntentsHandler.createAllTrainedIntents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates trained intents and sets self.trained</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Intent.IntentsHandler.getMessageIntents">
+<span class="sig-name descname"><span class="pre">getMessageIntents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialogNumber</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.IntentsHandler.getMessageIntents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get message intents for a given dialog number
+:param message: Message Text
+:param dialogNumber:  The current dialog number
+:return:
+list of [{
+“name”: classifier name
+“confidence”: Classifier confidence
+“dialogNumber”: Current dialog number
+“rank”: Classifier rank
+}]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Intent.IntentsHandler.intentSamplesAugment">
+<span class="sig-name descname"><span class="pre">intentSamplesAugment</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.IntentsHandler.intentSamplesAugment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to augment intent samples ,making sure each intent is at least 100 samples long</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Intent.IntentsHandler.substituteAllEntitiesInAllTrainingExamples">
+<span class="sig-name descname"><span class="pre">substituteAllEntitiesInAllTrainingExamples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.IntentsHandler.substituteAllEntitiesInAllTrainingExamples" title="Permalink to this definition">¶</a></dt>
+<dd><p>For certain types of classifiers it is helpful to have entities substituted
+Whenever a new intent is trained , all the entitiy values in the message texts get replaced by the entity kind values.
+This is to help training the intents . Note that you can define certain entities to help increase the accuracy of intent</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="simbots.Intent.MultinomialNBIntent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.Intent.</span></span><span class="sig-name descname"><span class="pre">MultinomialNBIntent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intentName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Irrelevant'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allIntentExamples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entityHandler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.MultinomialNBIntent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#simbots.Intent.Intent" title="simbots.Intent.Intent"><code class="xref py py-class docutils literal notranslate"><span class="pre">simbots.Intent.Intent</span></code></a></p>
+<p>Uses Multinomial Naive bayes classifier for intent training.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Intent.MultinomialNBIntent.createDataSetForIntent">
+<span class="sig-name descname"><span class="pre">createDataSetForIntent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.MultinomialNBIntent.createDataSetForIntent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the data set for the intent model
+:return:
+X_train: training sentences asn list
+X_test: testing sentences as list
+X : all sentences as list
+y_train: train set labels
+y_test: testset labels
+y : the complete  sample labels (including the training and the testing sets)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Intent.MultinomialNBIntent.createIntent">
+<span class="sig-name descname"><span class="pre">createIntent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clfName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.MultinomialNBIntent.createIntent" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>clfName</strong> – Classifier Name , if not provided , will default to intentName+’_multinomialNbClassifier’</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>classifier</p>
+</dd>
+</dl>
+<dl>
+<dt>classifier = {</dt><dd><p>“name”: Classifier name,
+“classifier”: Classifier Object,
+“expectedAccuracy”: Training accuracy achieved by the intent,
+“data”: {</p>
+<blockquote>
+<div><p>“countVect”: count vectoriser ,
+“trainedOnX”: Training samples,
+“trainedOnY”: Training labels</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Intent.MultinomialNBIntent.createVocab">
+<span class="sig-name descname"><span class="pre">createVocab</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.MultinomialNBIntent.createVocab" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates the vocab for intent and updates the intent vocabulary
+:return:
+count_vect : This returns a fitted Countvectorizer object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Intent.MultinomialNBIntent.getIntentProbability">
+<span class="sig-name descname"><span class="pre">getIntentProbability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userMessage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.MultinomialNBIntent.getIntentProbability" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the intent probability
+:param userMessage: Text message from the user
+:return: {
+“name”: classifier name
+“confidence”: classifier confidence
+}</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Intent.MultinomialNBIntent.predictClassifierOutput">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">predictClassifierOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count_vect</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.MultinomialNBIntent.predictClassifierOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make predictions on the trained intent
+:param clf: trained classifier
+:param X: The sample for prediction
+:param count_vect: count vectoriser for the classifier
+:return:</p>
+<p>predictions: predicted class
+probabilities: probablities for the predicted class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Intent.MultinomialNBIntent.train">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Intent.MultinomialNBIntent.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train the intent model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_train</strong> – Training sentences</p></li>
+<li><p><strong>y_train</strong> – Training labels</p></li>
+<li><p><strong>params</strong> – None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>trained classifier</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-simbots">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-simbots" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+              </div>
+              
+        
+            <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Welcome to Simbots documentation!</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="simbots.utils.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">simbots.utils package</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Vaibhav Arora<br/>
+        
+            &copy; Copyright 2021, Vaibhav Arora.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,3404 @@
+.. Simbots documentation master file, created by
+   sphinx-quickstart on Sun Nov 21 20:04:20 2021.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+
+Welcome to Simbots documentation!
+===================================
+
+Simple bots or Simbots is a library designed to create simple chat bots using the power of python. This library utilises Intent, Entity, Relation and Context
+model to create bots .
+
+Its Basic functions :-
+
+1) Uses machine learning to create Intents .
+2) Supports multiple ways of creating entities and relations .
+3) Also provides helper functions to query context stack .
+4) Provides a framework to create text based chatbots .
+5) Provides a framework to define test conversation of the bot and test it.
+6) Support saving and loading existing conversation .
+7) Support saving and loading trained Chatbot .
+
+
+Installation
+============
+
+To install simply do
+
+.. code:: shell
+
+    pip install simbots
+
+Usage Guide
+===========
+
+This usage guide will help illuminate you about chatbots !
+
+*******************
+Chatbot Terminology
+*******************
+
+**Intent**: An intent is what the user intends to say . Lets say that a user types in
+
+1) I want a Burger.
+2) Can you get me a diet coke ?
+3) I want a pizza.
+
+In all three cases the intent is to Order Food.
+
+**Entity**: An entity is something that adds detail to the intent . These are often keywords in the sentence.
+
+1) I want a burger. -> Entity : Burger
+2) Can you get me a diet coke ? -> Entity : diet coke
+3) I want a pizza. -> Entity : pizza
+
+entities have multiple properties :
+
+a) "value":the value of the entity , In the first example it is 'Burger'.
+b) "exactValue":the exact value that occurs within the message text. In the first example it is 'burger'.
+c) "kind":the kind of the entity eg in the first example  Food , and in the second one Drinks
+d) "foundAt":[start location , end location] -> [9 15] the position where it is detected in text .
+
+
+**Relation**: Often entities and intents together can help one determine the meaning of a sentence but sometimes entites interact together .
+A relation is established between sentences to help bring more clarity to what the user is saying. For example:
+
+1) I want a cheese burger or a bean burger. -> here entities are cheese burger , bean burger and there is an "or" relation between these two
+2) I want a cheese burger and fries. -> here entities are cheese burger , fries and there is an "and" relation between these two
+
+**Context**: Without Context any bot would only be able to reply to the message it just received and not the messages it received in the past .
+Context in the case of simbots is simply a stack of intent , entity and relations received over time. It also contains methods to query and manage the context stack.
+You can query the context method to retrieve anything in the context stack and formulate complex functionality .
+
+
+
+you can read more about chatbots `here <https://chatbotsmagazine.com/>`_
+
+
+How to Create Bots
+==================
+
+*******************
+Quick Start
+*******************
+
+To create any bot we will need to define these things:
+
+1) Intents
+2) Entities
+3) Bot Templates (Reply messages)
+4) Reason
+
+What this bot will do
+**********************
+
+In this Example we will set up a simple bot which can answer basic questions like
+
+Who are you ?
+
+What is your age ?
+
+Intents
+*******
+
+Lets first setup some intent examples
+
+.. code:: python
+
+   #!/usr/bin/python
+   # -*- coding: utf-8 -*-
+
+   import json
+
+   intentExamples = {
+       'Greetings': [
+           'Hello !',
+           'Hi , How are you ?',
+           'Hey !! ',
+           'Namaste ',
+           'Good day',
+           'Good evening',
+           'Good morning',
+           'Good to see you',
+           'Greetings',
+           'Have you been well?',
+           'Hello Agent',
+           'Hello',
+           'Hello I am looking for some help here',
+           'Hey how are you doing',
+           'Hey there all',
+           'Hey there',
+           'Hey twin',
+           'Hey you',
+           'Hi advisor',
+           'Hi there',
+           'How are things going?',
+           'How are you today?',
+           'How have you been?',
+           'How is it going?',
+           'How r u?',
+           'Looking good eve',
+           'take me back',
+           "What's new?",
+           "What's up?",
+           'Who is this?',
+           'You there',
+           'Namaste',
+           'satsriyakaal',
+           'helo',
+           'hiiiiiii',
+           'abe oye',
+           ' sup ',
+           ' wassup bruh ',
+           ' sup bro ',
+           ' ssssup mate whats up',
+       ],
+       'BotName': [
+           'Who are you',
+           'Who are you ?',
+           'What is your Name ?',
+           'What is your name ',
+           'what should i call you ?',
+           'What should i call you',
+           'How to address you ?',
+           'how  to address you by name',
+           'what is your name in english',
+           'call you',
+           'your name',
+           'call you ?',
+           'your name ?',
+           'whom are you',
+           'whom are you referred as',
+       ],
+
+       'Irrelevant': ['the weather is fine todaythe sun rises in the east'
+           , 'the quick brown fox jumps over the red carpet',
+                      'This is random irrelevant text',
+                      'What is love , baby dont hurt me ',
+                      ],
+   }
+
+Since these intents are frequently used in many bots therefore we have added them in the utils module .
+
+.. code:: python
+
+   from simbots.utils.builtInIntents import IntentSamples
+
+   intentExamples = {
+    'Greetings': IntentSamples.greetingSamples(),
+    'BotName': IntentSamples.botNameSamples(),
+    'Irrelevant': ['the weather is fine today','the sun rises in the east','the quick brown fox jumps over the red carpet',
+                   'the sun rises in the east',
+                   'What is love , baby dont hurt me ',
+                   'this is a new dawn a new day']
+    }
+
+
+Entities
+********
+
+Now we will add some entities here . Note that we dont have any interesting entities here . We have only added entities to help the bot identify certain
+intents like Greetings
+
+.. code:: python
+
+   entityExamples = {
+    "GreetingsHelper": {
+        "wsup": [
+            {
+                "tag": "case-insensitive",
+                "pattern": "\s[w]*[a]*[s] [u] [p] \s",
+                "type": "regex",
+            }
+        ],
+        "hi": [{"tag": "case-insensitive", "pattern": "\s[h] [i] \s", "type": "regex"}],
+        "hello": [
+            {
+                "tag": "case-insensitive",
+                "pattern": "\s[h] [e] [l] [o] \s",
+                "type": "regex",
+            }
+        ],
+    }}
+
+Note that you can also import some commonly used entities.
+
+.. code:: python
+
+   from simbots.utils.builtInEntities import EntitySamples
+
+   entityExamples = {
+    'GreetingsHelper': EntitySamples.greetingsHelper(),
+    }
+
+Responses
+*********
+
+Now that we are done with the entities and intents lets setup the basic bot responses . Here we have created three themes (themeBasic,funky,cowboy)
+which can be switched to give varied responses.
+
+.. code:: python
+
+   botMessages = {
+       "themeBasic": {
+           "Greetings": {
+               "basic": [
+                   "Hello ! What can i do for you ?",
+                   "Hi there ! what can I do for you ?",
+                   "Hello",
+               ]
+           },
+           "BotName": {"basic": ["I am riko", "You can call me riko"]},
+           "Irrelevant": {
+               "basic": [
+                   "Im sorry Im not getting you :( ",
+                   "Im sorry could you please rephrase ?",
+               ]
+           },
+       },
+       "funky": {
+           "Greetings": {
+               "basic": ["Hey Yo Wassup Bro What can i do for ya ?", "Heyo what ya want ?"]
+           },
+           "BotName": {"basic": ["Yo Im Riko ! "]},
+       },
+       "cowboy": {
+           "Greetings": {
+               "basic": [
+                   "Howdy partner what can i do for you greenhorn",
+                   " Howdy ! Pleasure meeting ya ?",
+               ]
+           },
+           "BotName": {
+               "basic": ["Howdy Partner , Im Riko  "]
+           },
+       },
+   }
+
+Reason (Bot Logic)
+*****************
+
+
+Now lets define the bot . To do that you must always define the reason method in the bot class. Depending on the usecase you might also have to change the
+'say' method.
+
+.. code:: python
+
+   from simbots.Bot import Bot
+
+   class NewBot(Bot):
+
+       def reason(self):
+
+           # # find current dialogNumber
+
+           currentDialogNumber = self.contextManager.context['dialogs'][-1]
+
+           currentTopIntent = self.contextManager.findCurrentTopIntent()
+
+           currentEntities = self.contextManager.findCurrentEntities()
+
+           output = []
+
+           if currentTopIntent['confidence'] < self.confidenceLimit \
+                   or currentTopIntent['name'] == 'Irrelevant':
+               currentTopIntent = {}
+
+           if currentTopIntent:
+
+               # #
+               # # Rule For All
+               # #
+               # if currentTopIntent["name"]=="Greetings":
+               # #
+               # # Person is greeting
+               # #
+
+               name = currentTopIntent['name']
+               reply = {'tag': '{0}.basic'.format(name), 'data': None}
+               # note if you had defined the botname response as "my name is {0}" , then you can change the botname
+               # response by changing the data field here as this is set in the string.
+
+
+               # "message":""
+
+               output.append(reply)
+           else:
+
+               # #
+               # #
+               # # Rule for irrelevant
+               # #
+               # #
+
+               irrelevant = {'tag': 'Irrelevant.basic', 'data': None}
+
+               output.append(irrelevant)
+
+           return output
+
+   newB = NewBot(intentExamples, entityExamples, botMessages,
+                 confidenceLimit=0)
+
+Once we have defined the bot, lets run it !
+
+.. code:: python
+
+   outputTheme = 'themeBasic'
+
+   newB.run(theme = outputTheme)
+
+---------
+
+*********************
+A Bot for simple conversation
+*********************
+
+Now here's the bot with a number of intents and entities added .
+
+What this bot will do
+**********************
+
+This will be able to answer to basic questions like
+
+1) Hello
+2) what is your name ?
+3) Do you have any relatives
+4) What is your age ?
+5) Where were you born ?
+6) What can you do ?
+7) Tell me a joke
+
+Complete Code
+**********************
+
+.. code:: python
+
+   from simbots.Bot import Bot
+   from simbots.utils.builtInIntents import IntentSamples
+   from simbots.utils.builtInEntities import EntitySamples
+   import json
+
+
+
+   intentExamples = {
+       'Greetings': IntentSamples.greetingSamples(),
+       'BotName': IntentSamples.botNameSamples(),
+       'Relatives': IntentSamples.relativeSamples(),
+       'Age': IntentSamples.ageSamples(),
+       'BirthPlace': IntentSamples.birthPlaceSamples(),
+       'Abilities': IntentSamples.abilitiesSamples(),
+       'Really': IntentSamples.reallySamples(),
+       'Laughter': IntentSamples.laughterSamples(),
+       'Cool': IntentSamples.coolSamples(),
+       'Praise': IntentSamples.praiseSamples(),
+       'TrueT': IntentSamples.trueSamples(),
+       'FalseT': IntentSamples.falseSamples(),
+       'Bye': IntentSamples.byeSamples(),
+       'Confirm': IntentSamples.confirmSamples(),
+       'Thanks': IntentSamples.thanksSamples(),
+       'Discard': IntentSamples.discardSamples(),
+       'Joke': IntentSamples.jokeSamples(),
+       'Irrelevant': ['the weather is fine today','the sun rises in the east','the quick brown fox jumps over the red carpet',
+                      'the sun rises in the east',
+                      'What is love , baby dont hurt me ',
+                      'this is a new dawn a new day'],
+   }
+
+   entityExamples = {
+       'GreetingsHelper': EntitySamples.greetingsHelper(),
+       'LaughterHelper': EntitySamples.laughterHelper(),
+       'CoolHelper': EntitySamples.coolHelper(),
+       'ByeHelper': EntitySamples.byeHelper(),
+   }
+
+   botMessages = {'themeBasic': {
+       'Greetings': {'basic': ['Hello ! What can i do for you ?',
+                               'Hi there ! what can I do for you ?', 'Hello']},
+       'Age': {'basic': ['I am two years old ', 'I am two']},
+       'BotName': {'basic': ['I am riko', 'You can call me riko']},
+       'Abilities': {'basic': ['I am learning to make basic conversation ! \n ... and i can tell you a couple of jokes :) '
+                               ]},
+       'BirthPlace': {'basic': ['I am from  India', 'I am an Indian'
+           , 'I am punjabi and i love food']},
+       'Really': {'basic': ['To the best of my knowledge', 'Im positive !'
+                            ]},
+       'Laughter': {'basic': ['Im glad i was able to make you smile !',
+                              'See I can be funny !',
+                              'And they say I dont have a sense of humor :)']},
+       'Cool': {'basic': ['cool', 'thanks']},
+       'Bye': {'basic': ['Bubye !', 'Bye ! nice chatting with you !']},
+       'Confirm': {'basic': ['cool ']},
+       'Discard': {'basic': ['No it is then', 'agreed , no it is .']},
+       'TrueT': {'basic': ['I know right', 'that makes me ']},
+       'FalseT': {'basic': ['Im still learning ... I sometimes make mistakes '
+                            ]},
+       'Praise': {'basic': ['Thanks ! now i think ill blush ',
+                            'So nice of you to say that !']},
+       'Relatives': {'basic': ['Umm no i dont really have any relatives :)'
+                               ]},
+       'Thanks': {'basic': ['Dont mention it ',
+                            ' Im glad , please dont mention it']},
+       'Joke': {'basic': ['''
+
+    Sure here is one
+    {0}'''.format(el.replace('...'
+                             , '''
+
+   ''')) for el in
+                          ['What did one pirate say to the other when he beat him at chess? Checkmatey.'
+                              ,
+                           'I burned 2000 calories today<>I left my food in the oven for too long.'
+                           ]]},
+       'Question': {'basic': ['i dont know !']},
+       'Irrelevant': {'basic': ['Im sorry Im not getting you :( ',
+                                'Im sorry could you please rephrase ?']},
+   },
+       'funky': {'Greetings': {'basic': ['Hey Yo Wassup Bro What can i do for ya ?'
+           , 'Heyo what ya want ?']},
+                 'Abilities': {'basic': ['Yo I can get ya somethin to eat '
+                                         ]}},
+       'cowboy': {'Greetings': {'basic': ['Howdy partner what can i do for you greenhorn'
+           , ' Howdy ! Pleasure meeting ya ?']},
+                  'Abilities': {'basic': ['You up for some food ? cause i can help you with that '
+                                          ]}}}
+
+
+   class NewBot(Bot):
+
+       def reason(self):
+
+           # # find current dialogNumber
+
+           currentDialogNumber = self.contextManager.context['dialogs'][-1]
+
+           currentTopIntent = self.contextManager.findCurrentTopIntent()
+
+           currentEntities = self.contextManager.findCurrentEntities()
+
+           output = []
+
+           if currentTopIntent['confidence'] < self.confidenceLimit \
+                   or currentTopIntent['name'] == 'Irrelevant':
+               currentTopIntent = {}
+
+           if currentTopIntent:
+
+               # #
+               # # Rule For All
+               # #
+               # if currentTopIntent["name"]=="Greetings":
+               # #
+               # # Person is greeting
+               # #
+
+               name = currentTopIntent['name']
+               reply = {'tag': '{0}.basic'.format(name), 'data': None}
+
+               # "message":""
+
+               output.append(reply)
+           else:
+
+               # #
+               # #
+               # # Rule for irrelevant
+               # #
+               # #
+
+               irrelevant = {'tag': 'Irrelevant.basic', 'data': None}
+
+               output.append(irrelevant)
+
+           return output
+
+
+   newB = NewBot(intentExamples, entityExamples, botMessages,
+                 confidenceLimit=0)
+
+   outputTheme = 'themeBasic'
+   newB.run(theme = outputTheme)
+
+Sample Conversations
+**********************
+
+Some conversations with this bot :
+
+.. code:: shell
+
+   Type in @@ to exit bot
+   @i to get intents
+   @c to get context
+   @e to get entities
+   @t to add a test case
+   @etc to evaluate a test case
+   @eatc to evaluate all test cases
+   @ti to add intent
+
+   User : hi
+   themeBasicBot : Hello ! What can i do for you ?
+   User : who are you ?
+   themeBasicBot : I am riko
+   User : hey riko
+   themeBasicBot : Hello ! What can i do for you ?
+   User : what can you do ?
+   themeBasicBot : I am learning to make basic conversation !
+    ... and i can tell you a couple of jokes :)
+   User : tell me one then
+   themeBasicBot :
+
+    Sure here is one
+    I burned 2000 calories today<>I left my food in the oven for too long.
+   User : hahaha
+   themeBasicBot : Im glad i was able to make you smile !
+   User : thats awesome
+   themeBasicBot : thanks
+   User : do you have a sister ?
+   themeBasicBot : Umm no i dont really have any relatives :)
+   User : oh ok
+   themeBasicBot : cool
+   User : bye
+   themeBasicBot : Bye ! nice chatting with you !
+   User : @@
+   Process finished with exit code 0
+
+
+---------
+
+*********************
+Reply Using Name
+*********************
+
+Often you will need to detect names from messages and generate a reply using that name .
+There isn't any easy way to write a regex pattern to detect names .To do this you will need a Machine learning or Deep learning based solution.
+Spacy provides NER to detect person names . Of course, you can also define your own custom name detection mechanism .
+
+Entities
+**********************
+
+To start off you need to define an entity extractor and an entity substituter .
+
+
+.. code:: python
+
+   import spacy
+
+   # Load English tokenizer, tagger, parser and NER
+   nlp = spacy.load("en_core_web_sm")
+
+   def extractor(messageText,dialogNumber):
+       doc = nlp(messageText)
+       extractedNamesFromText = []
+       for entity in doc.ents:
+           if entity.label_ =='PERSON':
+               extractedNamesFromText.append(
+
+               {
+                   "value" : entity.text,
+                   "exactValue" : entity.text,
+                   "kind":'PERSON',
+                   "dialogNumber": dialogNumber,
+                   "foundAt":[entity.start_char, entity.end_char]
+               }
+               )
+       return extractedNamesFromText
+
+
+   def substituter(messageText):
+       doc = nlp(messageText)
+       textLabel = [(entity.text, entity.label_) for entity in doc.ents if entity.label_=='PERSON']
+       for text, label in textLabel:
+           messageText = messageText.replace(text, label)
+
+       return messageText
+
+
+Next we need to create an entity for detecting names lets call it NameHelper
+
+.. code:: json
+
+   'NameHelper':{
+           'personName':[{'type' : 'function',
+                          'extractor': extractor,
+                          'substituter':substituter,
+                          'tag':'case-insensitive'
+           }]
+
+
+
+       }
+
+Intents
+**********************
+
+Also we will need to define Intents for name detection lets call it PersonName
+
+.. code:: json
+
+    {"PersonName": ["My name is Vaibhav","I am Vaibhav Arora .","You can call me Rahul ." ,
+                    "I am Simon  . ","I am Riko .","You can call me Shiva . "]}
+
+
+Bot Messages
+**********************
+
+We need to write what the bot will output.
+
+.. code:: json
+
+    {
+    'basic': {
+		'Greetings': {
+			'basic': ['Hello ! What can i do for you ?',
+				'Hi there ! what can I do for you ?', 'Hello'
+			],
+            "nameKnown":[
+                "Hi {0} ! Its a pleasure to meet you !",
+                "Hey {0} its a pleasure talking to you !"
+            ]
+		},
+        "PersonName": {
+			'basic': ["Its a pleasure to meet you {0} ."],
+			"nameNotFound": ["Im sorry i couldn't get your name could you please write it in title case like -> Riko  "]
+
+
+		}
+    }
+
+Reason (Bot Logic)
+**********************
+
+Lastly we need to alter the bot reason method to accomodate this
+
+
+.. code:: python
+
+   # this goes in the reason method
+
+   name = currentTopIntent['name']
+
+   if name == 'Greetings' and ("sessionVariables" in  self.contextManager.context.keys()):
+
+       personName =  self.contextManager.context["sessionVariables"]["PERSON"]
+
+       reply = {'tag': '{0}.nameKnown'.format(name), 'data': personName}
+
+
+   elif name =='PersonName' and len(currentEntities) >0:
+
+       currentEntities =[ent for ent in currentEntities if ent["kind"] =='PERSON' and ent["exactValue"].lower() != 'riko']
+
+       self.contextManager.context["sessionVariables"] = {
+
+           "PERSON" :currentEntities[0]["exactValue"]
+
+       }
+       self.contextManager.updateContextTree()
+
+
+       reply = {'tag': '{0}.basic'.format(name), 'data': currentEntities[0]["exactValue"]}
+
+   elif name =='PersonName':
+
+       reply = {'tag': '{0}.nameNotFound'.format(name), 'data': None}
+   else:
+        reply = {'tag': '{0}.basic'.format(name), 'data': None}
+
+
+The Complete Code
+*****************
+.. code:: python
+
+   import spacy
+
+   # Load English tokenizer, tagger, parser and NER
+   nlp = spacy.load("en_core_web_sm")
+
+   def extractor(messageText,dialogNumber):
+       doc = nlp(messageText)
+       extractedNamesFromText = []
+       for entity in doc.ents:
+           if entity.label_ =='PERSON':
+               extractedNamesFromText.append(
+
+               {
+                   "value" : entity.text,
+                   "exactValue" : entity.text,
+                   "kind":'PERSON',
+                   "dialogNumber": dialogNumber,
+                   "foundAt":[entity.start_char, entity.end_char]
+               }
+               )
+       return extractedNamesFromText
+
+
+   def substituter(messageText):
+       doc = nlp(messageText)
+       textLabel = [(entity.text, entity.label_) for entity in doc.ents if entity.label_=='PERSON']
+       for text, label in textLabel:
+           messageText = messageText.replace(text, label)
+
+       return messageText
+
+
+
+   from simbots.Bot import Bot
+   from simbots.utils.builtInIntents import IntentSamples
+   from simbots.utils.builtInEntities import EntitySamples
+   import json
+
+   intentExamples = {
+
+       "PersonName": ["My name is Vaibhav","I am Vaibhav Arora .","You can call me Rahul ." ,
+                       "I am Simon  . ","I am Riko .","You can call me Shiva . "],
+
+       'Greetings': IntentSamples.greetingSamples(),
+
+       'BotName': IntentSamples.botNameSamples(),
+
+       'Relatives': IntentSamples.relativeSamples(),
+
+       'Age': IntentSamples.ageSamples(),
+
+       'BirthPlace': IntentSamples.birthPlaceSamples(),
+
+       'Abilities': IntentSamples.abilitiesSamples(),
+
+       'Really': IntentSamples.reallySamples(),
+
+       'Laughter': IntentSamples.laughterSamples(),
+
+       'Cool': IntentSamples.coolSamples(),
+
+       'Praise': IntentSamples.praiseSamples(),
+
+       'TrueT': IntentSamples.trueSamples(),
+
+       'FalseT': IntentSamples.falseSamples(),
+
+       'Bye': IntentSamples.byeSamples(),
+
+       'Confirm': IntentSamples.confirmSamples(),
+
+       'Thanks': IntentSamples.thanksSamples(),
+
+       'Irrelevant': ['the weather is fine today','the sun rises in the east','the quick brown fox jumps over the red carpet',
+                      'the sun rises in the east',
+                      'What is love , baby dont hurt me ',
+                      'this is a new dawn a new day'],
+   }
+
+
+   entityExamples = {
+       'GreetingsHelper': EntitySamples.greetingsHelper(),
+       'LaughterHelper': {'haha': [{ 'tag': 'case-insensitive',
+                                    'pattern': "\s(h+(a|e)+)+(h+)?\s",
+                                    'type': 'regex'}],
+                          'happysmily': [{'tag': 'case-insensitive',
+                                          'pattern': "\s\:\)\s", 'type': 'regex'}]},
+       'CoolHelper': EntitySamples.coolHelper(),
+       'ByeHelper': EntitySamples.byeHelper(),
+       'NameHelper':{
+           'personName':[{'type' : 'function',
+                          'extractor': extractor,
+                          'substituter':substituter,
+                          'tag':'case-insensitive'
+           }]
+
+
+
+       }
+   }
+
+
+
+   botMessages = {
+       'basic': {
+           'Greetings': {
+               'basic': ['Hello ! What can i do for you ?',
+                   'Hi there ! what can I do for you ?', 'Hello'
+               ],
+               "nameKnown":[
+                   "Hi {0} ! Its a pleasure to meet you !",
+                   "Hey {0} its a pleasure talking to you !"
+               ]
+           },
+           "PersonName": {
+               'basic': ["Its a pleasure to meet you {0} ."],
+               "nameNotFound": ["Im sorry i couldn't get your name could you please write it in title case like -> Riko  "]
+
+
+           },
+           'Age': {
+               'basic': ['I am two years old ', 'I am two']
+           },
+           'BotName': {
+               'basic': ['I am riko', 'You can call me riko']
+           },
+           'Abilities': {
+               'basic': ['I am still learning ! So cant do much !']
+           },
+           'BirthPlace': {
+               'basic': ['I am from Punjab , india', 'I am punjabi', 'I am punjabi and i love food']
+           },
+           'Really': {
+               'basic': ['To the best of my knowledge', 'Im positive !']
+           },
+           'Laughter': {
+               'basic': ['Im glad i was able to make you smile !',
+                   'See I can be funny !',
+                   'And they say I dont have a sense of humor :)'
+               ]
+           },
+           'Cool': {
+               'basic': ['cool', 'thanks']
+           },
+           'Bye': {
+               'basic': ['Bubye !', 'Bye ! nice chatting with you !']
+           },
+           'Confirm': {
+               'basic': ['cool ']
+           },
+           'Discard': {
+               'basic': ['No it is then', 'agreed , no it is .']
+           },
+           'Praise': {
+               'basic': ['Thanks ! now i think ill blush ',
+                   'So nice of you to say that !'
+               ]
+           },
+           'Relatives': {
+               'basic': ['Umm no i dont really have any relatives :)']
+           },
+           'Thanks': {
+               'basic': ['Dont mention it ',
+                   ' Im glad , please dont mention it'
+               ]
+           },
+           'Irrelevant': {
+               'basic': ['Im sorry Im not getting you :( ',
+                   'Im sorry could you please rephrase ?'
+               ]
+           },
+       }
+   }
+
+   class NewBot(Bot):
+
+       def reason(self):
+
+           # # find current dialogNumber
+
+           currentDialogNumber = self.contextManager.context['dialogs'][-1]
+
+           currentTopIntent = self.contextManager.findCurrentTopIntent()
+
+           currentEntities = self.contextManager.findCurrentEntities()
+
+           output = []
+
+           if currentTopIntent['confidence'] < self.confidenceLimit or currentTopIntent['name'] == 'Irrelevant':
+               currentTopIntent = {}
+
+           if currentTopIntent:
+               ##
+               ## Getting the Intent name here
+               ##
+               name = currentTopIntent['name']
+
+               if name == 'Greetings' and ("sessionVariables" in  self.contextManager.context.keys()):
+
+                   personName =  self.contextManager.context["sessionVariables"]["PERSON"]
+
+                   reply = {'tag': '{0}.nameKnown'.format(name), 'data': personName}
+
+
+               elif name =='PersonName' and len(currentEntities) >0:
+
+                   currentEntities =[ent for ent in currentEntities if ent["kind"] =='PERSON' and ent["exactValue"].lower() != 'riko']
+
+                   self.contextManager.context["sessionVariables"] = {
+
+                       "PERSON" :currentEntities[0]["exactValue"]
+
+                   }
+                   self.contextManager.updateContextTree()
+
+
+                   reply = {'tag': '{0}.basic'.format(name), 'data': currentEntities[0]["exactValue"]}
+
+               elif name =='PersonName':
+
+                   reply = {'tag': '{0}.nameNotFound'.format(name), 'data': None}
+               else:
+                    reply = {'tag': '{0}.basic'.format(name), 'data': None}
+
+
+               output.append(reply)
+
+           else:
+
+               # #
+               # #
+               # # Rule for irrelevant
+               # #
+               # #
+
+               irrelevant = {'tag': 'Irrelevant.basic', 'data': None}
+
+               output.append(irrelevant)
+
+           return output
+
+
+   newB = NewBot(intentExamples, entityExamples, botMessages,
+                 confidenceLimit=0.5)
+
+   outputTheme = 'basic'
+
+   newB.run(theme = outputTheme)
+
+Sample Conversation
+**********************
+
+Here is the output of the bot. Notice that the bot's greeting changes when you tell it your name .
+
+.. code:: shell
+
+   Type in @@ to exit bot
+   @i to get intents
+   @c to get context
+   @e to get entities
+   @t to add a test case
+   @etc to evaluate a test case
+   @eatc to evaluate all test cases
+   @ti to add intent
+   <1> User : Hi
+   <1> basicBot : Hello ! What can i do for you ?
+   <2> User : My name is Abe Lincoln
+   <2> basicBot : Its a pleasure to meet you Abe Lincoln .
+   <3> User : Hi
+   <3> basicBot : Hi Abe Lincoln ! Its a pleasure to meet you !
+   <4> User : thanks
+   <4> basicBot : Dont mention it
+   <5> User : bye
+   <5> basicBot : Bubye !
+
+
+---------
+
+************************
+How To turn Faq's into bots
+************************
+
+Many sites have Frequently Asked Questions sections (faqs) on them , where the user is expected to search through the faq's.
+Sometimes it can be more useful to have a bot learn these faq's and interact with the users . This tutorial will teach you how
+
+1) Turn Faq's into bot response .
+2) Add and Evaluate test cases to the bot .
+3) How to deal with very little training examples .
+4) How to use dev mode to train the bot .
+
+We are going to create a bot that answers FAQ's about Covid . We will use `cdc.gov <https://www.cdc.gov/coronavirus/2019-ncov/faq.html>`_
+faq's to get data for the bot .
+
+It assumes you have `yake <https://pypi.org/project/yake/>`_ and `beautiful soup <https://pypi.org/project/beautifulsoup4/>`_ installed
+and some knowledge of web scraping .
+
+this one is going to be one long tutorial :) lets get started !
+
+Getting the Initial Data
+*************************
+
+We need some question answer pairs for our bot to start learning . If you had a look at the `cdc.gov <https://www.cdc.gov/coronavirus/2019-ncov/faq.html>`_  you'll find just that for Covid 19.
+Now one way to get the data is to copy and paste each question and answer pairs . A better way is to scrape the question answer pairs from the site itself.
+We can use requests and Beautiful soup to do just that !
+
+Each Faq will be its separate intent , note however you can also combine faqs which are similar into one intent.
+
+The Faq Answer will be served as is in the bot response for this tutorial.
+
+while we are scraping the website can also create some test cases to ensure that all faq's listed are answered .
+
+.. code:: python
+
+   from bs4 import BeautifulSoup
+   import requests
+
+   page = requests.get("https://www.cdc.gov/coronavirus/2019-ncov/faq.html")
+   soup = BeautifulSoup(page.content, 'html.parser')
+
+   intentExamplesScraped = {}
+   botMessagesScraped = {"basic":{},"test":{}}
+
+   testCase = {"faqListed":{
+     "conversation": [
+     ],
+     "description": "Contains all Faq's and expected answers on the cdc website"
+   }}
+
+
+   def removeSpecialCharactersWithSpaces(text):
+       return ''.join(e for e in text if e.isalnum())
+
+
+   for el in soup.find_all(class_="card card-accordion"):
+
+       ques = el.find(class_="card-title btn btn-link")
+       ans  = el.find(class_="card-body")
+
+       print("Question : " , ques.text)
+       print("Answer : ",  ans.text)
+       intentName = removeSpecialCharactersWithSpaces(ques.text)
+       intentExamplesScraped[intentName] = [ques.text.replace("?"," ?")]*10
+       botMessagesScraped["basic"][intentName] = {"basic" :[]}
+       botMessagesScraped["basic"][intentName]["basic"].append(ans.text)
+       botMessagesScraped["basic"][intentName] = {"basic" :[]}
+       botMessagesScraped["basic"][intentName]["basic"].append(ans.text)
+       testCase["faqListed"]["conversation"].append([ques.text.replace("?"," ?"),ans.text])
+       print()
+
+
+Output
+
+.. code:: shell
+
+   Question :  What is COVID-19?
+   Answer :  COVID-19 is a disease caused by a virus called SARS-CoV-2. Most people with COVID-19 have mild symptoms, but some people can become severely ill. Although most people with COVID-19 get better within weeks of illness, some people experience post-COVID conditions. Post-COVID conditions are a wide range of new, returning, or ongoing health problems people can experience more than four weeks after first being infected with the virus that causes COVID-19. Older people and those who have certain underlying medical conditions are more likely to get severely ill from COVID-19. Vaccines against COVID-19 are safe and effective.
+
+   Question :  How does the virus spread?
+   Answer :  COVID-19 spreads when an infected person breathes out droplets and very small particles that contain the virus. These droplets and particles can be breathed in by other people or land on their eyes, noses, or mouth. In some circumstances, they may contaminate surfaces they touch. People who are closer than 6 feet from the infected person are most likely to get infected.
+   COVID-19 is spread in three main ways:
+
+   Breathing in air when close to an infected person who is exhaling small droplets and particles that contain the virus.
+   Having these small droplets and particles that contain virus land on the eyes, nose, or mouth, especially through splashes and sprays like a cough or sneeze.
+   Touching eyes, nose, or mouth with hands that have the virus on them.
+
+   For more information about how COVID-19 spreads, visit the How COVID-19 Spreads page to learn how COVID-19 spreads and how to protect yourself.
+
+Building some simple conversation into the bot
+*********************
+
+Before we add the scraped data into our bot we need to make the bot answer simple questions like
+
+1) who are you ?
+2) What can you  do ?
+
+etc
+
+lets build in the intents , entities and responses for that
+
+.. code:: python
+
+   from simbots.Bot import Bot
+   from simbots.utils.builtInIntents import IntentSamples
+   from simbots.utils.builtInEntities import EntitySamples
+
+
+
+   intentExamples= {
+
+      'Greetings': IntentSamples.greetingSamples(),
+
+       'BotName': IntentSamples.botNameSamples(),
+
+       'Relatives': IntentSamples.relativeSamples(),
+
+       'Age': IntentSamples.ageSamples(),
+
+       'BirthPlace': IntentSamples.birthPlaceSamples(),
+
+       'Abilities': IntentSamples.abilitiesSamples(),
+
+       "Bye":IntentSamples.byeSamples(),
+
+       'Irrelevant': ['the weather is fine today','the sun rises in the east','the quick brown fox jumps over the red carpet',
+                  'the sun rises in the east',
+                  'What is love , baby dont hurt me ',
+                  'this is a new dawn a new day'],
+
+   }
+
+
+
+   botMessages = {
+     "basic": {
+         'Age': {
+               'basic': ['I am two years old ', 'I am two']
+           },
+           'BotName': {
+               'basic': ['I am CovidInfoBot', 'You can call me CovidInfoBot']
+           },
+           'Abilities': {
+               'basic': ['I can tell you about Covid 19 or corona virus disease .']
+           },
+           'BirthPlace': {
+               'basic': ['I am from India' , 'India', 'I am an Indian']
+           },
+           "Greetings":{
+                 "basic" : ["Hi ","Hello "]
+           },
+           "Bye":{
+              "basic":["It was nice talking to you ! Take care, keep safe and wear a mask ."]
+           },
+           "Relatives":{
+               "basic":["No , I dont have any relatives ."]
+
+           },
+          'Irrelevant': {
+               'basic': ['Im sorry Im not getting you :( ',
+                   'Im sorry could you please rephrase ?'
+               ]
+           },
+
+     }
+
+   }
+
+
+   entityExamples = {
+       'GreetingsHelper': EntitySamples.greetingsHelper(),
+       'ByeHelper': EntitySamples.byeHelper(),
+       'Covid19':{
+           'covid19':[{"type" : "regex","tag" :'case-insensitive',"pattern":"(corona virus disease)|(corona virus)|(covid-19)|(covid 19)|(covid19)|(coronavirus disease)|(covid disease)|(covid)"}]
+       },
+       'SarsCov2':{
+           'sarscov2':[
+               {
+                   "type":"regex",
+                   "tag":'case-insensitive',
+                   "pattern":"(SARS-CoV-2)|(SarsCov2)(Sars)"
+
+               }
+
+           ]
+       }
+
+   }
+
+
+How to add more examples to intents
+***********************************
+
+So far even if we do add our scraped data into our already created intents we have very few examples for them !
+So our bot isn't going to be as accurate as we would like it . How to address this issue ?
+
+   1) The best solution to this is of course to create a manually curated dataset of questions for each Faq. But this can be time consuming and sometimes infeasable.
+
+   2)  An alternative approach is to do somekind of Data Augmentation .
+
+For Faqs we can add keyphrases from answers and questions to artificially augment the dataset .
+
+For this tutorial we will follow a three step process:-
+
+   1) create augmented samples using keyphrase extraction.
+
+   2) Manually alter the augmented samples.
+
+   3) Train the bot in dev mode to increase bot accuracy.
+
+lets use Yake to create augmented data samples
+
+
+.. code:: python
+
+   def createExampleIntentsThroughYake(text,max_ngram_size = 4,minLength=0,probThreshold=0.85):
+       language = "en"
+       deduplication_threshold = 0.8
+       numOfKeywords = 50
+       keyWordExtractor = yake.KeywordExtractor(lan=language, n=max_ngram_size, dedupLim=deduplication_threshold, top=numOfKeywords, features=None)
+       returnedKeywords =[ ]
+       text = ".".join([removeSpecialCharactersWithOutSpaces(el) for el in text.split(".")])
+       keywords = keyWordExtractor.extract_keywords(text)
+
+       for keyWord in keywords:
+           if (len(keyWord[0].split() ) >=minLength) and keyWord[1]>probThreshold:
+               returnedKeywords.append(keyWord[0])
+       return returnedKeywords
+
+   def removeSpecialCharactersWithOutSpaces(text):
+       return ''.join(e  if e.isalnum() or e==" " else " "  for e in text )
+
+
+   intent = "CanbatsinUnitedStatesgetthevirusthatcausesCOVID19andcantheyspreaditbacktopeople"
+   createExampleIntentsThroughYake(botMessagesScraped["basic"][intent]["basic"][0] ,probThreshold=0.3,minLength=2)
+
+.. code:: shell
+
+   ['present in bats',
+    'illness or death',
+    'coronavirus would make',
+    'bats in the United',
+    'affected by COVID',
+    'bats resulting',
+    'declining in the United',
+    'species of bats sick',
+    'important part',
+    'part of natural']
+
+looks like we are on to some thing ! some of the sample like 'present in bats' could be useful.
+
+
+Augment the dataset
+********************
+
+lets now add the augmented dataset to the bot
+
+.. code:: python
+
+   for intent in intentExamplesScraped.keys():
+
+      # extract keywords from answers
+      intentExamplesScraped[intent].extend(createExampleSentencesThroughYake(botMessagesScraped["basic"][intent]["basic"][0] ,probThreshold=0.3,minLength=2))
+      # extract keywords from questions themselves
+
+      intentExamplesScraped[intent].extend(createExampleSentencesThroughYake(intentExamplesScraped[intent][0] ,probThreshold=0))
+
+   for intent in intentExamplesScraped.keys():
+       intentExamples[intent] = intentExamplesScraped[intent]
+
+   for message in botMessagesScraped["basic"].keys():
+       botMessages["basic"][message] = botMessagesScraped["basic"][message]
+
+Also now lets make some manual changes. Note ive used comments to indicate the changes ive made during a quick glance throught the bot.
+This will be much quicker than manually adding all the examples yourself.
+
+.. code:: python
+
+   intentExamples = {'Greetings': ['Hello !',
+  'Hi , How are you ?',
+  'Hey !! ',
+  'Namaste ',
+  'Good day',
+  'Good evening',
+  'Good morning',
+  'Good to see you',
+  'Greetings',
+  'Have you been well?',
+  'Hello Agent',
+  'Hello',
+  'Hey how are you doing',
+  'Hey there all',
+  'Hey there',
+  'Hey twin',
+  'Hey you',
+  'Hi advisor',
+  'Hi there',
+  'How are things going?',
+  'How are you today?',
+  'How have you been?',
+  'How is it going?',
+  'How r u?',
+  'Looking good eve',
+  "What's new?",
+  "What's up?",
+  'You there',
+  'Namaste',
+  'satsriyakaal',
+  'helo',
+  'hiiiiiii',
+  ' sup ',
+  ' wassup bruh ',
+  ' sup bro ',
+  ' ssssup mate whats up',
+  'hi',
+  'hey'],
+ 'BotName': ['Who is this?',
+  'Who are you',
+  'Who are you ?',
+  'What is your Name ?',
+  'What is your name ',
+  'what should i call you ?',
+  'What should i call you',
+  'How to address you ?',
+  'how  to address you by name',
+  'what is your name ',
+  'call you',
+  'your name',
+  'call you ?',
+  'your name ?',
+  'whom are you',
+  'whom are you referred as'],
+ 'Relatives': ['Do you have any relatives ',
+  'Do you have a sibling ',
+  'Any brother or sister',
+  'Do you have a father',
+  'Do you happen to have a grandparent ?',
+  'Any grandparents or parents ',
+  'do you have Any wife ?',
+  'Are you married ?'],
+ 'Age': ['What is your age',
+  'your age ?',
+  'how old are you ?when were you born',
+  'your year of birth',
+  'year of birth',
+  'when were you born again',
+  'born ?',
+  'born again ?',
+  'how long have you lived ?'],
+ 'BirthPlace': ['where were you born ?',
+  'where are you from',
+  'where in the world are you from ?',
+  'where do you belong to',
+  'you are from ',
+  'are you from ',
+  'you belong to ',
+  'place of birth',
+  'and you are from ?',
+  'and your birthplace is from ?and you are from ?',
+  'birthplace',
+  'place of birth',
+  'location of birth',
+  'place of residence',
+  'location',
+  'your address',
+  'where do you reside ?',
+  'place of residence ?'],
+ 'Abilities': ['What can you do ?',
+  'What are your abilities ',
+  'your abilities',
+  'your capabilities',
+  'what are your capabilities',
+  'ability',
+  'your ability',
+  'capability',
+  'your capability',
+  'your abilities',
+  'your powers',
+  'what are your superpowers',
+  'superpowers',
+  'you are capable of ',
+  'what are you capable of',
+  'what can you do ?',
+  'what can you do ?',
+  'Can you jump ?',
+  'could you do this ?',
+  'could you please do this ?'],
+ 'Bye': ['good bye',
+  'bye bye',
+  'buh bye',
+  'see you later',
+  'byee',
+  'se ya later aligator',
+  'I gotta go',
+  'I have someplace else i need to be',
+  'I Need to be someplace else',
+  'We can talk later',
+  'Will chat later',
+  'We can chat later',
+  'Will be chatting later',
+  'goodbye'],
+ 'Irrelevant': ['the weather is fine today',
+  'the sun rises in the east',
+  'the quick brown fox jumps over the red carpet',
+  'the sun rises in the east',
+  'What is love , baby dont hurt me ',
+  'this is a new dawn a new day'],
+ 'WhatisCOVID19': ['What is COVID-19 ?',
+  'What is COVID-19 ?',
+  'What is COVID-19 ?',
+  'What is COVID-19 ?',
+  'What is COVID-19 ?',
+  'What is COVID-19 ?',
+  'What is COVID-19 ?',
+  'What is COVID-19 ?',
+  'What is COVID-19 ?',
+  'What is COVID-19 ?',
+   "can you tell me about covid 19 ?", #
+   #'people experience',
+  #'mild symptoms',
+  #'experience post',
+  #'Older people',
+  #'ill from COVID',
+  'problems people',
+  'Vaccines against COVID',
+  'medical conditions',
+  #'health problems people',
+  #'underlying medical conditions',
+  'i want information on COVID'] #
+                  ,
+ 'Howdoesthevirusspread': ['How does the virus spread ?',
+  'How does the virus spread ?',
+  'How does the virus spread ?',
+  'How does the virus spread ?',
+  'How does the virus spread ?',
+  'How does the virus spread ?',
+  'How does the virus spread ?',
+  'How does the virus spread ?',
+  'How does the virus spread ?',
+  'How does the virus spread ?',
+  'breathes out droplets',
+  'small particles',
+  'main ways Breathing',
+  'Breathing in air',
+  'virus land',
+  'information about how COVID',
+  'exhaling small droplets',
+  'Touching eyes nose',
+  'surfaces they touch',
+  'virus spread',
+  'spread',
+  'virus'],
+ 'Whatiscommunityspread': ['What is community spread ?',
+  'What is community spread ?',
+  'What is community spread ?',
+  'What is community spread ?',
+  'What is community spread ?',
+  'What is community spread ?',
+  'What is community spread ?',
+  'What is community spread ?',
+  'What is community spread ?',
+  'What is community spread ?',
+   "how does virus spread in the community ?", #
+    "tell me how covid spreads in the community ?",
+  'does  community define how covid spreads ?',#
+  #'spread differently',
+  #'local conditions',
+  #'local health department',
+  #'department determines',
+  #'virus in an area',
+  #'differently based',
+  #'local health',
+  'information on community spread',
+  'does covid spread differently based on local conditions ?', #
+  'health department s website',
+  'department s website',
+  'does covid spread differently based on local conditions ?', #
+  'information on community area spread', #
+  #'based on local',
+  #'visit your local health',
+  #'area please visit',
+  #'visit your local',
+  'spread in your area',
+  'community spread',
+  #'spread',
+  #'community'
+                          ],
+ 'HowcanIprotectmyself': ['How can I protect myself ?',
+  'How can I protect myself ?',
+  'How can I protect myself ?',
+  'How can I protect myself ?',
+  'How can I protect myself ?',
+  'How can I protect myself ?',
+  'How can I protect myself ?',
+  'How can I protect myself ?',
+  'How can I protect myself ?',
+  'How can I protect myself ?',
+  'what do i do to protect myself from covid ?',#
+   "how to protect oneself ?",#
+   "what measures to take for protection of oneself ?"#
+    "how to save self from covid ?"#
+                         ],
+ 'ShouldIusesoapandwaterorhandsanitizertoprotectagainstCOVID19': ['Should I use soap and water or hand sanitizer to protect against COVID-19 ?',
+  'Should I use soap and water or hand sanitizer to protect against COVID-19 ?',
+  'Should I use soap and water or hand sanitizer to protect against COVID-19 ?',
+  'Should I use soap and water or hand sanitizer to protect against COVID-19 ?',
+  'Should I use soap and water or hand sanitizer to protect against COVID-19 ?',
+  'Should I use soap and water or hand sanitizer to protect against COVID-19 ?',
+  'Should I use soap and water or hand sanitizer to protect against COVID-19 ?',
+  'Should I use soap and water or hand sanitizer to protect against COVID-19 ?',
+  'Should I use soap and water or hand sanitizer to protect against COVID-19 ?',
+  'Should I use soap and water or hand sanitizer to protect against COVID-19 ?',
+  'based hand',
+  'hand sanitizer',
+  'Wash your hands',
+  'alcohol based',
+  'water are not readily',
+  'bathroom and before eating',
+  'hands often with soap',
+  #'protect against COVID', as may confuse with HowcanIprotectmyself
+  'water or hand sanitizer',
+  'hand sanitizer to protect',
+   #'COVID',
+  'soap and water',
+  'water or hand',
+  'hand sanitizer',
+  'sanitizer to protect',
+  'soap',
+  'water',
+  'hand',
+  'sanitizer',
+  'protect'],
+ 'WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick': ['What should I do if I get sick or someone in my house gets sick ?',
+  'What should I do if I get sick or someone in my house gets sick ?',
+  'What should I do if I get sick or someone in my house gets sick ?',
+  'What should I do if I get sick or someone in my house gets sick ?',
+  'What should I do if I get sick or someone in my house gets sick ?',
+  'What should I do if I get sick or someone in my house gets sick ?',
+  'What should I do if I get sick or someone in my house gets sick ?',
+  'What should I do if I get sick or someone in my house gets sick ?',
+  'What should I do if I get sick or someone in my house gets sick ?',
+  'What should I do if I get sick or someone in my house gets sick ?',
+  'develop new symptoms',
+  'disease and show',
+  'People who have tested',
+  'vaccinated against the disease',
+  'show no symptoms',
+  'tested again as long',
+  'identified for their symptoms',
+  'quarantine or get tested',
+  'house gets sick',#
+   "what do i do if i get covid ?",#
+  'i feel sickness is spreading in my family',#
+  'house'],
+ 'WhataretherecommendationsforsomeonewhohassymptomsofCOVID19': ['What are the recommendations for someone who has symptoms of COVID-19 ?',
+  'What are the recommendations for someone who has symptoms of COVID-19 ?',
+  'What are the recommendations for someone who has symptoms of COVID-19 ?',
+  'What are the recommendations for someone who has symptoms of COVID-19 ?',
+  'What are the recommendations for someone who has symptoms of COVID-19 ?',
+  'What are the recommendations for someone who has symptoms of COVID-19 ?',
+  'What are the recommendations for someone who has symptoms of COVID-19 ?',
+  'What are the recommendations for someone who has symptoms of COVID-19 ?',
+  'What are the recommendations for someone who has symptoms of COVID-19 ?',
+  'What are the recommendations for someone who has symptoms of COVID-19 ?',
+  'Wear a mask',
+  'Cover your coughs',
+  'coughs and sneezes',
+  'nose and mouth',
+  'Wash your hands',
+  'Clean high',
+  'surfaces every day',
+  'steps below to care',
+  'Avoid sharing',
+  'household items',
+   "what do you recommend if i have covid ?",#
+   "I feel i have covid . what what should i do ?" ,#
+    "I feel my brother is sick with covid ? what to do in this case ?",    #
+
+  #'symptoms of COVID',
+  #'COVID',
+  'recommendations',
+  #'symptoms'
+   ],
+ 'WhatistheriskofmychildbecomingsickwithCOVID19': ['What is the risk of my child becoming sick with COVID-19 ?',
+  'What is the risk of my child becoming sick with COVID-19 ?',
+  'What is the risk of my child becoming sick with COVID-19 ?',
+  'What is the risk of my child becoming sick with COVID-19 ?',
+  'What is the risk of my child becoming sick with COVID-19 ?',
+  'What is the risk of my child becoming sick with COVID-19 ?',
+  'What is the risk of my child becoming sick with COVID-19 ?',
+  'What is the risk of my child becoming sick with COVID-19 ?',
+  'What is the risk of my child becoming sick with COVID-19 ?',
+  'What is the risk of my child becoming sick with COVID-19 ?',
+  'multisystem inflammatory syndrome MIS',
+  'Babies younger',
+  'symptoms at all asymptomatic',
+  'underlying medical conditions',
+  'underlying medical',
+  'medical conditions',
+  'called multisystem',
+  'called multisystem inflammatory',
+  'developed a rare',
+  'multisystem inflammatory',
+  'children have developed',
+  #'sick with COVID',
+  #'COVID',
+  'risk of my child',
+  'child becoming sick',
+  #'risk',
+  'child',
+  #'sick'
+  ],
+ 'WhatismultisysteminflammatorysyndromeinchildrenMISC': ['What is multisystem inflammatory syndrome in children (MIS-C) ?',
+  'What is multisystem inflammatory syndrome in children (MIS-C) ?',
+  'What is multisystem inflammatory syndrome in children (MIS-C) ?',
+  'What is multisystem inflammatory syndrome in children (MIS-C) ?',
+  'What is multisystem inflammatory syndrome in children (MIS-C) ?',
+  'What is multisystem inflammatory syndrome in children (MIS-C) ?',
+  'What is multisystem inflammatory syndrome in children (MIS-C) ?',
+  'What is multisystem inflammatory syndrome in children (MIS-C) ?',
+  'What is multisystem inflammatory syndrome in children (MIS-C) ?',
+  'What is multisystem inflammatory syndrome in children (MIS-C) ?',
+  'syndrome in children MIS',
+  'multisystem inflammatory syndrome',
+  'inflammatory syndrome in children',
+  'children MIS',
+  'multisystem inflammatory',
+  'inflammatory syndrome',
+  'MIS',
+  'multisystem',
+  'inflammatory',
+  'syndrome',
+  'children'],
+ 'WhatarethesymptomsandcomplicationsthatCOVID19cancause': ['What are the symptoms and complications that COVID-19 can cause ?',
+  'What are the symptoms and complications that COVID-19 can cause ?',
+  'What are the symptoms and complications that COVID-19 can cause ?',
+  'What are the symptoms and complications that COVID-19 can cause ?',
+  'What are the symptoms and complications that COVID-19 can cause ?',
+  'What are the symptoms and complications that COVID-19 can cause ?',
+  'What are the symptoms and complications that COVID-19 can cause ?',
+  'What are the symptoms and complications that COVID-19 can cause ?',
+  'What are the symptoms and complications that COVID-19 can cause ?',
+  'What are the symptoms and complications that COVID-19 can cause ?',
+  'range of symptoms',
+  'symptoms from mild',
+  'symptoms to severe',
+  'exposure to the virus',
+  'fever cough',
+  'cough or other symptoms',
+  'complications that COVID',
+  #'COVID',
+  'symptoms and complications',
+  'symptoms',
+  'complications'],
+ 'WhenshouldIseekemergencycareifIhaveCOVID19': ['When should I seek emergency care if I have COVID-19 ?',
+  'When should I seek emergency care if I have COVID-19 ?',
+  'When should I seek emergency care if I have COVID-19 ?',
+  'When should I seek emergency care if I have COVID-19 ?',
+  'When should I seek emergency care if I have COVID-19 ?',
+  'When should I seek emergency care if I have COVID-19 ?',
+  'When should I seek emergency care if I have COVID-19 ?',
+  'When should I seek emergency care if I have COVID-19 ?',
+  'When should I seek emergency care if I have COVID-19 ?',
+  'When should I seek emergency care if I have COVID-19 ?',
+  'seek emergency care',
+  'seek emergency',
+  'emergency care',
+  #'COVID',
+  'seek',
+  'emergency',
+  'care'],
+ 'Isathomespecimencollectionortestingavailable': ['Is at-home specimen collection or testing available ?',
+  'Is at-home specimen collection or testing available ?',
+  'Is at-home specimen collection or testing available ?',
+  'Is at-home specimen collection or testing available ?',
+  'Is at-home specimen collection or testing available ?',
+  'Is at-home specimen collection or testing available ?',
+  'Is at-home specimen collection or testing available ?',
+  'Is at-home specimen collection or testing available ?',
+  'Is at-home specimen collection or testing available ?',
+  'Is at-home specimen collection or testing available ?',
+  'collect a specimen',
+  'test at home',
+  'local healthcare facility',
+  'healthcare facility',
+  'collection kit',
+  'healthcare provider',
+  'local healthcare',
+  'signs and symptoms',
+  'facility or preform',
+  'preform the test',
+  'information see At Home',
+  'home and either send',
+  'testing at a local',
+  'home specimen collection',
+  'specimen collection or testing',
+  'home specimen',
+  'specimen collection',
+  'collection or testing',
+  'home',
+  'specimen',
+  'collection',
+  'testing'],
+ 'ShouldIbetestedforacurrentinfection': ['Should I be tested for a current infection ?',
+  'Should I be tested for a current infection ?',
+  'Should I be tested for a current infection ?',
+  'Should I be tested for a current infection ?',
+  'Should I be tested for a current infection ?',
+  'Should I be tested for a current infection ?',
+  'Should I be tested for a current infection ?',
+  'Should I be tested for a current infection ?',
+  'Should I be tested for a current infection ?',
+  'Should I be tested for a current infection ?',
+  'screening for COVID',
+  'Test for Current',
+  'check for infection Fully',
+  'Testing for COVID',
+  'Test for Past',
+  'symptoms of COVID',
+  'test result',
+  'suspected or confirmed',
+  'current infection',
+  'tested for a current',
+  'infection',
+  'tested',
+  'current'],
+ 'CansomeonetestnegativeandlatertestpositiveonaviraltestforCOVID19': ['Can someone test negative and later test positive on a viral test for COVID-19 ?',
+  'Can someone test negative and later test positive on a viral test for COVID-19 ?',
+  'Can someone test negative and later test positive on a viral test for COVID-19 ?',
+  'Can someone test negative and later test positive on a viral test for COVID-19 ?',
+  'Can someone test negative and later test positive on a viral test for COVID-19 ?',
+  'Can someone test negative and later test positive on a viral test for COVID-19 ?',
+  'Can someone test negative and later test positive on a viral test for COVID-19 ?',
+  'Can someone test negative and later test positive on a viral test for COVID-19 ?',
+  'Can someone test negative and later test positive on a viral test for COVID-19 ?',
+  'Can someone test negative and later test positive on a viral test for COVID-19 ?',
+  'sample was collected',
+  'collected early',
+  'test positive',
+  'early in your infection',
+  'infection and test positive',
+  'steps to protect',
+  'infection and test',
+  'Infection for more information',
+  'negative if the sample',
+  'test and get infected',
+  'viral test for COVID',
+  'positive on a viral',
+  'test negative',
+  'test positive',
+  'viral test',
+  'test for COVID',
+  #'COVID',
+  'test',
+  'negative and later test',
+  'negative',
+  'positive',
+  'viral'],
+ 'Whatiscontacttracing': ['What is contact tracing ?',
+  'What is contact tracing ?',
+  'What is contact tracing ?',
+  'What is contact tracing ?',
+  'What is contact tracing ?',
+  'What is contact tracing ?',
+  'What is contact tracing ?',
+  'What is contact tracing ?',
+  'What is contact tracing ?',
+  'What is contact tracing ?',
+  'contact tracing',
+  'tracing',
+  'contact'],
+ 'Whatwillhappenwithmypersonalinformationduringcontacttracing': ['What will happen with my personal information during contact tracing ?',
+  'What will happen with my personal information during contact tracing ?',
+  'What will happen with my personal information during contact tracing ?',
+  'What will happen with my personal information during contact tracing ?',
+  'What will happen with my personal information during contact tracing ?',
+  'What will happen with my personal information during contact tracing ?',
+  'What will happen with my personal information during contact tracing ?',
+  'What will happen with my personal information during contact tracing ?',
+  'What will happen with my personal information during contact tracing ?',
+  'What will happen with my personal information during contact tracing ?',
+  'diagnosed with COVID',
+  'personal and medical',
+  'health care',
+  'exposed to COVID',
+  'medical information',
+  'health information',
+  'local health department',
+  'close contact',
+  'protecting health information',
+  'protecting health',
+  'local health',
+  'notify people',
+  'collecting and protecting health',
+  'method for collecting',
+  'information during contact tracing',
+  'personal information during contact',
+  'contact tracing',
+  'happen with my personal',
+  'personal information',
+  'information during contact',
+  'tracing',
+  'happen',
+  'personal',
+  'information',
+  'contact'],
+ 'WhoisconsideredaclosecontactofsomeonewithCOVID19': ['Who is considered a close contact of someone with COVID-19 ?',
+  'Who is considered a close contact of someone with COVID-19 ?',
+  'Who is considered a close contact of someone with COVID-19 ?',
+  'Who is considered a close contact of someone with COVID-19 ?',
+  'Who is considered a close contact of someone with COVID-19 ?',
+  'Who is considered a close contact of someone with COVID-19 ?',
+  'Who is considered a close contact of someone with COVID-19 ?',
+  'Who is considered a close contact of someone with COVID-19 ?',
+  'Who is considered a close contact of someone with COVID-19 ?',
+  'Who is considered a close contact of someone with COVID-19 ?',
+  'feet of an infected',
+  'considered a close contact',
+  #'COVID',
+  'considered a close',
+  'close contact',
+  'considered',
+  'close',
+  'contact'],
+ 'IhaveCOVID19HowdoItellthepeopleIwasaround': ['I have COVID-19. How do I tell the people I was around ?',
+  'I have COVID-19. How do I tell the people I was around ?',
+  'I have COVID-19. How do I tell the people I was around ?',
+  'I have COVID-19. How do I tell the people I was around ?',
+  'I have COVID-19. How do I tell the people I was around ?',
+  'I have COVID-19. How do I tell the people I was around ?',
+  'I have COVID-19. How do I tell the people I was around ?',
+  'I have COVID-19. How do I tell the people I was around ?',
+  'I have COVID-19. How do I tell the people I was around ?',
+  'I have COVID-19. How do I tell the people I was around ?',
+  'text notifications anonymously',
+  'call text',
+  'text notifications',
+  'stay anonymous',
+  'online tool',
+  'email your contacts',
+  'call text or email',
+  'contacts by sending',
+  'emails or text notifications',
+  'sending out emails',
+  'text or email',
+  'emails or text',
+  #'COVID',
+  'people'],
+ 'Doesmaskusehelpdetermineifsomeoneisconsideredaclosecontact': ['Does mask use help determine if someone is considered a close contact ?',
+  'Does mask use help determine if someone is considered a close contact ?',
+  'Does mask use help determine if someone is considered a close contact ?',
+  'Does mask use help determine if someone is considered a close contact ?',
+  'Does mask use help determine if someone is considered a close contact ?',
+  'Does mask use help determine if someone is considered a close contact ?',
+  'Does mask use help determine if someone is considered a close contact ?',
+  'Does mask use help determine if someone is considered a close contact ?',
+  'Does mask use help determine if someone is considered a close contact ?',
+  'Does mask use help determine if someone is considered a close contact ?',
+  'considered a close contact',
+  'close contact',
+  'mask use help determine',
+  'considered a close',
+  'contact',
+  'mask',
+  'determine',
+  'considered',
+  'close'],
+ 'IfIamaclosecontactwillIbetestedforCOVID19': ['If I am a close contact, will I be tested for COVID-19 ?',
+  'If I am a close contact, will I be tested for COVID-19 ?',
+  'If I am a close contact, will I be tested for COVID-19 ?',
+  'If I am a close contact, will I be tested for COVID-19 ?',
+  'If I am a close contact, will I be tested for COVID-19 ?',
+  'If I am a close contact, will I be tested for COVID-19 ?',
+  'If I am a close contact, will I be tested for COVID-19 ?',
+  'If I am a close contact, will I be tested for COVID-19 ?',
+  'If I am a close contact, will I be tested for COVID-19 ?',
+  'If I am a close contact, will I be tested for COVID-19 ?',
+  'information see COVID',
+  'health department',
+  'provide resources',
+  'resources for testing',
+  'symptoms worsen',
+  'medical care',
+  'monitor your symptoms',
+  'seek medical',
+  'seek medical care',
+  'testing in your area',
+  'worsen or become severe',
+  'severe you should seek',
+  'Watch for or monitor',
+  'tested for COVID',
+  'close contact',
+  #'COVID',
+  'close',
+  'contact',
+  'tested'],
+ 'CanIgetCOVID19frommypetsorotheranimals': ['Can I get COVID-19 from my pets or other animals ?',
+  'Can I get COVID-19 from my pets or other animals ?',
+  'Can I get COVID-19 from my pets or other animals ?',
+  'Can I get COVID-19 from my pets or other animals ?',
+  'Can I get COVID-19 from my pets or other animals ?',
+  'Can I get COVID-19 from my pets or other animals ?',
+  'Can I get COVID-19 from my pets or other animals ?',
+  'Can I get COVID-19 from my pets or other animals ?',
+  'Can I get COVID-19 from my pets or other animals ?',
+  'Can I get COVID-19 from my pets or other animals ?',
+  'information about pets',
+  'Pets for more information',
+  'pets or other animals',
+  #'COVID',
+  'animals',
+  'pets'],
+ 'CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur': ['Can animals carry the virus that causes COVID-19 on their skin or fur ?',
+  'Can animals carry the virus that causes COVID-19 on their skin or fur ?',
+  'Can animals carry the virus that causes COVID-19 on their skin or fur ?',
+  'Can animals carry the virus that causes COVID-19 on their skin or fur ?',
+  'Can animals carry the virus that causes COVID-19 on their skin or fur ?',
+  'Can animals carry the virus that causes COVID-19 on their skin or fur ?',
+  'Can animals carry the virus that causes COVID-19 on their skin or fur ?',
+  'Can animals carry the virus that causes COVID-19 on their skin or fur ?',
+  'Can animals carry the virus that causes COVID-19 on their skin or fur ?',
+  'Can animals carry the virus that causes COVID-19 on their skin or fur ?',
+  'virus that causes COVID',
+  'animals carry the virus',
+  'skin or fur',
+  #'COVID',
+  'animals carry',
+  'carry the virus',
+  'fur',
+  'animals',
+  'carry',
+  'virus',
+  'skin'],
+ 'CanIusehandsanitizeronpets': ['Can I use hand sanitizer on pets ?',
+  'Can I use hand sanitizer on pets ?',
+  'Can I use hand sanitizer on pets ?',
+  'Can I use hand sanitizer on pets ?',
+  'Can I use hand sanitizer on pets ?',
+  'Can I use hand sanitizer on pets ?',
+  'Can I use hand sanitizer on pets ?',
+  'Can I use hand sanitizer on pets ?',
+  'Can I use hand sanitizer on pets ?',
+  'Can I use hand sanitizer on pets ?',
+  "can i sanitize my pets ?",
+   "should i be using hand sanitizer on my pets ?",
+  'hand sanitizer on pets',
+  'sanitizer on pets',
+  'hand sanitizer',
+  'pets',
+  'hand',
+  'sanitizer'],
+ 'WhatshouldIdoifmypetgetssickandIthinkitsCOVID19': ['What should I do if my pet gets sick and I think it’s COVID-19 ?',
+  'What should I do if my pet gets sick and I think it’s COVID-19 ?',
+  'What should I do if my pet gets sick and I think it’s COVID-19 ?',
+  'What should I do if my pet gets sick and I think it’s COVID-19 ?',
+  'What should I do if my pet gets sick and I think it’s COVID-19 ?',
+  'What should I do if my pet gets sick and I think it’s COVID-19 ?',
+  'What should I do if my pet gets sick and I think it’s COVID-19 ?',
+  'What should I do if my pet gets sick and I think it’s COVID-19 ?',
+  'What should I do if my pet gets sick and I think it’s COVID-19 ?',
+  'What should I do if my pet gets sick and I think it’s COVID-19 ?',
+  'contact with a person',
+  'animals for COVID',
+  'sick pets',
+  'health concerns',
+  'sick from the virus',
+  'call your veterinarian',
+  'sick after contact',
+  'veterinary clinic',
+  'evaluate your pet',
+  'treatment and care',
+  'offer telemedicine',
+  'telemedicine consultations',
+  'consultations or other plans',
+  'Routine testing',
+  'pet gets sick',
+  #'COVID',
+  'pet',
+  #'sick'
+  ],
+ 'CanwildanimalsspreadthevirusthatcausesCOVID19topeople': ['Can wild animals spread the virus that causes COVID-19 to people ?',
+  'Can wild animals spread the virus that causes COVID-19 to people ?',
+  'Can wild animals spread the virus that causes COVID-19 to people ?',
+  'Can wild animals spread the virus that causes COVID-19 to people ?',
+  'Can wild animals spread the virus that causes COVID-19 to people ?',
+  'Can wild animals spread the virus that causes COVID-19 to people ?',
+  'Can wild animals spread the virus that causes COVID-19 to people ?',
+  'Can wild animals spread the virus that causes COVID-19 to people ?',
+  'Can wild animals spread the virus that causes COVID-19 to people ?',
+  'Can wild animals spread the virus that causes COVID-19 to people ?',
+  'virus that causes COVID',
+  'wild animals spread',
+  'animals spread the virus',
+  #'COVID',
+  'wild animals',
+  'animals spread',
+  'spread the virus',
+  'people',
+  'wild',
+  'animals',
+  'spread',
+  'virus'],
+ 'CanbatsinUnitedStatesgetthevirusthatcausesCOVID19andcantheyspreaditbacktopeople': ['Can bats in United States get the virus that causes COVID-19, and can they spread it back to people ?',
+  'Can bats in United States get the virus that causes COVID-19, and can they spread it back to people ?',
+  'Can bats in United States get the virus that causes COVID-19, and can they spread it back to people ?',
+  'Can bats in United States get the virus that causes COVID-19, and can they spread it back to people ?',
+  'Can bats in United States get the virus that causes COVID-19, and can they spread it back to people ?',
+  'Can bats in United States get the virus that causes COVID-19, and can they spread it back to people ?',
+  'Can bats in United States get the virus that causes COVID-19, and can they spread it back to people ?',
+  'Can bats in United States get the virus that causes COVID-19, and can they spread it back to people ?',
+  'Can bats in United States get the virus that causes COVID-19, and can they spread it back to people ?',
+  'Can bats in United States get the virus that causes COVID-19, and can they spread it back to people ?',
+  'present in bats',
+  'illness or death',
+  'coronavirus would make',
+  'bats in the United',
+  'affected by COVID',
+  'bats resulting',
+  'declining in the United',
+  'species of bats sick',
+  'important part',
+  'part of natural',
+  'bats in United States',
+  'United States',
+  'virus that causes COVID',
+  'bats in United',
+  'States get the virus',
+  'back to people',
+  'spread it back',
+  #'COVID',
+  'United',
+  'States',
+  'people',
+  'bats',
+  'virus',
+  'spread',
+  'back'],
+ 'Whatiscommunitymitigation': ['What is community mitigation ?',
+  'tell me about community mitigation ?',
+  'What is community mitigation ?',
+  'What is community mitigation ?',
+  'What is community mitigation ?',
+  'What is community mitigation ?',
+  'What is community mitigation ?',
+  'What is community mitigation ?',
+  'What is community mitigation ?',
+  'What is community mitigation ?',
+   "How to mitigate community spread of the virus",
+  #'slow the spread',
+  #'slow its spread',
+  'goal of community',
+  'mitigation in areas',
+  'information see Community',
+  'community mitigation',
+  'mitigation',
+  'community']}
+
+Building and running the bot
+*****************************
+
+Now lets build the bot ! Dont forget to add the test cases.
+
+.. code:: python
+
+   from simbots.Bot import Bot
+   from simbots.utils.builtInIntents import IntentSamples
+   from simbots.utils.builtInEntities import EntitySamples
+   import json
+
+
+   newB = Bot(intentExamples, entityExamples, botMessages,testCases=testCase,
+                 confidenceLimit=0)
+
+   outputTheme = 'basic'
+
+   newB.run(theme = outputTheme)
+
+now lets test it out !
+
+.. code:: shell
+
+  Type in @@ to exit bot
+   @i to get intents
+   @c to get context
+   @e to get entities
+   @t to add a test case
+   @etc to evaluate a test case
+   @eatc to evaluate all test cases
+   @ti to add intent
+   <1> User : tell me about covid ?
+   <1> basicBot : COVID-19 is a disease caused by a virus called SARS-CoV-2. Most people with COVID-19 have mild symptoms, but some people can become severely ill. Although most people with COVID-19 get better within weeks of illness, some people experience post-COVID conditions. Post-COVID conditions are a wide range of new, returning, or ongoing health problems people can experience more than four weeks after first being infected with the virus that causes COVID-19. Older people and those who have certain underlying medical conditions are more likely to get severely ill from COVID-19. Vaccines against COVID-19 are safe and effective.
+   <2> User : can my pet get covid ?
+   <2> basicBot : Based on the available information to date, the risk of animals spreading COVID-19 to people is considered to be low. See If You Have Pets for more information about pets and COVID-19.
+   <3> User : can i get covid from animals ?
+   <3> basicBot : Based on the available information to date, the risk of animals spreading COVID-19 to people is considered to be low. See If You Have Pets for more information about pets and COVID-19.
+
+
+Training in Dev mode
+*********************
+
+The bot is doing good ! however we need to train it further to be awesome !
+
+we can use @ti to do that . I noticed that the bot was getting confused about a question about pets
+
+.. code:: shell
+
+   <4> User : is my pet at risk of getting covid ?
+   <4> basicBot : Children can be infected with the virus that causes COVID-19 and can get sick with COVID-19. Most children with COVID-19 have mild symptoms or they may have no symptoms at all (“asymptomatic”). Fewer children have been sick with COVID-19 compared to adults. Babies younger than 1 and children with certain underlying medical conditions may be more likely to have serious illness from COVID-19. Some children have developed a rare but serious disease that is linked to COVID-19 called multisystem inflammatory syndrome (MIS-C).
+   For more information about how people get sick with the virus that causes COVID-19, see How COVID-19 Spreads.
+   <5> User : @ti
+   Intents available are : Greetings
+   BotName
+   Relatives
+   Age
+   BirthPlace
+   Abilities
+   Bye
+   Irrelevant
+   WhatisCOVID19
+   Howdoesthevirusspread
+   Whatiscommunityspread
+   HowcanIprotectmyself
+   ShouldIusesoapandwaterorhandsanitizertoprotectagainstCOVID19
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   WhataretherecommendationsforsomeonewhohassymptomsofCOVID19
+   WhatistheriskofmychildbecomingsickwithCOVID19
+   WhatismultisysteminflammatorysyndromeinchildrenMISC
+   WhatarethesymptomsandcomplicationsthatCOVID19cancause
+   WhenshouldIseekemergencycareifIhaveCOVID19
+   Isathomespecimencollectionortestingavailable
+   ShouldIbetestedforacurrentinfection
+   CansomeonetestnegativeandlatertestpositiveonaviraltestforCOVID19
+   Whatiscontacttracing
+   Whatwillhappenwithmypersonalinformationduringcontacttracing
+   WhoisconsideredaclosecontactofsomeonewithCOVID19
+   IhaveCOVID19HowdoItellthepeopleIwasaround
+   Doesmaskusehelpdetermineifsomeoneisconsideredaclosecontact
+   IfIamaclosecontactwillIbetestedforCOVID19
+   CanIgetCOVID19frommypetsorotheranimals
+   CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur
+   CanIusehandsanitizeronpets
+   WhatshouldIdoifmypetgetssickandIthinkitsCOVID19
+   CanwildanimalsspreadthevirusthatcausesCOVID19topeople
+   CanbatsinUnitedStatesgetthevirusthatcausesCOVID19andcantheyspreaditbacktopeople
+   Whatiscommunitymitigation
+   Enter intent name to update : WhatshouldIdoifmypetgetssickandIthinkitsCOVID19
+   Enter the dialog number of the message to add to this intent :4
+   WhatshouldIdoifmypetgetssickandIthinkitsCOVID19
+
+   [
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "contact with a person",
+     "animals for COVID",
+     "sick pets",
+     "health concerns",
+     "sick from the virus",
+     "call your veterinarian",
+     "sick after contact",
+     "veterinary clinic",
+     "evaluate your pet",
+     "treatment and care",
+     "offer telemedicine",
+     "telemedicine consultations",
+     "consultations or other plans",
+     "Routine testing",
+     "pet gets sick",
+     "pet",
+     " is my pet at risk of getting covid ? "
+   ]
+   <5> User : is my pet at risk of covid ?
+   <5> basicBot : Children can be infected with the virus that causes COVID-19 and can get sick with COVID-19. Most children with COVID-19 have mild symptoms or they may have no symptoms at all (“asymptomatic”). Fewer children have been sick with COVID-19 compared to adults. Babies younger than 1 and children with certain underlying medical conditions may be more likely to have serious illness from COVID-19. Some children have developed a rare but serious disease that is linked to COVID-19 called multisystem inflammatory syndrome (MIS-C).
+   For more information about how people get sick with the virus that causes COVID-19, see How COVID-19 Spreads.
+   <6> User : @ti
+   Intents available are : Greetings
+   BotName
+   Relatives
+   Age
+   BirthPlace
+   Abilities
+   Bye
+   Irrelevant
+   WhatisCOVID19
+   Howdoesthevirusspread
+   Whatiscommunityspread
+   HowcanIprotectmyself
+   ShouldIusesoapandwaterorhandsanitizertoprotectagainstCOVID19
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   WhataretherecommendationsforsomeonewhohassymptomsofCOVID19
+   WhatistheriskofmychildbecomingsickwithCOVID19
+   WhatismultisysteminflammatorysyndromeinchildrenMISC
+   WhatarethesymptomsandcomplicationsthatCOVID19cancause
+   WhenshouldIseekemergencycareifIhaveCOVID19
+   Isathomespecimencollectionortestingavailable
+   ShouldIbetestedforacurrentinfection
+   CansomeonetestnegativeandlatertestpositiveonaviraltestforCOVID19
+   Whatiscontacttracing
+   Whatwillhappenwithmypersonalinformationduringcontacttracing
+   WhoisconsideredaclosecontactofsomeonewithCOVID19
+   IhaveCOVID19HowdoItellthepeopleIwasaround
+   Doesmaskusehelpdetermineifsomeoneisconsideredaclosecontact
+   IfIamaclosecontactwillIbetestedforCOVID19
+   CanIgetCOVID19frommypetsorotheranimals
+   CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur
+   CanIusehandsanitizeronpets
+   WhatshouldIdoifmypetgetssickandIthinkitsCOVID19
+   CanwildanimalsspreadthevirusthatcausesCOVID19topeople
+   CanbatsinUnitedStatesgetthevirusthatcausesCOVID19andcantheyspreaditbacktopeople
+   Whatiscommunitymitigation
+   Enter intent name to update : WhatshouldIdoifmypetgetssickandIthinkitsCOVID19
+   Enter the dialog number of the message to add to this intent :5
+   WhatshouldIdoifmypetgetssickandIthinkitsCOVID19
+
+   [
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+     "contact with a person",
+     "animals for COVID",
+     "sick pets",
+     "health concerns",
+     "sick from the virus",
+     "call your veterinarian",
+     "sick after contact",
+     "veterinary clinic",
+     "evaluate your pet",
+     "treatment and care",
+     "offer telemedicine",
+     "telemedicine consultations",
+     "consultations or other plans",
+     "Routine testing",
+     "pet gets sick",
+     "pet",
+     " is my pet at risk of getting covid ? ",
+     " is my pet at risk of covid ? "
+   ]
+   <6> User : is there a risk of my pet getting covid ?
+   <6> basicBot : Most pets that have gotten sick from the virus that causes COVID-19 were infected after close contact with a person with COVID-19. Talk to your veterinarian about any health concerns you have about your pets.
+   If your pet gets sick after contact with a person with COVID-19, call your veterinarian and let them know the pet was around a person with COVID-19. If you are sick with COVID-19, do not take your pet to the veterinary clinic yourself. Some veterinarians may offer telemedicine consultations or other plans for seeing sick pets. Your veterinarian can evaluate your pet and determine the next steps for your pet’s treatment and care. Routine testing of animals for COVID-19 is not recommended at this time.
+
+Finally , it seems to be getting this question !
+
+Checking your test Cases
+************************
+
+Anytime you train the bot for a new intent , it is possible that it messed up an old one as the bot learns to assign probabilities to each intent.
+We can check if the bot fails any test cases by using @eatc. We see that so far the bot has not failed our test examples .
+
+.. code:: shell
+
+   : @eatc
+   Evaluating :  faqListed
+   {
+     "caseName": "faqListed",
+     "failedCases": 0,
+     "result": [
+       {
+         "input": "What is COVID-19 ?",
+         "expectedOutput": "COVID-19 is a disease caused by a virus called SARS-CoV-2. Most people with COVID-19 have mild symptoms, but some people can become severely ill. Although most people with COVID-19 get better within weeks of illness, some people experience post-COVID conditions. Post-COVID conditions\u00a0are a wide range of new, returning, or ongoing health problems people can experience\u00a0more than four weeks after first being infected with the virus that causes COVID-19. Older people and those who have certain underlying medical conditions\u00a0are more likely to get severely ill from COVID-19. Vaccines\u00a0against COVID-19 are safe and effective.",
+         "actualOutput": "COVID-19 is a disease caused by a virus called SARS-CoV-2. Most people with COVID-19 have mild symptoms, but some people can become severely ill. Although most people with COVID-19 get better within weeks of illness, some people experience post-COVID conditions. Post-COVID conditions\u00a0are a wide range of new, returning, or ongoing health problems people can experience\u00a0more than four weeks after first being infected with the virus that causes COVID-19. Older people and those who have certain underlying medical conditions\u00a0are more likely to get severely ill from COVID-19. Vaccines\u00a0against COVID-19 are safe and effective.",
+         "testCasePassed": true
+       },
+       {
+         "input": "How does the virus spread ?",
+         "expectedOutput": "COVID-19 spreads when an infected person breathes out droplets and very small particles that contain the virus.\u00a0These droplets and particles can be breathed in by other people\u00a0or\u00a0land on their eyes, noses, or mouth.\u00a0In some circumstances,\u00a0they may\u00a0contaminate surfaces they touch.\u00a0People who are closer than 6 feet from the infected person are most likely to get infected.\nCOVID-19 is spread in three main ways:\n\nBreathing in air when close to an infected person who is exhaling small droplets and particles that contain the virus.\nHaving these small droplets and particles that contain virus land on the eyes, nose, or mouth, especially through splashes and sprays like a cough or sneeze.\nTouching eyes, nose, or mouth with hands that have the virus on them.\n\nFor more information about how COVID-19 spreads, visit the How COVID-19 Spreads\u00a0page to learn how COVID-19 spreads and how to protect yourself.\u00a0",
+         "actualOutput": "COVID-19 spreads when an infected person breathes out droplets and very small particles that contain the virus.\u00a0These droplets and particles can be breathed in by other people\u00a0or\u00a0land on their eyes, noses, or mouth.\u00a0In some circumstances,\u00a0they may\u00a0contaminate surfaces they touch.\u00a0People who are closer than 6 feet from the infected person are most likely to get infected.\nCOVID-19 is spread in three main ways:\n\nBreathing in air when close to an infected person who is exhaling small droplets and particles that contain the virus.\nHaving these small droplets and particles that contain virus land on the eyes, nose, or mouth, especially through splashes and sprays like a cough or sneeze.\nTouching eyes, nose, or mouth with hands that have the virus on them.\n\nFor more information about how COVID-19 spreads, visit the How COVID-19 Spreads\u00a0page to learn how COVID-19 spreads and how to protect yourself.\u00a0",
+         "testCasePassed": true
+       },
+       {
+         "input": "What is community spread ?",
+         "expectedOutput": "Community spread means people have been infected with the virus in an area, including some who are not sure how or where they became infected. Each health department determines community spread differently based on local conditions. For information on community spread in your area, please visit your local health department\u2019s website.",
+         "actualOutput": "Community spread means people have been infected with the virus in an area, including some who are not sure how or where they became infected. Each health department determines community spread differently based on local conditions. For information on community spread in your area, please visit your local health department\u2019s website.",
+         "testCasePassed": true
+       },
+       {
+         "input": "How can I protect myself ?",
+         "expectedOutput": "Visit the How to Protect Yourself & Others\u00a0page to learn about how to protect yourself from respiratory illnesses, like COVID-19.",
+         "actualOutput": "Visit the How to Protect Yourself & Others\u00a0page to learn about how to protect yourself from respiratory illnesses, like COVID-19.",
+         "testCasePassed": true
+       },
+       {
+         "input": "Should I use soap and water or hand sanitizer to protect against COVID-19 ?",
+         "expectedOutput": "Handwashing is one of the best ways to protect yourself and your family from getting sick. Wash your hands often with soap and water for at least 20 seconds, especially after blowing your nose, coughing, or sneezing; going to the bathroom; and before eating or preparing food. If soap and water are not readily available, use an alcohol-based hand sanitizer with at least 60% alcohol.",
+         "actualOutput": "Handwashing is one of the best ways to protect yourself and your family from getting sick. Wash your hands often with soap and water for at least 20 seconds, especially after blowing your nose, coughing, or sneezing; going to the bathroom; and before eating or preparing food. If soap and water are not readily available, use an alcohol-based hand sanitizer with at least 60% alcohol.",
+         "testCasePassed": true
+       },
+       {
+         "input": "What should I do if I get sick or someone in my house gets sick ?",
+         "expectedOutput": "People who have been in close contact with someone who has COVID-19\u2014excluding people who have had COVID-19 within the past 3 months or who are fully vaccinated\n\nPeople who have tested positive for COVID-19 within the past 3 months and recovered do not have to quarantine or get tested again as long as they do not develop new symptoms.\nPeople who develop symptoms again within 3 months of their first bout of COVID-19 may need to be tested again if there is no other cause identified for their symptoms.\nPeople who have been in close contact with someone who has COVID-19 are not required to quarantine if they have been fully vaccinated against the disease and show no symptoms.\n\nFor more information, see COVID-19: When to Quarantine and What to Do If You Are Sick.",
+         "actualOutput": "People who have been in close contact with someone who has COVID-19\u2014excluding people who have had COVID-19 within the past 3 months or who are fully vaccinated\n\nPeople who have tested positive for COVID-19 within the past 3 months and recovered do not have to quarantine or get tested again as long as they do not develop new symptoms.\nPeople who develop symptoms again within 3 months of their first bout of COVID-19 may need to be tested again if there is no other cause identified for their symptoms.\nPeople who have been in close contact with someone who has COVID-19 are not required to quarantine if they have been fully vaccinated against the disease and show no symptoms.\n\nFor more information, see COVID-19: When to Quarantine and What to Do If You Are Sick.",
+         "testCasePassed": true
+       },
+       {
+         "input": "What are the recommendations for someone who has symptoms of COVID-19 ?",
+         "expectedOutput": "If you are sick with COVID-19 or think you might have COVID-19, follow the steps below to care for yourself and to help protect other people in your home and community.\n\nStay at home (except to get medical care).\nSeparate yourself from others.\nMonitor your symptoms.\nWear a mask over your nose and mouth when around others.\nCover your coughs and sneezes.\nWash your hands often.\nClean high-touch surfaces every day.\nAvoid sharing personal household items.\n\nFor more information, see What to Do If You Are Sick.",
+         "actualOutput": "If you are sick with COVID-19 or think you might have COVID-19, follow the steps below to care for yourself and to help protect other people in your home and community.\n\nStay at home (except to get medical care).\nSeparate yourself from others.\nMonitor your symptoms.\nWear a mask over your nose and mouth when around others.\nCover your coughs and sneezes.\nWash your hands often.\nClean high-touch surfaces every day.\nAvoid sharing personal household items.\n\nFor more information, see What to Do If You Are Sick.",
+         "testCasePassed": true
+       },
+       {
+         "input": "What is the risk of my child becoming sick with COVID-19 ?",
+         "expectedOutput": "Children can be infected with the virus that causes COVID-19 and can get sick with COVID-19. Most children with COVID-19 have mild symptoms or they may have no symptoms at all (\u201casymptomatic\u201d). Fewer children have been sick with COVID-19 compared to adults. Babies younger than 1 and children with certain underlying medical conditions may be more likely to have serious illness from COVID-19. Some children have developed a rare but serious disease that is linked to COVID-19 called multisystem inflammatory syndrome (MIS-C).\nFor more information about how people get sick with the virus that causes COVID-19, see How COVID-19 Spreads.",
+         "actualOutput": "Children can be infected with the virus that causes COVID-19 and can get sick with COVID-19. Most children with COVID-19 have mild symptoms or they may have no symptoms at all (\u201casymptomatic\u201d). Fewer children have been sick with COVID-19 compared to adults. Babies younger than 1 and children with certain underlying medical conditions may be more likely to have serious illness from COVID-19. Some children have developed a rare but serious disease that is linked to COVID-19 called multisystem inflammatory syndrome (MIS-C).\nFor more information about how people get sick with the virus that causes COVID-19, see How COVID-19 Spreads.",
+         "testCasePassed": true
+       },
+       {
+         "input": "What is multisystem inflammatory syndrome in children (MIS-C) ?",
+         "expectedOutput": "Multisystem inflammatory syndrome in children (MIS-C) is a serious condition associated with COVID-19 where different body parts can become inflamed, including the heart, lungs, kidneys, brain, skin, eyes, or gastrointestinal organs. For information, see MIS-C.",
+         "actualOutput": "Multisystem inflammatory syndrome in children (MIS-C) is a serious condition associated with COVID-19 where different body parts can become inflamed, including the heart, lungs, kidneys, brain, skin, eyes, or gastrointestinal organs. For information, see MIS-C.",
+         "testCasePassed": true
+       },
+       {
+         "input": "What are the symptoms and complications that COVID-19 can cause ?",
+         "expectedOutput": "People with COVID-19 have reported a wide range of symptoms \u2013 from mild symptoms to severe illness. Symptoms may appear 2-14 days after exposure to the virus. If you have fever, cough, or other symptoms, you might have COVID-19.",
+         "actualOutput": "People with COVID-19 have reported a wide range of symptoms \u2013 from mild symptoms to severe illness. Symptoms may appear 2-14 days after exposure to the virus. If you have fever, cough, or other symptoms, you might have COVID-19.",
+         "testCasePassed": true
+       },
+       {
+         "input": "When should I seek emergency care if I have COVID-19 ?",
+         "expectedOutput": "Look for emergency warning signs* for COVID-19. If someone is showing any of these signs, seek emergency medical care immediately\n\nTrouble breathing\nPersistent pain or pressure in the chest\nNew confusion\nInability to wake or stay awake\nPale, gray, or blue-colored skin, lips, or nail beds, depending on skin tone\n\n*This list is not all possible symptoms. Please call your medical provider for any other symptoms that are severe or concerning to you.",
+         "actualOutput": "Look for emergency warning signs* for COVID-19. If someone is showing any of these signs, seek emergency medical care immediately\n\nTrouble breathing\nPersistent pain or pressure in the chest\nNew confusion\nInability to wake or stay awake\nPale, gray, or blue-colored skin, lips, or nail beds, depending on skin tone\n\n*This list is not all possible symptoms. Please call your medical provider for any other symptoms that are severe or concerning to you.",
+         "testCasePassed": true
+       },
+       {
+         "input": "Is at-home specimen collection or testing available ?",
+         "expectedOutput": "\nYes. At-home testing and collection allow you to collect a specimen at home and either send it to a testing facility or preform the test at home.\nYou and your healthcare provider might consider either an at-home collection kit or an at-home test if you have signs and symptoms of COVID-19 or if you can\u2019t get testing at a local healthcare facility.\nFor more information, see At-Home Testing.\n",
+         "actualOutput": "\nYes. At-home testing and collection allow you to collect a specimen at home and either send it to a testing facility or preform the test at home.\nYou and your healthcare provider might consider either an at-home collection kit or an at-home test if you have signs and symptoms of COVID-19 or if you can\u2019t get testing at a local healthcare facility.\nFor more information, see At-Home Testing.\n",
+         "testCasePassed": true
+       },
+       {
+         "input": "Should I be tested for a current infection ?",
+         "expectedOutput": "The following people should get tested for current COVID-19 infection:\n\nPeople who have\u00a0symptoms of COVID-19. People who have had a known exposure to someone with suspected or confirmed COVID-19. People who have come into close contact with someone with COVID-19 should be tested to check for infection:\n\nFully vaccinated people should be tested 5\u20137 days after their last exposure.\nPeople who are not fully vaccinated should get tested immediately when they find out they are a close contact. If their test result is negative, they should get tested again 5\u20137 days after their last exposure or immediately if symptoms develop.\n\n\nPeople not fully vaccinated with COVID-19 vaccine who are prioritized for expanded\u00a0community screening for COVID-19.\nPeople not fully vaccinated with COVID-19 vaccine who have been asked or referred to get testing by their school, workplace, healthcare provider,\u00a0state,\u00a0tribal,\u00a0localexternal icon, or\u00a0territorial health department.\u201d\n\nFor more information on testing, see\n\nTesting for COVID-19\nSelf-Testing\nTest for Current Infection\nTest for Past Infection\n\n",
+         "actualOutput": "The following people should get tested for current COVID-19 infection:\n\nPeople who have\u00a0symptoms of COVID-19. People who have had a known exposure to someone with suspected or confirmed COVID-19. People who have come into close contact with someone with COVID-19 should be tested to check for infection:\n\nFully vaccinated people should be tested 5\u20137 days after their last exposure.\nPeople who are not fully vaccinated should get tested immediately when they find out they are a close contact. If their test result is negative, they should get tested again 5\u20137 days after their last exposure or immediately if symptoms develop.\n\n\nPeople not fully vaccinated with COVID-19 vaccine who are prioritized for expanded\u00a0community screening for COVID-19.\nPeople not fully vaccinated with COVID-19 vaccine who have been asked or referred to get testing by their school, workplace, healthcare provider,\u00a0state,\u00a0tribal,\u00a0localexternal icon, or\u00a0territorial health department.\u201d\n\nFor more information on testing, see\n\nTesting for COVID-19\nSelf-Testing\nTest for Current Infection\nTest for Past Infection\n\n",
+         "testCasePassed": true
+       },
+       {
+         "input": "Can someone test negative and later test positive on a viral test for COVID-19 ?",
+         "expectedOutput": "Yes, it is possible. You may test negative if the sample was collected early in your infection and test positive later during this illness. You could also be exposed to COVID-19 after the test and get infected then. Even if you test negative, you still should take steps to\u202fprotect yourself and others. See Testing for Current Infection for more information.\n",
+         "actualOutput": "Yes, it is possible. You may test negative if the sample was collected early in your infection and test positive later during this illness. You could also be exposed to COVID-19 after the test and get infected then. Even if you test negative, you still should take steps to\u202fprotect yourself and others. See Testing for Current Infection for more information.\n",
+         "testCasePassed": true
+       },
+       {
+         "input": "What is contact tracing ?",
+         "expectedOutput": "Contact tracing has been used for decades by state and local health departments to slow or stop the spread of infectious diseases.\nContact tracing slows the spread of COVID-19 by\n\nLetting people know they may have been exposed to COVID-19 and should monitor their health for signs and symptoms of COVID-19\nHelping people who may have been exposed to COVID-19 get tested\nAsking people to self-isolate if they have COVID-19 or self-quarantine if they are a close contact of someone with COVID-19\n\nDuring contact tracing, the health department staff will not ask you for\n\nMoney\nSocial Security number\nBank account information\nSalary information\nCredit card numbers\n\n",
+         "actualOutput": "Contact tracing has been used for decades by state and local health departments to slow or stop the spread of infectious diseases.\nContact tracing slows the spread of COVID-19 by\n\nLetting people know they may have been exposed to COVID-19 and should monitor their health for signs and symptoms of COVID-19\nHelping people who may have been exposed to COVID-19 get tested\nAsking people to self-isolate if they have COVID-19 or self-quarantine if they are a close contact of someone with COVID-19\n\nDuring contact tracing, the health department staff will not ask you for\n\nMoney\nSocial Security number\nBank account information\nSalary information\nCredit card numbers\n\n",
+         "testCasePassed": true
+       },
+       {
+         "input": "What will happen with my personal information during contact tracing ?",
+         "expectedOutput": "Discussions with health department staff are confidential. This means that your personal and medical information will be kept private and only shared with those who may need to know, like your health care provider.\nIf you have been diagnosed with COVID-19, your name will not be shared with those you came in contact with. The health department will only notify people you were in close contact with that they might have been exposed to COVID-19. Each state and jurisdiction use their own method for collecting and protecting health information. To learn more, contact your state or local health department.",
+         "actualOutput": "Discussions with health department staff are confidential. This means that your personal and medical information will be kept private and only shared with those who may need to know, like your health care provider.\nIf you have been diagnosed with COVID-19, your name will not be shared with those you came in contact with. The health department will only notify people you were in close contact with that they might have been exposed to COVID-19. Each state and jurisdiction use their own method for collecting and protecting health information. To learn more, contact your state or local health department.",
+         "testCasePassed": true
+       },
+       {
+         "input": "Who is considered a close contact of someone with COVID-19 ?",
+         "expectedOutput": "For COVID-19, a\u00a0close contact\u00a0is anyone who was within 6 feet of an infected person for a total of 15 minutes or more over a 24-hour period (for example, three individual 5-minute exposures for a total of 15 minutes). An infected person can spread COVID-19 starting from 2 days before they have any symptoms (or, if they are asymptomatic, 2 days before their specimen that tested positive was collected), until they meet the criteria for\u00a0discontinuing home isolation.",
+         "actualOutput": "For COVID-19, a\u00a0close contact\u00a0is anyone who was within 6 feet of an infected person for a total of 15 minutes or more over a 24-hour period (for example, three individual 5-minute exposures for a total of 15 minutes). An infected person can spread COVID-19 starting from 2 days before they have any symptoms (or, if they are asymptomatic, 2 days before their specimen that tested positive was collected), until they meet the criteria for\u00a0discontinuing home isolation.",
+         "testCasePassed": true
+       },
+       {
+         "input": "I have COVID-19. How do I tell the people I was around ?",
+         "expectedOutput": "If you have COVID-19, tell your close contacts pdf icon[93 KB, 2 Pages]\u00a0you have COVID-19 so that they can quarantine at home and get tested. By letting your close contacts\u00a0know they may have been exposed to COVID-19, you are helping to protect them and others within your community.\nYou can call, text, or email your contacts. If you would like to stay anonymous, there is also an online tool that allows you to tell your contacts by sending out emails or text notifications anonymously (www.tellyourcontacts.orgexternal icon).",
+         "actualOutput": "If you have COVID-19, tell your close contacts pdf icon[93 KB, 2 Pages]\u00a0you have COVID-19 so that they can quarantine at home and get tested. By letting your close contacts\u00a0know they may have been exposed to COVID-19, you are helping to protect them and others within your community.\nYou can call, text, or email your contacts. If you would like to stay anonymous, there is also an online tool that allows you to tell your contacts by sending out emails or text notifications anonymously (www.tellyourcontacts.orgexternal icon).",
+         "testCasePassed": true
+       },
+       {
+         "input": "Does mask use help determine if someone is considered a close contact ?",
+         "expectedOutput": "A person is still considered a close contact even if one or both people wore a mask when they were together.",
+         "actualOutput": "A person is still considered a close contact even if one or both people wore a mask when they were together.",
+         "testCasePassed": true
+       },
+       {
+         "input": "If I am a close contact, will I be tested for COVID-19 ?",
+         "expectedOutput": "If you have been in close contact with someone who has COVID-19, you should be tested, even if you do not have symptoms of COVID-19. The health department may be able to provide resources for testing in your area.\nFor more information, see COVID-19 Contact Tracing. \nWatch for or monitor your\u00a0symptoms of COVID-19. If your symptoms worsen or become severe, you should seek medical care.",
+         "actualOutput": "If you have been in close contact with someone who has COVID-19, you should be tested, even if you do not have symptoms of COVID-19. The health department may be able to provide resources for testing in your area.\nFor more information, see COVID-19 Contact Tracing. \nWatch for or monitor your\u00a0symptoms of COVID-19. If your symptoms worsen or become severe, you should seek medical care.",
+         "testCasePassed": true
+       },
+       {
+         "input": "Can I get COVID-19 from my pets or other animals ?",
+         "expectedOutput": "Based on the available information to date, the risk of animals spreading COVID-19 to people is considered to be low. See If You Have Pets\u00a0for more information about pets and COVID-19.",
+         "actualOutput": "Based on the available information to date, the risk of animals spreading COVID-19 to people is considered to be low. See If You Have Pets\u00a0for more information about pets and COVID-19.",
+         "testCasePassed": true
+       },
+       {
+         "input": "Can animals carry the virus that causes COVID-19 on their skin or fur ?",
+         "expectedOutput": "Although we know certain bacteria and fungi can be carried on fur and hair, there is no evidence that viruses, including the virus that causes COVID-19, can spread to people from the skin, fur, or hair of pets.",
+         "actualOutput": "Although we know certain bacteria and fungi can be carried on fur and hair, there is no evidence that viruses, including the virus that causes COVID-19, can spread to people from the skin, fur, or hair of pets.",
+         "testCasePassed": true
+       },
+       {
+         "input": "Can I use hand sanitizer on pets ?",
+         "expectedOutput": "Do not wipe or bathe your pet with chemical disinfectants, alcohol, hydrogen peroxide, or other products, such as hand sanitizer, counter-cleaning wipes, or other industrial or surface cleaners. If you have questions about appropriate products for bathing or cleaning your pet, talk to your veterinarian. If your pet gets hand sanitizer on their skin\u00a0or fur, rinse or wipe down your pet with water immediately. If your pet\u00a0ingests hand sanitizer (such as by chewing the bottle)\u00a0or is showing signs of illness after use, contact your veterinarian or pet poison control immediately.\u00a0",
+         "actualOutput": "Do not wipe or bathe your pet with chemical disinfectants, alcohol, hydrogen peroxide, or other products, such as hand sanitizer, counter-cleaning wipes, or other industrial or surface cleaners. If you have questions about appropriate products for bathing or cleaning your pet, talk to your veterinarian. If your pet gets hand sanitizer on their skin\u00a0or fur, rinse or wipe down your pet with water immediately. If your pet\u00a0ingests hand sanitizer (such as by chewing the bottle)\u00a0or is showing signs of illness after use, contact your veterinarian or pet poison control immediately.\u00a0",
+         "testCasePassed": true
+       },
+       {
+         "input": "What should I do if my pet gets sick and I think it\u2019s COVID-19 ?",
+         "expectedOutput": "Most pets that have gotten sick from the virus that causes COVID-19 were infected after close contact with a person with COVID-19. Talk to your veterinarian about any health concerns you have about your pets.\nIf your pet gets sick after contact with a person with COVID-19,\u00a0call your veterinarian and let them know the pet was around a person with COVID-19. If you are sick with COVID-19, do not take your pet to the veterinary clinic yourself. Some veterinarians may offer telemedicine consultations or other plans for seeing sick pets. Your veterinarian can evaluate your pet and determine the next steps for your pet\u2019s treatment and care. Routine testing of animals for COVID-19 is not recommended at this time.",
+         "actualOutput": "Most pets that have gotten sick from the virus that causes COVID-19 were infected after close contact with a person with COVID-19. Talk to your veterinarian about any health concerns you have about your pets.\nIf your pet gets sick after contact with a person with COVID-19,\u00a0call your veterinarian and let them know the pet was around a person with COVID-19. If you are sick with COVID-19, do not take your pet to the veterinary clinic yourself. Some veterinarians may offer telemedicine consultations or other plans for seeing sick pets. Your veterinarian can evaluate your pet and determine the next steps for your pet\u2019s treatment and care. Routine testing of animals for COVID-19 is not recommended at this time.",
+         "testCasePassed": true
+       },
+       {
+         "input": "Can wild animals spread the virus that causes COVID-19 to people ?",
+         "expectedOutput": "Currently, there is no evidence to suggest that wildlife might be a source of infection for people in the United States. The risk of getting COVID-19 from wild animals is low.",
+         "actualOutput": "Currently, there is no evidence to suggest that wildlife might be a source of infection for people in the United States. The risk of getting COVID-19 from wild animals is low.",
+         "testCasePassed": true
+       },
+       {
+         "input": "Can bats in United States get the virus that causes COVID-19, and can they spread it back to people ?",
+         "expectedOutput": "Other coronaviruses have been found in North American bats in the past, but there is currently no evidence that the virus that causes COVID-19 is present in bats in the United States. In general, coronaviruses do not cause illness or death in bats, but we don\u2019t yet know if this new coronavirus would make North American species of bats sick. Bats are an important part of natural ecosystems, and their populations are already declining in the United States. Bat populations could be further threatened by the disease itself or by harm inflicted on bats resulting from a misconception that bats are spreading COVID-19. However, there is no evidence that bats in the United States are a source of the virus that causes COVID-19 for people. Further studies are needed to understand if and how bats could be affected by COVID-19.",
+         "actualOutput": "Other coronaviruses have been found in North American bats in the past, but there is currently no evidence that the virus that causes COVID-19 is present in bats in the United States. In general, coronaviruses do not cause illness or death in bats, but we don\u2019t yet know if this new coronavirus would make North American species of bats sick. Bats are an important part of natural ecosystems, and their populations are already declining in the United States. Bat populations could be further threatened by the disease itself or by harm inflicted on bats resulting from a misconception that bats are spreading COVID-19. However, there is no evidence that bats in the United States are a source of the virus that causes COVID-19 for people. Further studies are needed to understand if and how bats could be affected by COVID-19.",
+         "testCasePassed": true
+       },
+       {
+         "input": "What is community mitigation ?",
+         "expectedOutput": "Community mitigation is a set of actions that people and communities can take to slow the spread of infectious diseases like COVID-19. The goal of community mitigation in areas with local COVID-19 transmission is to slow its spread and to protect all individuals, especially those at increased risk for severe illness, while minimizing the negative impacts of these strategies. For more information, see Community Mitigation Framework.",
+         "actualOutput": "Community mitigation is a set of actions that people and communities can take to slow the spread of infectious diseases like COVID-19. The goal of community mitigation in areas with local COVID-19 transmission is to slow its spread and to protect all individuals, especially those at increased risk for severe illness, while minimizing the negative impacts of these strategies. For more information, see Community Mitigation Framework.",
+         "testCasePassed": true
+       }
+     ]
+   }
+
+lets keep going !
+
+.. code:: shell
+
+   <7> User : what do i do if i suspect someone in my family is sick ?
+   <7> basicBot : People who have been in close contact with someone who has COVID-19—excluding people who have had COVID-19 within the past 3 months or who are fully vaccinated
+
+   People who have tested positive for COVID-19 within the past 3 months and recovered do not have to quarantine or get tested again as long as they do not develop new symptoms.
+   People who develop symptoms again within 3 months of their first bout of COVID-19 may need to be tested again if there is no other cause identified for their symptoms.
+   People who have been in close contact with someone who has COVID-19 are not required to quarantine if they have been fully vaccinated against the disease and show no symptoms.
+
+   For more information, see COVID-19: When to Quarantine and What to Do If You Are Sick.
+   <8> User : can you tell me about community mitigation ?
+   <8> basicBot : Community mitigation is a set of actions that people and communities can take to slow the spread of infectious diseases like COVID-19. The goal of community mitigation in areas with local COVID-19 transmission is to slow its spread and to protect all individuals, especially those at increased risk for severe illness, while minimizing the negative impacts of these strategies. For more information, see Community Mitigation Framework.
+   <9> User : can covid spread through bats ?
+   <9> basicBot : Other coronaviruses have been found in North American bats in the past, but there is currently no evidence that the virus that causes COVID-19 is present in bats in the United States. In general, coronaviruses do not cause illness or death in bats, but we don’t yet know if this new coronavirus would make North American species of bats sick. Bats are an important part of natural ecosystems, and their populations are already declining in the United States. Bat populations could be further threatened by the disease itself or by harm inflicted on bats resulting from a misconception that bats are spreading COVID-19. However, there is no evidence that bats in the United States are a source of the virus that causes COVID-19 for people. Further studies are needed to understand if and how bats could be affected by COVID-19.
+   <10> User : is there covid in my cat's fur ?
+   <10> basicBot : Children can be infected with the virus that causes COVID-19 and can get sick with COVID-19. Most children with COVID-19 have mild symptoms or they may have no symptoms at all (“asymptomatic”). Fewer children have been sick with COVID-19 compared to adults. Babies younger than 1 and children with certain underlying medical conditions may be more likely to have serious illness from COVID-19. Some children have developed a rare but serious disease that is linked to COVID-19 called multisystem inflammatory syndrome (MIS-C).
+   For more information about how people get sick with the virus that causes COVID-19, see How COVID-19 Spreads.
+   <11> User : @ti
+   Intents available are : Greetings
+   BotName
+   Relatives
+   Age
+   BirthPlace
+   Abilities
+   Bye
+   Irrelevant
+   WhatisCOVID19
+   Howdoesthevirusspread
+   Whatiscommunityspread
+   HowcanIprotectmyself
+   ShouldIusesoapandwaterorhandsanitizertoprotectagainstCOVID19
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   WhataretherecommendationsforsomeonewhohassymptomsofCOVID19
+   WhatistheriskofmychildbecomingsickwithCOVID19
+   WhatismultisysteminflammatorysyndromeinchildrenMISC
+   WhatarethesymptomsandcomplicationsthatCOVID19cancause
+   WhenshouldIseekemergencycareifIhaveCOVID19
+   Isathomespecimencollectionortestingavailable
+   ShouldIbetestedforacurrentinfection
+   CansomeonetestnegativeandlatertestpositiveonaviraltestforCOVID19
+   Whatiscontacttracing
+   Whatwillhappenwithmypersonalinformationduringcontacttracing
+   WhoisconsideredaclosecontactofsomeonewithCOVID19
+   IhaveCOVID19HowdoItellthepeopleIwasaround
+   Doesmaskusehelpdetermineifsomeoneisconsideredaclosecontact
+   IfIamaclosecontactwillIbetestedforCOVID19
+   CanIgetCOVID19frommypetsorotheranimals
+   CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur
+   CanIusehandsanitizeronpets
+   WhatshouldIdoifmypetgetssickandIthinkitsCOVID19
+   CanwildanimalsspreadthevirusthatcausesCOVID19topeople
+   CanbatsinUnitedStatesgetthevirusthatcausesCOVID19andcantheyspreaditbacktopeople
+   Whatiscommunitymitigation
+   Enter intent name to update : CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur
+   Enter the dialog number of the message to add to this intent :10
+   CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur
+
+   [
+     "Can animals carry the virus that causes COVID-19 on their skin or fur ?",
+     "Can animals carry the virus that causes COVID-19 on their skin or fur ?",
+     "Can animals carry the virus that causes COVID-19 on their skin or fur ?",
+     "Can animals carry the virus that causes COVID-19 on their skin or fur ?",
+     "Can animals carry the virus that causes COVID-19 on their skin or fur ?",
+     "Can animals carry the virus that causes COVID-19 on their skin or fur ?",
+     "Can animals carry the virus that causes COVID-19 on their skin or fur ?",
+     "Can animals carry the virus that causes COVID-19 on their skin or fur ?",
+     "Can animals carry the virus that causes COVID-19 on their skin or fur ?",
+     "Can animals carry the virus that causes COVID-19 on their skin or fur ?",
+     "virus that causes COVID",
+     "animals carry the virus",
+     "skin or fur",
+     "animals carry",
+     "carry the virus",
+     "fur",
+     "animals",
+     "carry",
+     "virus",
+     "skin",
+     " is there covid in my cat's fur ? "
+   ]
+   <11> User : can my dogs fur carry covid ?
+   <11> basicBot : Although we know certain bacteria and fungi can be carried on fur and hair, there is no evidence that viruses, including the virus that causes COVID-19, can spread to people from the skin, fur, or hair of pets.
+   <12> User : what are your recommendations for someone who has covid ?
+   <12> basicBot : If you are sick with COVID-19 or think you might have COVID-19, follow the steps below to care for yourself and to help protect other people in your home and community.
+
+   Stay at home (except to get medical care).
+   Separate yourself from others.
+   Monitor your symptoms.
+   Wear a mask over your nose and mouth when around others.
+   Cover your coughs and sneezes.
+   Wash your hands often.
+   Clean high-touch surfaces every day.
+   Avoid sharing personal household items.
+
+   For more information, see What to Do If You Are Sick.
+   <13> User : someone in my family is sick !
+   <13> basicBot : People who have been in close contact with someone who has COVID-19—excluding people who have had COVID-19 within the past 3 months or who are fully vaccinated
+
+   People who have tested positive for COVID-19 within the past 3 months and recovered do not have to quarantine or get tested again as long as they do not develop new symptoms.
+   People who develop symptoms again within 3 months of their first bout of COVID-19 may need to be tested again if there is no other cause identified for their symptoms.
+   People who have been in close contact with someone who has COVID-19 are not required to quarantine if they have been fully vaccinated against the disease and show no symptoms.
+
+   For more information, see COVID-19: When to Quarantine and What to Do If You Are Sick.
+   <14> User : @i
+   Bot Intents:
+   [
+     [
+       "WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick",
+       0.9987667909102061,
+       13
+     ],
+     [
+       "WhatistheriskofmychildbecomingsickwithCOVID19",
+       0.007522229329191306,
+       13
+     ],
+     [
+       "WhataretherecommendationsforsomeonewhohassymptomsofCOVID19",
+       0.002480457083078246,
+       13
+     ],
+     [
+       "WhatshouldIdoifmypetgetssickandIthinkitsCOVID19",
+       0.0011453820042482943,
+       13
+     ],
+     [
+       "WhatismultisysteminflammatorysyndromeinchildrenMISC",
+       0.00031533868440213064,
+       13
+     ],
+     [
+       "WhoisconsideredaclosecontactofsomeonewithCOVID19",
+       0.00018725618194092563,
+       13
+     ],
+     [
+       "Whatiscommunitymitigation",
+       0.00011188624256690133,
+       13
+     ],
+     [
+       "Doesmaskusehelpdetermineifsomeoneisconsideredaclosecontact",
+       8.933523270411462e-05,
+       13
+     ],
+     [
+       "Whatiscommunityspread",
+       8.033420854064744e-05,
+       13
+     ],
+     [
+       "Irrelevant",
+       3.7903876435069755e-05,
+       13
+     ],
+     [
+       "Whatiscontacttracing",
+       3.147170482592477e-05,
+       13
+     ],
+     [
+       "WhatisCOVID19",
+       2.9855143763537937e-05,
+       13
+     ],
+     [
+       "BirthPlace",
+       1.1443747494088539e-05,
+       13
+     ],
+     [
+       "BotName",
+       7.409148703167065e-06,
+       13
+     ],
+     [
+       "CansomeonetestnegativeandlatertestpositiveonaviraltestforCOVID19",
+       6.701901048674078e-06,
+       13
+     ],
+     [
+       "Isathomespecimencollectionortestingavailable",
+       4.679380439066902e-06,
+       13
+     ],
+     [
+       "CanbatsinUnitedStatesgetthevirusthatcausesCOVID19andcantheyspreaditbacktopeople",
+       3.2007538481171745e-06,
+       13
+     ],
+     [
+       "Whatwillhappenwithmypersonalinformationduringcontacttracing",
+       3.1266345210605442e-06,
+       13
+     ],
+     [
+       "Greetings",
+       2.9941670295217903e-06,
+       13
+     ],
+     [
+       "CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur",
+       2.793733155377256e-06,
+       13
+     ],
+     [
+       "Age",
+       2.015758321974308e-06,
+       13
+     ],
+     [
+       "CanIgetCOVID19frommypetsorotheranimals",
+       1.917048382697739e-06,
+       13
+     ],
+     [
+       "Howdoesthevirusspread",
+       7.113649122263574e-07,
+       13
+     ],
+     [
+       "IfIamaclosecontactwillIbetestedforCOVID19",
+       4.544132920285948e-07,
+       13
+     ],
+     [
+       "Bye",
+       4.068249056471001e-07,
+       13
+     ],
+     [
+       "Abilities",
+       2.0250601319767454e-07,
+       13
+     ],
+     [
+       "HowcanIprotectmyself",
+       9.292452062579218e-08,
+       13
+     ],
+     [
+       "Relatives",
+       9.26730668928883e-08,
+       13
+     ],
+     [
+       "CanIusehandsanitizeronpets",
+       8.343974331485195e-08,
+       13
+     ],
+     [
+       "ShouldIbetestedforacurrentinfection",
+       4.619728541090555e-08,
+       13
+     ],
+     [
+       "ShouldIusesoapandwaterorhandsanitizertoprotectagainstCOVID19",
+       4.3063731731924754e-08,
+       13
+     ],
+     [
+       "WhenshouldIseekemergencycareifIhaveCOVID19",
+       3.477896773494394e-08,
+       13
+     ],
+     [
+       "IhaveCOVID19HowdoItellthepeopleIwasaround",
+       1.2151042121793027e-08,
+       13
+     ],
+     [
+       "WhatarethesymptomsandcomplicationsthatCOVID19cancause",
+       9.775289244787967e-09,
+       13
+     ],
+     [
+       "CanwildanimalsspreadthevirusthatcausesCOVID19topeople",
+       8.299352843043025e-09,
+       13
+     ]
+   ]
+   <14> User : i feel sick with covid !! help me
+   <14> basicBot : Children can be infected with the virus that causes COVID-19 and can get sick with COVID-19. Most children with COVID-19 have mild symptoms or they may have no symptoms at all (“asymptomatic”). Fewer children have been sick with COVID-19 compared to adults. Babies younger than 1 and children with certain underlying medical conditions may be more likely to have serious illness from COVID-19. Some children have developed a rare but serious disease that is linked to COVID-19 called multisystem inflammatory syndrome (MIS-C).
+   For more information about how people get sick with the virus that causes COVID-19, see How COVID-19 Spreads.
+   <15> User : @ti
+   Intents available are : Greetings
+   BotName
+   Relatives
+   Age
+   BirthPlace
+   Abilities
+   Bye
+   Irrelevant
+   WhatisCOVID19
+   Howdoesthevirusspread
+   Whatiscommunityspread
+   HowcanIprotectmyself
+   ShouldIusesoapandwaterorhandsanitizertoprotectagainstCOVID19
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   WhataretherecommendationsforsomeonewhohassymptomsofCOVID19
+   WhatistheriskofmychildbecomingsickwithCOVID19
+   WhatismultisysteminflammatorysyndromeinchildrenMISC
+   WhatarethesymptomsandcomplicationsthatCOVID19cancause
+   WhenshouldIseekemergencycareifIhaveCOVID19
+   Isathomespecimencollectionortestingavailable
+   ShouldIbetestedforacurrentinfection
+   CansomeonetestnegativeandlatertestpositiveonaviraltestforCOVID19
+   Whatiscontacttracing
+   Whatwillhappenwithmypersonalinformationduringcontacttracing
+   WhoisconsideredaclosecontactofsomeonewithCOVID19
+   IhaveCOVID19HowdoItellthepeopleIwasaround
+   Doesmaskusehelpdetermineifsomeoneisconsideredaclosecontact
+   IfIamaclosecontactwillIbetestedforCOVID19
+   CanIgetCOVID19frommypetsorotheranimals
+   CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur
+   CanIusehandsanitizeronpets
+   WhatshouldIdoifmypetgetssickandIthinkitsCOVID19
+   CanwildanimalsspreadthevirusthatcausesCOVID19topeople
+   CanbatsinUnitedStatesgetthevirusthatcausesCOVID19andcantheyspreaditbacktopeople
+   Whatiscommunitymitigation
+   Enter intent name to update : WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   Enter the dialog number of the message to add to this intent :14
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+
+   [
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "develop new symptoms",
+     "disease and show",
+     "People who have tested",
+     "vaccinated against the disease",
+     "show no symptoms",
+     "tested again as long",
+     "identified for their symptoms",
+     "quarantine or get tested",
+     "house gets sick",
+     "what do i do if i get covid ?",
+     "i feel sickness is spreading in my family",
+     "house",
+     " i feel sick with covid !! help me "
+   ]
+   <15> User : i feel sick with corona virus !
+   <15> basicBot : Children can be infected with the virus that causes COVID-19 and can get sick with COVID-19. Most children with COVID-19 have mild symptoms or they may have no symptoms at all (“asymptomatic”). Fewer children have been sick with COVID-19 compared to adults. Babies younger than 1 and children with certain underlying medical conditions may be more likely to have serious illness from COVID-19. Some children have developed a rare but serious disease that is linked to COVID-19 called multisystem inflammatory syndrome (MIS-C).
+   For more information about how people get sick with the virus that causes COVID-19, see How COVID-19 Spreads.
+   <16> User : @ti
+   Intents available are : Greetings
+   BotName
+   Relatives
+   Age
+   BirthPlace
+   Abilities
+   Bye
+   Irrelevant
+   WhatisCOVID19
+   Howdoesthevirusspread
+   Whatiscommunityspread
+   HowcanIprotectmyself
+   ShouldIusesoapandwaterorhandsanitizertoprotectagainstCOVID19
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   WhataretherecommendationsforsomeonewhohassymptomsofCOVID19
+   WhatistheriskofmychildbecomingsickwithCOVID19
+   WhatismultisysteminflammatorysyndromeinchildrenMISC
+   WhatarethesymptomsandcomplicationsthatCOVID19cancause
+   WhenshouldIseekemergencycareifIhaveCOVID19
+   Isathomespecimencollectionortestingavailable
+   ShouldIbetestedforacurrentinfection
+   CansomeonetestnegativeandlatertestpositiveonaviraltestforCOVID19
+   Whatiscontacttracing
+   Whatwillhappenwithmypersonalinformationduringcontacttracing
+   WhoisconsideredaclosecontactofsomeonewithCOVID19
+   IhaveCOVID19HowdoItellthepeopleIwasaround
+   Doesmaskusehelpdetermineifsomeoneisconsideredaclosecontact
+   IfIamaclosecontactwillIbetestedforCOVID19
+   CanIgetCOVID19frommypetsorotheranimals
+   CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur
+   CanIusehandsanitizeronpets
+   WhatshouldIdoifmypetgetssickandIthinkitsCOVID19
+   CanwildanimalsspreadthevirusthatcausesCOVID19topeople
+   CanbatsinUnitedStatesgetthevirusthatcausesCOVID19andcantheyspreaditbacktopeople
+   Whatiscommunitymitigation
+   Enter intent name to update : WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   Enter the dialog number of the message to add to this intent :15
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+
+   [
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "develop new symptoms",
+     "disease and show",
+     "People who have tested",
+     "vaccinated against the disease",
+     "show no symptoms",
+     "tested again as long",
+     "identified for their symptoms",
+     "quarantine or get tested",
+     "house gets sick",
+     "what do i do if i get covid ?",
+     "i feel sickness is spreading in my family",
+     "house",
+     " i feel sick with covid !! help me ",
+     " i feel sick with corona virus ! "
+   ]
+   <16> User : i think i am sick with covid
+   <16> basicBot : Most pets that have gotten sick from the virus that causes COVID-19 were infected after close contact with a person with COVID-19. Talk to your veterinarian about any health concerns you have about your pets.
+   If your pet gets sick after contact with a person with COVID-19, call your veterinarian and let them know the pet was around a person with COVID-19. If you are sick with COVID-19, do not take your pet to the veterinary clinic yourself. Some veterinarians may offer telemedicine consultations or other plans for seeing sick pets. Your veterinarian can evaluate your pet and determine the next steps for your pet’s treatment and care. Routine testing of animals for COVID-19 is not recommended at this time.
+   <17> User : @ti
+   Intents available are : Greetings
+   BotName
+   Relatives
+   Age
+   BirthPlace
+   Abilities
+   Bye
+   Irrelevant
+   WhatisCOVID19
+   Howdoesthevirusspread
+   Whatiscommunityspread
+   HowcanIprotectmyself
+   ShouldIusesoapandwaterorhandsanitizertoprotectagainstCOVID19
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   WhataretherecommendationsforsomeonewhohassymptomsofCOVID19
+   WhatistheriskofmychildbecomingsickwithCOVID19
+   WhatismultisysteminflammatorysyndromeinchildrenMISC
+   WhatarethesymptomsandcomplicationsthatCOVID19cancause
+   WhenshouldIseekemergencycareifIhaveCOVID19
+   Isathomespecimencollectionortestingavailable
+   ShouldIbetestedforacurrentinfection
+   CansomeonetestnegativeandlatertestpositiveonaviraltestforCOVID19
+   Whatiscontacttracing
+   Whatwillhappenwithmypersonalinformationduringcontacttracing
+   WhoisconsideredaclosecontactofsomeonewithCOVID19
+   IhaveCOVID19HowdoItellthepeopleIwasaround
+   Doesmaskusehelpdetermineifsomeoneisconsideredaclosecontact
+   IfIamaclosecontactwillIbetestedforCOVID19
+   CanIgetCOVID19frommypetsorotheranimals
+   CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur
+   CanIusehandsanitizeronpets
+   WhatshouldIdoifmypetgetssickandIthinkitsCOVID19
+   CanwildanimalsspreadthevirusthatcausesCOVID19topeople
+   CanbatsinUnitedStatesgetthevirusthatcausesCOVID19andcantheyspreaditbacktopeople
+   Whatiscommunitymitigation
+   Enter intent name to update : WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   Enter the dialog number of the message to add to this intent :15
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+
+   [
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "develop new symptoms",
+     "disease and show",
+     "People who have tested",
+     "vaccinated against the disease",
+     "show no symptoms",
+     "tested again as long",
+     "identified for their symptoms",
+     "quarantine or get tested",
+     "house gets sick",
+     "what do i do if i get covid ?",
+     "i feel sickness is spreading in my family",
+     "house",
+     " i feel sick with covid !! help me ",
+     " i feel sick with corona virus ! ",
+     " i feel sick with corona virus ! "
+   ]
+   <17> User : @ti
+   Intents available are : Greetings
+   BotName
+   Relatives
+   Age
+   BirthPlace
+   Abilities
+   Bye
+   Irrelevant
+   WhatisCOVID19
+   Howdoesthevirusspread
+   Whatiscommunityspread
+   HowcanIprotectmyself
+   ShouldIusesoapandwaterorhandsanitizertoprotectagainstCOVID19
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   WhataretherecommendationsforsomeonewhohassymptomsofCOVID19
+   WhatistheriskofmychildbecomingsickwithCOVID19
+   WhatismultisysteminflammatorysyndromeinchildrenMISC
+   WhatarethesymptomsandcomplicationsthatCOVID19cancause
+   WhenshouldIseekemergencycareifIhaveCOVID19
+   Isathomespecimencollectionortestingavailable
+   ShouldIbetestedforacurrentinfection
+   CansomeonetestnegativeandlatertestpositiveonaviraltestforCOVID19
+   Whatiscontacttracing
+   Whatwillhappenwithmypersonalinformationduringcontacttracing
+   WhoisconsideredaclosecontactofsomeonewithCOVID19
+   IhaveCOVID19HowdoItellthepeopleIwasaround
+   Doesmaskusehelpdetermineifsomeoneisconsideredaclosecontact
+   IfIamaclosecontactwillIbetestedforCOVID19
+   CanIgetCOVID19frommypetsorotheranimals
+   CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur
+   CanIusehandsanitizeronpets
+   WhatshouldIdoifmypetgetssickandIthinkitsCOVID19
+   CanwildanimalsspreadthevirusthatcausesCOVID19topeople
+   CanbatsinUnitedStatesgetthevirusthatcausesCOVID19andcantheyspreaditbacktopeople
+   Whatiscommunitymitigation
+   Enter intent name to update : WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   Enter the dialog number of the message to add to this intent :16
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+
+   [
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "develop new symptoms",
+     "disease and show",
+     "People who have tested",
+     "vaccinated against the disease",
+     "show no symptoms",
+     "tested again as long",
+     "identified for their symptoms",
+     "quarantine or get tested",
+     "house gets sick",
+     "what do i do if i get covid ?",
+     "i feel sickness is spreading in my family",
+     "house",
+     " i feel sick with covid !! help me ",
+     " i feel sick with corona virus ! ",
+     " i feel sick with corona virus ! ",
+     " i think i am sick with covid  "
+   ]
+   <17> User : i may be sick with covid
+   <17> basicBot : Children can be infected with the virus that causes COVID-19 and can get sick with COVID-19. Most children with COVID-19 have mild symptoms or they may have no symptoms at all (“asymptomatic”). Fewer children have been sick with COVID-19 compared to adults. Babies younger than 1 and children with certain underlying medical conditions may be more likely to have serious illness from COVID-19. Some children have developed a rare but serious disease that is linked to COVID-19 called multisystem inflammatory syndrome (MIS-C).
+   For more information about how people get sick with the virus that causes COVID-19, see How COVID-19 Spreads.
+   <18> User : @ti
+   Intents available are : Greetings
+   BotName
+   Relatives
+   Age
+   BirthPlace
+   Abilities
+   Bye
+   Irrelevant
+   WhatisCOVID19
+   Howdoesthevirusspread
+   Whatiscommunityspread
+   HowcanIprotectmyself
+   ShouldIusesoapandwaterorhandsanitizertoprotectagainstCOVID19
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   WhataretherecommendationsforsomeonewhohassymptomsofCOVID19
+   WhatistheriskofmychildbecomingsickwithCOVID19
+   WhatismultisysteminflammatorysyndromeinchildrenMISC
+   WhatarethesymptomsandcomplicationsthatCOVID19cancause
+   WhenshouldIseekemergencycareifIhaveCOVID19
+   Isathomespecimencollectionortestingavailable
+   ShouldIbetestedforacurrentinfection
+   CansomeonetestnegativeandlatertestpositiveonaviraltestforCOVID19
+   Whatiscontacttracing
+   Whatwillhappenwithmypersonalinformationduringcontacttracing
+   WhoisconsideredaclosecontactofsomeonewithCOVID19
+   IhaveCOVID19HowdoItellthepeopleIwasaround
+   Doesmaskusehelpdetermineifsomeoneisconsideredaclosecontact
+   IfIamaclosecontactwillIbetestedforCOVID19
+   CanIgetCOVID19frommypetsorotheranimals
+   CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur
+   CanIusehandsanitizeronpets
+   WhatshouldIdoifmypetgetssickandIthinkitsCOVID19
+   CanwildanimalsspreadthevirusthatcausesCOVID19topeople
+   CanbatsinUnitedStatesgetthevirusthatcausesCOVID19andcantheyspreaditbacktopeople
+   Whatiscommunitymitigation
+   Enter intent name to update : WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   Enter the dialog number of the message to add to this intent :17
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+
+   [
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "develop new symptoms",
+     "disease and show",
+     "People who have tested",
+     "vaccinated against the disease",
+     "show no symptoms",
+     "tested again as long",
+     "identified for their symptoms",
+     "quarantine or get tested",
+     "house gets sick",
+     "what do i do if i get covid ?",
+     "i feel sickness is spreading in my family",
+     "house",
+     " i feel sick with covid !! help me ",
+     " i feel sick with corona virus ! ",
+     " i feel sick with corona virus ! ",
+     " i think i am sick with covid  ",
+     " i may be sick with covid  "
+   ]
+   <18> User : I am feeling sick with covid !
+   <18> basicBot : Children can be infected with the virus that causes COVID-19 and can get sick with COVID-19. Most children with COVID-19 have mild symptoms or they may have no symptoms at all (“asymptomatic”). Fewer children have been sick with COVID-19 compared to adults. Babies younger than 1 and children with certain underlying medical conditions may be more likely to have serious illness from COVID-19. Some children have developed a rare but serious disease that is linked to COVID-19 called multisystem inflammatory syndrome (MIS-C).
+   For more information about how people get sick with the virus that causes COVID-19, see How COVID-19 Spreads.
+   <19> User : @i
+   Bot Intents:
+   [
+     [
+       "WhatistheriskofmychildbecomingsickwithCOVID19",
+       0.5046473583523131,
+       18
+     ],
+     [
+       "WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick",
+       0.4190513150014457,
+       18
+     ],
+     [
+       "IfIamaclosecontactwillIbetestedforCOVID19",
+       0.06523069383545986,
+       18
+     ],
+     [
+       "WhatshouldIdoifmypetgetssickandIthinkitsCOVID19",
+       0.036984638682048133,
+       18
+     ],
+     [
+       "WhoisconsideredaclosecontactofsomeonewithCOVID19",
+       0.015009186891238343,
+       18
+     ],
+     [
+       "WhataretherecommendationsforsomeonewhohassymptomsofCOVID19",
+       0.004923895759695946,
+       18
+     ],
+     [
+       "Whatwillhappenwithmypersonalinformationduringcontacttracing",
+       0.0017051203791572538,
+       18
+     ],
+     [
+       "WhatisCOVID19",
+       0.001043841505358764,
+       18
+     ],
+     [
+       "ShouldIusesoapandwaterorhandsanitizertoprotectagainstCOVID19",
+       0.0004887846859626148,
+       18
+     ],
+     [
+       "CanbatsinUnitedStatesgetthevirusthatcausesCOVID19andcantheyspreaditbacktopeople",
+       0.0002167004479001786,
+       18
+     ],
+     [
+       "WhenshouldIseekemergencycareifIhaveCOVID19",
+       0.0001785023658932644,
+       18
+     ],
+     [
+       "CanIgetCOVID19frommypetsorotheranimals",
+       0.00011454518013028827,
+       18
+     ],
+     [
+       "IhaveCOVID19HowdoItellthepeopleIwasaround",
+       0.00010030492778477824,
+       18
+     ],
+     [
+       "CansomeonetestnegativeandlatertestpositiveonaviraltestforCOVID19",
+       9.157333351193766e-05,
+       18
+     ],
+     [
+       "WhatarethesymptomsandcomplicationsthatCOVID19cancause",
+       9.147347508263629e-05,
+       18
+     ],
+     [
+       "CanwildanimalsspreadthevirusthatcausesCOVID19topeople",
+       8.340243055667968e-05,
+       18
+     ],
+     [
+       "Whatiscommunityspread",
+       7.508860512690369e-05,
+       18
+     ],
+     [
+       "ShouldIbetestedforacurrentinfection",
+       7.19322371653164e-05,
+       18
+     ],
+     [
+       "HowcanIprotectmyself",
+       6.365695377935408e-05,
+       18
+     ],
+     [
+       "CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur",
+       5.277828816904378e-05,
+       18
+     ],
+     [
+       "Howdoesthevirusspread",
+       3.549647004459306e-05,
+       18
+     ],
+     [
+       "Greetings",
+       1.4521658687310406e-05,
+       18
+     ],
+     [
+       "Bye",
+       1.0139623990160275e-05,
+       18
+     ],
+     [
+       "Whatiscontacttracing",
+       8.98514277761042e-06,
+       18
+     ],
+     [
+       "Abilities",
+       7.1995337746850914e-06,
+       18
+     ],
+     [
+       "BotName",
+       6.964718923777909e-06,
+       18
+     ],
+     [
+       "Whatiscommunitymitigation",
+       5.642997982825541e-06,
+       18
+     ],
+     [
+       "BirthPlace",
+       5.351926031414202e-06,
+       18
+     ],
+     [
+       "Age",
+       4.7996145920324695e-06,
+       18
+     ],
+     [
+       "Isathomespecimencollectionortestingavailable",
+       4.408252110153701e-06,
+       18
+     ],
+     [
+       "Relatives",
+       3.960483690751083e-06,
+       18
+     ],
+     [
+       "CanIusehandsanitizeronpets",
+       3.692893115710019e-06,
+       18
+     ],
+     [
+       "WhatismultisysteminflammatorysyndromeinchildrenMISC",
+       1.922363042672508e-06,
+       18
+     ],
+     [
+       "Doesmaskusehelpdetermineifsomeoneisconsideredaclosecontact",
+       9.272996158845109e-07,
+       18
+     ],
+     [
+       "Irrelevant",
+       6.006641469171287e-07,
+       18
+     ]
+   ]
+   <19> User : @ti
+   Intents available are : Greetings
+   BotName
+   Relatives
+   Age
+   BirthPlace
+   Abilities
+   Bye
+   Irrelevant
+   WhatisCOVID19
+   Howdoesthevirusspread
+   Whatiscommunityspread
+   HowcanIprotectmyself
+   ShouldIusesoapandwaterorhandsanitizertoprotectagainstCOVID19
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   WhataretherecommendationsforsomeonewhohassymptomsofCOVID19
+   WhatistheriskofmychildbecomingsickwithCOVID19
+   WhatismultisysteminflammatorysyndromeinchildrenMISC
+   WhatarethesymptomsandcomplicationsthatCOVID19cancause
+   WhenshouldIseekemergencycareifIhaveCOVID19
+   Isathomespecimencollectionortestingavailable
+   ShouldIbetestedforacurrentinfection
+   CansomeonetestnegativeandlatertestpositiveonaviraltestforCOVID19
+   Whatiscontacttracing
+   Whatwillhappenwithmypersonalinformationduringcontacttracing
+   WhoisconsideredaclosecontactofsomeonewithCOVID19
+   IhaveCOVID19HowdoItellthepeopleIwasaround
+   Doesmaskusehelpdetermineifsomeoneisconsideredaclosecontact
+   IfIamaclosecontactwillIbetestedforCOVID19
+   CanIgetCOVID19frommypetsorotheranimals
+   CananimalscarrythevirusthatcausesCOVID19ontheirskinorfur
+   CanIusehandsanitizeronpets
+   WhatshouldIdoifmypetgetssickandIthinkitsCOVID19
+   CanwildanimalsspreadthevirusthatcausesCOVID19topeople
+   CanbatsinUnitedStatesgetthevirusthatcausesCOVID19andcantheyspreaditbacktopeople
+   Whatiscommunitymitigation
+   Enter intent name to update : WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+   Enter the dialog number of the message to add to this intent :18
+   WhatshouldIdoifIgetsickorsomeoneinmyhousegetssick
+
+   [
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "What should I do if I get sick or someone in my house gets sick ?",
+     "develop new symptoms",
+     "disease and show",
+     "People who have tested",
+     "vaccinated against the disease",
+     "show no symptoms",
+     "tested again as long",
+     "identified for their symptoms",
+     "quarantine or get tested",
+     "house gets sick",
+     "what do i do if i get covid ?",
+     "i feel sickness is spreading in my family",
+     "house",
+     " i feel sick with covid !! help me ",
+     " i feel sick with corona virus ! ",
+     " i feel sick with corona virus ! ",
+     " i think i am sick with covid  ",
+     " i may be sick with covid  ",
+     " I am feeling sick with covid ! "
+   ]
+   <19> User : my daughter is feeling sick with covid !
+   <19> basicBot : Children can be infected with the virus that causes COVID-19 and can get sick with COVID-19. Most children with COVID-19 have mild symptoms or they may have no symptoms at all (“asymptomatic”). Fewer children have been sick with COVID-19 compared to adults. Babies younger than 1 and children with certain underlying medical conditions may be more likely to have serious illness from COVID-19. Some children have developed a rare but serious disease that is linked to COVID-19 called multisystem inflammatory syndrome (MIS-C).
+   For more information about how people get sick with the virus that causes COVID-19, see How COVID-19 Spreads.
+   <20> User : i am positive i am sick
+   <20> basicBot : If you have been in close contact with someone who has COVID-19, you should be tested, even if you do not have symptoms of COVID-19. The health department may be able to provide resources for testing in your area.
+   For more information, see COVID-19 Contact Tracing.
+   Watch for or monitor your symptoms of COVID-19. If your symptoms worsen or become severe, you should seek medical care.
+   <21> User : i am positive i am sick with covid
+   <21> basicBot : People who have been in close contact with someone who has COVID-19—excluding people who have had COVID-19 within the past 3 months or who are fully vaccinated
+
+   People who have tested positive for COVID-19 within the past 3 months and recovered do not have to quarantine or get tested again as long as they do not develop new symptoms.
+   People who develop symptoms again within 3 months of their first bout of COVID-19 may need to be tested again if there is no other cause identified for their symptoms.
+   People who have been in close contact with someone who has COVID-19 are not required to quarantine if they have been fully vaccinated against the disease and show no symptoms.
+
+   For more information, see COVID-19: When to Quarantine and What to Do If You Are Sick.
+   <22> User : Is vaccination available for covid ?
+   <22> basicBot :
+   Yes. At-home testing and collection allow you to collect a specimen at home and either send it to a testing facility or preform the test at home.
+   You and your healthcare provider might consider either an at-home collection kit or an at-home test if you have signs and symptoms of COVID-19 or if you can’t get testing at a local healthcare facility.
+   For more information, see At-Home Testing.
+
+   <23> User : when should i seek emergency medical care ?
+   <23> basicBot : Look for emergency warning signs* for COVID-19. If someone is showing any of these signs, seek emergency medical care immediately
+
+   Trouble breathing
+   Persistent pain or pressure in the chest
+   New confusion
+   Inability to wake or stay awake
+   Pale, gray, or blue-colored skin, lips, or nail beds, depending on skin tone
+
+   *This list is not all possible symptoms. Please call your medical provider for any other symptoms that are severe or concerning to you.
+   <24> User : I have Trouble breathing !
+   <24> basicBot : COVID-19 spreads when an infected person breathes out droplets and very small particles that contain the virus. These droplets and particles can be breathed in by other people or land on their eyes, noses, or mouth. In some circumstances, they may contaminate surfaces they touch. People who are closer than 6 feet from the infected person are most likely to get infected.
+   COVID-19 is spread in three main ways:
+
+   Breathing in air when close to an infected person who is exhaling small droplets and particles that contain the virus.
+   Having these small droplets and particles that contain virus land on the eyes, nose, or mouth, especially through splashes and sprays like a cough or sneeze.
+   Touching eyes, nose, or mouth with hands that have the virus on them.
+
+   For more information about how COVID-19 spreads, visit the How COVID-19 Spreads page to learn how COVID-19 spreads and how to protect yourself.
+   <25> User : can i sanitize my pets ?
+   <25> basicBot : Based on the available information to date, the risk of animals spreading COVID-19 to people is considered to be low. See If You Have Pets for more information about pets and COVID-19.
+   <26> User : should i use hand sanitizer on my pets
+   <26> basicBot : Do not wipe or bathe your pet with chemical disinfectants, alcohol, hydrogen peroxide, or other products, such as hand sanitizer, counter-cleaning wipes, or other industrial or surface cleaners. If you have questions about appropriate products for bathing or cleaning your pet, talk to your veterinarian. If your pet gets hand sanitizer on their skin or fur, rinse or wipe down your pet with water immediately. If your pet ingests hand sanitizer (such as by chewing the bottle) or is showing signs of illness after use, contact your veterinarian or pet poison control immediately.
+   <27> User : i feel sick
+   <27> basicBot : People who have been in close contact with someone who has COVID-19—excluding people who have had COVID-19 within the past 3 months or who are fully vaccinated
+
+   People who have tested positive for COVID-19 within the past 3 months and recovered do not have to quarantine or get tested again as long as they do not develop new symptoms.
+   People who develop symptoms again within 3 months of their first bout of COVID-19 may need to be tested again if there is no other cause identified for their symptoms.
+   People who have been in close contact with someone who has COVID-19 are not required to quarantine if they have been fully vaccinated against the disease and show no symptoms.
+
+   For more information, see COVID-19: When to Quarantine and What to Do If You Are Sick.
+   <28> User : my son feels sick
+   <28> basicBot : Children can be infected with the virus that causes COVID-19 and can get sick with COVID-19. Most children with COVID-19 have mild symptoms or they may have no symptoms at all (“asymptomatic”). Fewer children have been sick with COVID-19 compared to adults. Babies younger than 1 and children with certain underlying medical conditions may be more likely to have serious illness from COVID-19. Some children have developed a rare but serious disease that is linked to COVID-19 called multisystem inflammatory syndrome (MIS-C).
+   For more information about how people get sick with the virus that causes COVID-19, see How COVID-19 Spreads.
+
+
+The more you do this the better the bot becomes !
+
+Saving and loading the bot
+**************************
+
+If we need our bot to remember what we trained it for we need to save it !
+we can do this by
+
+.. code:: python
+
+   newB.saveBot("botSession1.p")
+
+consequently any new bot can be loaded by
+
+.. code:: python
+
+   newB.loadBot("botSession1.p")
+
+
+
+
+Modules
+=========
+
+
+.. toctree::
+   :maxdepth: 4
+
+   simbots
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

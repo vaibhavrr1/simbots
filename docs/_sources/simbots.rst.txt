@@ -1,0 +1,53 @@
+simbots package
+===============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   simbots.utils
+
+Submodules
+----------
+
+simbots.Bot module
+------------------
+
+.. automodule:: simbots.Bot
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+simbots.Context module
+----------------------
+
+.. automodule:: simbots.Context
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+simbots.Entity module
+---------------------
+
+.. automodule:: simbots.Entity
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+simbots.Intent module
+---------------------
+
+.. automodule:: simbots.Intent
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: simbots
+   :members:
+   :undoc-members:
+   :show-inheritance:
