@@ -87,7 +87,8 @@ DialogNumber
 
 Each user and chatbot message pair is treated as a dialog , the bot in dev mode will always show the **dialog number** .
 
-.. image:: dialogNumber.png
+
+.. image:: dialogNumber.PNG
 
 you can read more about chatbots `here <https://chatbotsmagazine.com/>`_
 
@@ -105,6 +106,8 @@ To create any bot we will need to define these things:
 2) Entities
 3) Bot Templates (Reply messages)
 4) Reason
+
+Note you can find the complete code for this bot `here <https://github.com/vaibhavrr1/simbots/blob/main/sampleBots/QuickStartBot.ipynb>`_
 
 What this bot will do
 **********************
@@ -292,70 +295,20 @@ which can be switched to give varied responses.
        },
    }
 
-Reason (Bot Logic)
+Bot
 *****************
 
 
-Now lets define the bot . To do that you must always define the reason method in the bot class. Depending on the usecase you might also have to change the
-'say' method.
+Since for this case no complicated reasoning is involved , we can directly use the Bot class to run our bot.
+By Default , it will determine the intent with the highest probability  from the input message and output the
+corresponding basic template message.
 
 .. code:: python
 
    from simbots.Bot import Bot
 
-   class NewBot(Bot):
-
-       def reason(self):
-
-           # # find current dialogNumber
-
-           currentDialogNumber = self.contextManager.context['dialogs'][-1]
-
-           currentTopIntent = self.contextManager.findCurrentTopIntent()
-
-           currentEntities = self.contextManager.findCurrentEntities()
-
-           output = []
-
-           if currentTopIntent['confidence'] < self.confidenceLimit \
-                   or currentTopIntent['name'] == 'Irrelevant':
-               currentTopIntent = {}
-
-           if currentTopIntent:
-
-               # #
-               # # Rule For All
-               # #
-               # if currentTopIntent["name"]=="Greetings":
-               # #
-               # # Person is greeting
-               # #
-
-               name = currentTopIntent['name']
-               reply = {'tag': '{0}.basic'.format(name), 'data': None}
-               # note if you had defined the botname response as "my name is {0}" , then you can change the botname
-               # response by changing the data field here as this is set in the string.
-
-
-               # "message":""
-
-               output.append(reply)
-           else:
-
-               # #
-               # #
-               # # Rule for irrelevant
-               # #
-               # #
-
-               irrelevant = {'tag': 'Irrelevant.basic', 'data': None}
-
-               output.append(irrelevant)
-
-           return output
-
-   newB = NewBot(intentExamples, entityExamples, botMessages,
-                 confidenceLimit=0)
+   newB = Bot(intentExamples, entityExamples, botMessages,
+              confidenceLimit=0)
 
 Once we have defined the bot, lets run it !
 
@@ -365,7 +318,19 @@ Once we have defined the bot, lets run it !
 
    newB.run(theme = outputTheme)
 
----------
+The output should look like
+
+.. image:: quickStartBotOutput.png
+
+
+Note that the bot can only answer two questions , because thats all we tought it to do !
+
+If you simply want the bots output as text .
+
+.. code:: python
+
+   output = newB.getBotOutput("hi who are you ?",outputTheme ="themeBasic")
+   print(output)
 
 *********************
 A Bot for simple conversation
