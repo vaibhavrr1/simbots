@@ -923,17 +923,16 @@ Here is the output of the bot. Notice that the bot's greeting changes when you t
    @ti to add intent
    <1> User : Hi
    <1> basicBot : Hello ! What can i do for you ?
-   <2> User : My name is Abe Lincoln
-   <2> basicBot : Its a pleasure to meet you Abe Lincoln .
-   <3> User : Hi
-   <3> basicBot : Hi Abe Lincoln ! Its a pleasure to meet you !
-   <4> User : thanks
-   <4> basicBot : Dont mention it
-   <5> User : bye
-   <5> basicBot : Bubye !
+   <2> User : who are you ?
+   <2> basicBot : I am riko
+   <3> User : hey Riko you can call me Victor .
+   <3> basicBot : Its a pleasure to meet you Victor .
+   <4> User : Im driving a car Can you please call me Vic ?
+   <4> basicBot : Its a pleasure to meet you Vic .
+   <5> User : hey
+   <5> basicBot : Hey Vic its a pleasure talking to you !
 
 
----------
 
 ************************
 How To turn Faq's into bots
