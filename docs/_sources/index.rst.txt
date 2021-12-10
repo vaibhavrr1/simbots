@@ -3424,10 +3424,289 @@ consequently any new bot can be loaded by
 Take Order Bot V1
 *******************
 
-Whew ! we have made it so far ! lets now start making a bot to capture orders from customers . This tutorial will introduce you to the concept of Sub Conversations and Context Management.
+Whew ! we have made it so far ! lets now start making a bot to capture orders from customers . This tutorial will introduce you to the concept of **Sub Conversations** and **Context Management**.
 We will start by building a bot to capture simple customer orders and then modify the bot for better conversational experience in Take Order Bot V2 !
 
-lets get started !
+In case you need to see the full code first you can find it `here <https://github.com/vaibhavrr1/simbots/blob/main/sampleBots/TakeOrderBotV1.ipynb>`_
+
+How conversation with this bot should look like
+************************************************
+
+Now we are starting to get into some serious bots ! .
+
+Its very useful to write out what an idealised  bot conversation should look like  to get an idea about how the bot should behave .
+Since we have already created the bot we will just show the output here . For your case you should write out a few sample conversations by hand !
+
+.. code:: shell
+
+
+   <1> User : hi
+   <1> themeBasicBot : Hi there ! what can I do for you ?
+   <2> User : what can you do ?
+   <2> themeBasicBot : I am learning to make basic conversation ! Im taking orders if you want something to eat !
+   <3> User : thats awesome !
+   <3> themeBasicBot : cool
+   <4> User : get me a pizza then
+   <4> themeBasicBot : Just need a few more details to complete your order :
+    1) Name : pizza
+    2) Size :
+    3) Type :
+   <5> User : i want to know you name ?
+   <5> themeBasicBot : You can call me riko
+   Just need a few more details to complete your order :
+    1) Name : pizza
+    2) Size :
+    3) Type :
+   <6> User : i changed my mind on the pizza
+   <6> themeBasicBot : Im cancelling your order
+   <7> User : can you show me the menu ?
+   <7> themeBasicBot : We currently serve
+    1) Pizza [cheese and corn , Margherita ]
+    2) Burger [Alu tikki , Bean]
+   <8> User : ahh i guess ill have a bean burger
+   <8> themeBasicBot : Just need a few more details to complete your order :
+    1) Name : burger
+    2) Size :
+    3) Type : burgerBean
+   <9> User : make it a large one
+   <9> themeBasicBot : Thanks for placing your order . Your order is :
+    1) Name : burger
+    2) Size : large
+    3) Type : Bean
+
+   <10> User : thanks for the order !
+   <10> themeBasicBot : Dont mention it
+   <11> User : bye
+   <11> themeBasicBot : Bubye !
+
+It helps to make some kind of a flow diagram to decide how the bot will function.
+When we get into building larger more complicated bots this will come in handy . In future versions you will be able to do this using a gui for now we recommend using something like using `draw.io <https://app.diagrams.net/>`_ .
+
+
+
+.. image:: TakeOrderBotV1.png
+
+
+Intents , Entities and Bot Outputs
+**********************************
+We will need some orderring specific intents for this bot . Lets make one for Discarding the order. One for showing menu and one for orderring food.
+Also some entities lets say pizza and burger.
+
+
+.. code:: python
+
+    intentExamples = {
+    'Greetings': IntentSamples.greetingSamples(),
+    'BotName': IntentSamples.botNameSamples(),
+    'Relatives': IntentSamples.relativeSamples(),
+    'Age': IntentSamples.ageSamples(),
+    'BirthPlace': IntentSamples.birthPlaceSamples(),
+    'Abilities': IntentSamples.abilitiesSamples()+["tell me what can you do ?"],
+    'Really': IntentSamples.reallySamples(),
+    'Laughter': IntentSamples.laughterSamples(),
+    'Cool': IntentSamples.coolSamples(),
+    'Praise': IntentSamples.praiseSamples(),
+    'TrueT': IntentSamples.trueSamples(),
+    'FalseT': IntentSamples.falseSamples(),
+    'Bye': IntentSamples.byeSamples(),
+    'Confirm': IntentSamples.confirmSamples(),
+    'Thanks': IntentSamples.thanksSamples(),
+    'Discard': IntentSamples.discardSamples()+[
+            'No',
+            'No , i dont wanna do that',
+            'Nope change that',
+            ' negative ',
+            'No no',
+            'I said no',
+            'Never',
+            'Cancel that',
+            'Build a new one',
+            'cancel ',
+            "i do not want to do that",
+            "i changed my mind",
+            "i have had a change of heart",
+            "i think i want to cancel",
+            "please dont",
+            "please do not do that"
+        ],
+    "Menu":["whats on the menu ?","what is on the menu ?","could you tell me What is on the Menu ?","What are you serving ?",
+           "What do you serve ? ", " what do you serve ? ","What do you currently Serve ?","Id like to know whats on the Menu ?",
+            "what do you have ?"
+           ],
+
+    "OrderFood":["I want to order a piiza","can you get me a burger ?","need something to eat ","im hungry !","I am starving",
+                "please get me something to eat ","my stomach is empty","can you please take my order","i want to order food",
+                "can you get me a bean burger ?","need a bean burger ","i want a burger","i am ordering food","just put in a medium one",
+                 "okay ill go with medium one"
+
+                ],
+    'Irrelevant': ['the weather is fine today','the sun rises in the east','the quick brown fox jumps over the red carpet',
+                   'the sun rises in the east',
+                   'What is love , baby dont hurt me ',
+                   'this is a new dawn a new day'],
+   }
+
+   entityExamples = {
+       'GreetingsHelper': EntitySamples.greetingsHelper(),
+       'LaughterHelper': EntitySamples.laughterHelper(),
+       'CoolHelper': EntitySamples.coolHelper(),
+       'ByeHelper': EntitySamples.byeHelper(),
+       "FoodName": {
+                'pizza' :  [{'tag': 'case-insensitive','pattern': 'p+i+[z|j]+a+','type': 'regex'}],
+                'burger':  [{'tag': 'case-insensitive','pattern': 'b+u+r+g+e+r','type': 'regex'}],
+       },
+       "FoodSize":{
+           'small' :  [{'tag': 'case-insensitive','pattern': 'small','type': 'regex'}],
+           'large':  [{'tag': 'case-insensitive','pattern': 'large','type': 'regex'}],
+           "medium": [{'tag': 'case-insensitive','pattern': 'medium','type': 'regex'}]
+
+       },
+       "FoodType":{
+           'pizzaMargherita' :  [{'tag': 'case-insensitive','pattern': 'margherita','type': 'regex'}],
+           'pizzaCheeseAndCorn':  [{'tag': 'case-insensitive','pattern': '(cheese\s+and\s+corn)|(corn\s+and\s+cheese)','type': 'regex'}],
+           "burgerAluTikki": [{'tag': 'case-insensitive','pattern': 'a+l+(u|o)+ tikki','type': 'regex'}],
+           "burgerBean": [{'tag': 'case-insensitive','pattern': 'bean','type': 'regex'}]
+
+       }
+
+   }
+
+   botMessages= "botMessages ="{
+   "themeBasic":{
+      "Greetings":{
+         "basic":[
+            "Hello ! What can i do for you ?",
+            "Hi there ! what can I do for you ?",
+            "Hello"
+         ]
+      },
+      "Age":{
+         "basic":[
+            "I am two years old ",
+            "I am two"
+         ]
+      },
+      "BotName":{
+         "basic":[
+            "I am riko",
+            "You can call me riko"
+         ]
+      },
+      "Abilities":{
+         "basic":[
+            "I am learning to make basic conversation ! Im taking orders if you want something to eat !  "
+         ]
+      },
+      "Menu":{
+         "basic":[
+            "We currently serve \n 1) Pizza [cheese and corn , Margherita ] \n 2) Burger [Alu tikki , Bean] "
+         ]
+      },
+      "BirthPlace":{
+         "basic":[
+            "I am from  India",
+            "I am an Indian",
+            "I am punjabi and i love food"
+         ]
+      },
+      "Really":{
+         "basic":[
+            "To the best of my knowledge",
+            "Im positive !"
+         ]
+      },
+      "Laughter":{
+         "basic":[
+            "Im glad i was able to make you smile !",
+            "See I can be funny !",
+            "And they say I dont have a sense of humor :)"
+         ]
+      },
+      "Cool":{
+         "basic":[
+            "cool",
+            "thanks"
+         ]
+      },
+      "Bye":{
+         "basic":[
+            "Bubye !",
+            "Bye ! nice chatting with you !"
+         ]
+      },
+      "Confirm":{
+         "basic":[
+            "okay "
+         ]
+      },
+      "Discard":{
+         "basic":[
+            "Im cancelling your order"
+         ]
+      },
+      "TrueT":{
+         "basic":[
+            "I know right",
+            "that makes me "
+         ]
+      },
+      "FalseT":{
+         "basic":[
+            "Im still learning ... I sometimes make mistakes "
+         ]
+      },
+      "Praise":{
+         "basic":[
+            "Thanks ! now i think ill blush ",
+            "So nice of you to say that !"
+         ]
+      },
+      "Relatives":{
+         "basic":[
+            "Umm no i dont really have any relatives :)"
+         ]
+      },
+      "Thanks":{
+         "basic":[
+            "Dont mention it ",
+            " Im glad , please dont mention it"
+         ]
+      },
+      "OrderFood":{
+         "basic":[
+            "Thanks for placing your order . Your order is :\n 1) Name : {0}\n 2) Size : {1}\n 3) Type : {2}\n"
+         ],
+         "missing":[
+            "Just need a few more details to complete your order : \n 1) Name : {0}\n 2) Size : {1}\n 3) Type : {2}"
+         ]
+      },
+      "Irrelevant":{
+         "basic":[
+            "Im sorry Im not getting you :( ",
+            "Im sorry could you please rephrase ?"
+         ]
+      }
+   }
+}
+
+
+Sub Conversations
+*****************
+
+You'll notice that we have divided the whole conversation into two subconversations .
+
+    1) SubConversation1 is about everything except making an order
+    2) SubConversation2 is about making sure we have all things to complete the order.
+
+This helps us segregate the bot reason into multiple subparts or subconversations.
+
+Each Sub Conversation will have
+
+   1) **enter** : This is a function which indicates when to enter into a subconversation. It takes in the contextManager and returns a boolean.
+   2) **exit**  : This is a function for hard exit ie. whenever this condition is satified the bot is supposed to break out of the current sub conversation. It takes in the contextManager and returns a boolean.
+   3) **enterOnLogic** : This is a function that describes the bot logic on enterring the SubConversation . Takes in contextManager and bots previous outputs ,returning three things namely stayInSubConversation, contextManager , outputs . Where stayInSubConversation indicates if the bot should stay in the current subconversation.
+   4) **exitOnLogic**  : This is a function that describes the bot logic on exiting the SubConversation . Takes in contextManager and bots previous outputs returning modified contextManager and outputs.
+
 
 
 
