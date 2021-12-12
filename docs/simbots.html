@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>simbots package &#8212; simbots 0.0.22 documentation</title>
+    <title>simbots package &#8212; simbots 0.0.23 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -59,7 +59,7 @@
       
       
       
-      <h1 class="site-logo" id="site-title">simbots 0.0.22 documentation</h1>
+      <h1 class="site-logo" id="site-title">simbots 0.0.23 documentation</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -253,17 +253,34 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.Bot.evaluateTestCase">
 <span class="sig-name descname"><span class="pre">evaluateTestCase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caseName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputTheme</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.evaluateTestCase" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>evaluate a particular testCase
+:param caseName:
+:param outputTheme: The bot template theme to use for getting the output message
+:return:
+.. code:: json</p>
+<dl class="simple">
+<dt>{ “caseName”<span class="classifier">“test case name as string” ,</span></dt><dd><p>“failedCases” : “failedCases as int”,
+“result” : “testResults”</p>
+</dd>
+</dl>
+<p>}</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.Bot.executeCurrentSubConversation">
 <span class="sig-name descname"><span class="pre">executeCurrentSubConversation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.executeCurrentSubConversation" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Find which conversation has isHappenning set to true  and executes first found in subconversations
+:param outputs: outputs that were previously computed
+:return: outputs modified (contains outputs of the executed subConversation (as list))</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.Bot.findCurrentlyHappeningSubconversation">
 <span class="sig-name descname"><span class="pre">findCurrentlyHappeningSubconversation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.findCurrentlyHappeningSubconversation" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>First checks if any subConversation is happening or not : returns first found , then checks if the enterOn condition
+of any subConversation is completed or not , returns first found
+:return: [index of the subconversation,subconversationId of the subconversation which matches the above criteria</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.Bot.getBotConfidence">
@@ -282,17 +299,32 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.Bot.getBotOutput">
 <span class="sig-name descname"><span class="pre">getBotOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputTheme</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.getBotOutput" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get’s bot output for a given message and output theme</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> – input message as string</p></li>
+<li><p><strong>outputTheme</strong> – theme from botTemplates</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>message as string</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.Bot.listAllTestCases">
 <span class="sig-name descname"><span class="pre">listAllTestCases</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.listAllTestCases" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>print all test cases</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.Bot.listTestCase">
 <span class="sig-name descname"><span class="pre">listTestCase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caseName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.listTestCase" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>print test case with the given case name
+:param caseName: Case Name as string</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.Bot.loadBot">
@@ -326,15 +358,27 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.Bot.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'basic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dev'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.run" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'basic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dev'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loadPath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversationId</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversationSavePath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bot can run in two modes</p>
+<p>dev : cli to debug, train intents, evaluate test cases and more
+singleMessageResponse : to be used when deploying in production , gives output for a single message only
+loads in conversations from conversationSavePath and trained bot from loadpath</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>theme</strong> – The theme name from bot responses</p></li>
-<li><p><strong>mode</strong> – The mode in which bot is to run , currently only ‘dev’ mode is supported</p></li>
+<li><p><strong>mode</strong> – dev and singleMessageResponse</p></li>
+<li><p><strong>loadPath</strong> – Loads trained intents ,entities and relations from .p file ie. file exported from saveBotMethod (only used in singleMessageResponse mode)</p></li>
+<li><p><strong>conversationId</strong> – conversationId of the conversation to continue (only used in singleMessageResponse mode)</p></li>
+<li><p><strong>message</strong> – (only used in singleMessageResponse mode)</p></li>
+<li><p><strong>conversationSavePath</strong> – looks for context at this path (only used in singleMessageResponse mode)</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>conversationId,outputMessage (only used in singleMessageResponse mode)</p>
+</dd>
 </dl>
+<p>no returns in dev mode</p>
 </dd></dl>
 
 <dl class="py method">
@@ -354,12 +398,18 @@ continue the conversation
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.saveSubConversationStatus">
+<span class="sig-name descname"><span class="pre">saveSubConversationStatus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.saveSubConversationStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save SubConversationStatus (isHappenning True or False) as a dict in the context manager</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.Bot.say">
 <span class="sig-name descname"><span class="pre">say</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputTheme</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.say" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate bot output message by adding message to the output components
 :param output:
 :param outputTheme:
-:return:</p>
+:return: message as string</p>
 </dd></dl>
 
 <dl class="py method">
@@ -384,26 +434,48 @@ continue the conversation
 <dd><p>Use this function when you need to retrain the bot with newly added intent and entity examples</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="simbots.Bot.Bot.updateSubConversationStatus">
+<span class="sig-name descname"><span class="pre">updateSubConversationStatus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.Bot.updateSubConversationStatus" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="simbots.Bot.SubConversation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.Bot.</span></span><span class="sig-name descname"><span class="pre">SubConversation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'04b974b5-d2d2-452d-bce5-662ca687d94e'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subConversationId</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'4470cf68-5c67-4e6d-bf4a-4c3ab65456f4'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onEnterLogic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onExitLogic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.SubConversation" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">simbots.Bot.</span></span><span class="sig-name descname"><span class="pre">SubConversation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'518fa8c6-6990-43ef-89ae-59da481d4ffc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subConversationId</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0ab566de-1f8f-4c23-a1a4-ff79d644b56a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onEnterLogic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onExitLogic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.SubConversation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Subconversations can be used to divide bot logic into multiple small parts</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.SubConversation.enterOn">
 <span class="sig-name descname"><span class="pre">enterOn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contextManager</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.SubConversation.enterOn" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Enter this SubConversation when condition is fulfilled
+:param contextManager: contextManager object , use this to construct a bool
+:return: bool that indicates if to enter this SubConversation or not</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.SubConversation.execute">
 <span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contextManager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.SubConversation.execute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Checks the enterOn and exitOn condition and executes the
+:param contextManager:
+:param outputs: creates outputs of the SubConversation using contextManager
+:return: modified contextManager , outputs</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="simbots.Bot.SubConversation.exitOn">
 <span class="sig-name descname"><span class="pre">exitOn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contextManager</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#simbots.Bot.SubConversation.exitOn" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Make a hard exit from this Subconversation when given condition is satisfied</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>contextManager</strong> – contextManager object , use this to construct a bool</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>bool that indicates if to make a hard exit or not</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

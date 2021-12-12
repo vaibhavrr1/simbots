@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to Simbots documentation! &#8212; simbots 0.0.22 documentation</title>
+    <title>Welcome to Simbots documentation! &#8212; simbots 0.0.23 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -58,7 +58,7 @@
       
       
       
-      <h1 class="site-logo" id="site-title">simbots 0.0.22 documentation</h1>
+      <h1 class="site-logo" id="site-title">simbots 0.0.23 documentation</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -1011,10 +1011,14 @@ Spacy provides NER ( Named Entity Recognition )to detect person names . Of cours
 
 
 <span class="k">def</span> <span class="nf">substituter</span><span class="p">(</span><span class="n">messageText</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Should return message substituted with --!entitykind</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">messageText</span><span class="p">)</span>
     <span class="n">textLabel</span> <span class="o">=</span> <span class="p">[(</span><span class="n">entity</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">entity</span><span class="o">.</span><span class="n">label_</span><span class="p">)</span> <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">ents</span> <span class="k">if</span> <span class="n">entity</span><span class="o">.</span><span class="n">label_</span><span class="o">==</span><span class="s1">&#39;PERSON&#39;</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">text</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">textLabel</span><span class="p">:</span>
-        <span class="n">messageText</span> <span class="o">=</span> <span class="n">messageText</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+        <span class="n">messageText</span> <span class="o">=</span> <span class="n">messageText</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;--!&quot;</span><span class="o">+</span><span class="n">label</span><span class="p">)</span>
+        <span class="c1"># note always substitute with --!entityKind to maintain homogeneity as other entities are substitutes the same way.</span>
 
     <span class="k">return</span> <span class="n">messageText</span>
 </pre></div>

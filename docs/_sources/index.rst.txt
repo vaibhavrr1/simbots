@@ -652,10 +652,14 @@ To start off you need to define an entity extractor and an entity substituter .
 
 
    def substituter(messageText):
+       """
+       Should return message substituted with --!entitykind
+       """
        doc = nlp(messageText)
        textLabel = [(entity.text, entity.label_) for entity in doc.ents if entity.label_=='PERSON']
        for text, label in textLabel:
-           messageText = messageText.replace(text, label)
+           messageText = messageText.replace(text, "--!"+label)
+           # note always substitute with --!entityKind to maintain homogeneity as other entities are substitutes the same way.
 
        return messageText
 
