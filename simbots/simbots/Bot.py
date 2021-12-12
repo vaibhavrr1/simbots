@@ -28,9 +28,6 @@ class Bot():
         :param subConversations: a list of SubConversationObjects which may be used to execute reason
         """
 
-
-
-
         self.intentExamples = intentExamples
         self.entityExamples = entityExamples
         self.contextManager = None
@@ -76,7 +73,6 @@ class Bot():
             self.subConversations = subConversations
         else:
             self.subConversations = []
-
 
 
         # Test Case Management
@@ -210,7 +206,7 @@ class Bot():
         Generate bot output message by adding message to the output components
         :param output:
         :param outputTheme:
-        :return:
+        :return: message as string
         """
 
         botSpeech = []
@@ -261,8 +257,18 @@ class Bot():
 
 
     def getBotOutput(self, message, outputTheme):
+        """
+        Get's bot output for a given message and output theme
+
+        :param message: input message as string
+        :param outputTheme: theme from botTemplates
+        :return: message as string
+        """
         # update the conversation with Inputs
         self.updateConversationInputs(message)
+
+        # load previous subconversation status
+        self.updateSubConversationStatus()
 
         # reason
         output = self.reason()
@@ -274,15 +280,30 @@ class Bot():
         for message in messages:
             self.updateConversationOutputs(message)
 
+        # save the subconversation status to contextManager
+        self.saveSubConversationStatus()
+
         return "\n".join(messages)
 
-    def run(self,theme="basic",mode='dev'):
+    def run(self,theme="basic",mode='dev',loadPath ="",conversationId="",message="",conversationSavePath=""):
         """
+        Bot can run in two modes
+
+        dev : cli to debug, train intents, evaluate test cases and more
+        singleMessageResponse : to be used when deploying in production , gives output for a single message only
+        loads in conversations from conversationSavePath and trained bot from loadpath
 
         :param theme: The theme name from bot responses
-        :param mode: The mode in which bot is to run , currently only 'dev' mode is supported
-
+        :param mode: dev and singleMessageResponse
+        :param loadPath: Loads trained intents ,entities and relations from .p file ie. file exported from saveBotMethod (only used in singleMessageResponse mode)
+        :param conversationId: conversationId of the conversation to continue (only used in singleMessageResponse mode)
+        :param message:  (only used in singleMessageResponse mode)
+        :param conversationSavePath: looks for context at this path (only used in singleMessageResponse mode)
+        :return: conversationId,outputMessage (only used in singleMessageResponse mode)
+        no returns in dev mode
         """
+
+
         if mode =='dev':
             currentDialogNumber =1
             botFunctions = ['@@ to exit bot' ,'@i to get intents' , '@c to get context ','@e to get entities' ,'@t to add a test case', '@etc to evaluate a test case' , '@eatc to evaluate all test cases',"@ti to add intent"]
@@ -373,8 +394,29 @@ class Bot():
                 except:
                     raise IndexingError("The Context Stack is Empty, cant access Current Dialog number")
 
-        else:
-            return "only dev mode is supported to run bot as of now . To get bot response use bot.getBotOutput(userMessage,theme)"
+        elif mode =='singleMessageResponse':
+            self.loadBot(loadPath)
+            message = "  {0}  ".format(message.replace('"', ""))
+            if len(conversationId) == 0:
+                conversationId = str(uuid.uuid4())
+                oldContext = {
+                    "intents": [],
+                    "dialogs": [],
+                    "entities": [],
+                    "messages": []
+                }
+            else:
+                pathToOldContext = os.path.join(conversationSavePath, "{0}.json".format(conversationId))
+                oldContext = json.load(open(pathToOldContext, 'r'))
+
+            self.contextManager.setNewContext(oldContext)
+            outputMessage = self.getBotOutput(message, outputTheme=theme)
+
+            savePath = os.path.join(conversationSavePath, "{0}.json".format(conversationId))
+            self.saveConversation(savePath, uid=conversationId)
+
+
+            return conversationId,outputMessage
 
     ###
     ### Test Case manipulation Functions
@@ -415,13 +457,34 @@ class Bot():
                                         }
 
     def listTestCase(self,caseName):
+        """
+        print test case with the given case name
+        :param caseName: Case Name as string
+
+        """
         print(caseName,json.dumps(self.testCases[caseName],indent=2))
 
     def listAllTestCases(self):
+        """
+        print all test cases
+        """
         for caseName in self.testCases.keys():
             self.listTestCase(caseName)
 
     def evaluateTestCase(self,caseName,outputTheme):
+        """
+        evaluate a particular testCase
+        :param caseName:
+        :param outputTheme: The bot template theme to use for getting the output message
+        :return:
+        .. code:: json
+
+        { "caseName" : "test case name as string" ,
+         "failedCases" : "failedCases as int",
+         "result" : "testResults"
+        }
+
+        """
         try:
             testCase = self.testCases[caseName]["conversation"]
         except:
@@ -469,7 +532,6 @@ class Bot():
 
         """
 
-
         if "conversationId" in  self.contextManager.context.keys():
             uid = self.contextManager.context["conversationId"]
 
@@ -499,6 +561,7 @@ class Bot():
         if loadPath is None:
             raise Exception("Need a conversation path to continue conversation")
 
+        """
         sampleSchema = {
             "entities": [
                 {
@@ -647,7 +710,7 @@ class Bot():
         print(
             "Ensure that schema follows valid format otherwise it may introduce errors later . It must contain 'entities','intents','dialogs','messages','conversationId' , extra stuff is allowed ")
         print("Sample Schema \n\n", json.dumps(sampleSchema))
-
+        """
         ##
         ## Add schema validation for context
         ##
@@ -707,8 +770,19 @@ class Bot():
         self.intentExamples = data["intentExamples"]
         self.entityExamples = data["entityExamples"]
 
+    ##
+    ## SubConversation Functions
+    ##
 
     def findCurrentlyHappeningSubconversation(self):
+
+        """
+
+        First checks if any subConversation is happening or not : returns first found , then checks if the enterOn condition
+        of any subConversation is completed or not , returns first found
+        :return: [index of the subconversation,subconversationId of the subconversation which matches the above criteria
+
+        """
 
         # check if any sub conversation is already happening
         for i, subConv in enumerate(self.subConversations):
@@ -724,6 +798,11 @@ class Bot():
         return [None, None]
 
     def executeCurrentSubConversation(self, outputs=None):
+        """
+        Find which conversation has isHappenning set to true  and executes first found in subconversations
+        :param outputs: outputs that were previously computed
+        :return: outputs modified (contains outputs of the executed subConversation (as list))
+        """
         if outputs is None:
             outputs = []
 
@@ -736,8 +815,31 @@ class Bot():
 
         return outputs
 
+    def saveSubConversationStatus(self):
+        """
+
+        Save SubConversationStatus (isHappenning True or False) as a dict in the context manager
+
+        """
+        subConversationStatus = {}
+
+        for subConversation in self.subConversations:
+            subConversationStatus[subConversation.subConversationId] =  subConversation.isHappening
+
+        self.contextManager.context["subConversationStatus"] = subConversationStatus
+        self.contextManager.updateContextTree()
+
+    def updateSubConversationStatus(self):
+        if "subConversationStatus" in self.contextManager.context.keys():
+            for i in range(len(self.subConversations)):
+                self.subConversations[i].isHappening = self.contextManager.context["subConversationStatus"][self.subConversations[i].subConversationId]
+
 
 class SubConversation():
+    """
+    Subconversations can be used to divide bot logic into multiple small parts
+
+    """
 
     def __init__(self, name=str(uuid.uuid4()), subConversationId=str(uuid.uuid4()), enter=None, exit=None,
                  onEnterLogic=None, onExitLogic=None):
@@ -781,18 +883,38 @@ class SubConversation():
             self.onExitLogic = lambda x, y: (x, y)
 
     def enterOn(self, contextManager):
+        """
+        Enter this SubConversation when condition is fulfilled
+        :param contextManager: contextManager object , use this to construct a bool
+        :return: bool that indicates if to enter this SubConversation or not
+
+        """
 
         self.isHappening = self.enter(contextManager)
 
         return self.isHappening
 
     def exitOn(self, contextManager):
+        """
+        Make a hard exit from this Subconversation when given condition is satisfied
+
+        :param contextManager:  contextManager object , use this to construct a bool
+        :return: bool that indicates if to make a hard exit or not
+
+        """
 
         self.isHappening = self.exit(contextManager)
 
         return self.isHappening
 
     def execute(self, contextManager, outputs):
+        """
+        Checks the enterOn and exitOn condition and executes the
+        :param contextManager:
+        :param outputs: creates outputs of the SubConversation using contextManager
+        :return: modified contextManager , outputs
+
+        """
 
         if self.exitOn(contextManager):
             # hard exit the bot if exit on condition is fulfilled
